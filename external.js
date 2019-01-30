@@ -10,20 +10,22 @@
     is set to "example", it will be called with "/example" by the user.) Finally, create a get property
     with type Function that will return the stuff that will be sent to the user in a discord message. 
     You can get the command's arguments (that the user specifies, as shown in the templateExample) 
-    using the variable "args". See the example below or contact Cannicide#2753 for more information.
+    using the variable "args". Specify an args argument
+    in your get function itself, even if you do not require usage of the arguments.
+    See the example below or contact Cannicide#2753 for more information.
 */
 
 const externalCommands = {
     extExample: {
         name: "example",
-        get: function() {
+        get: function(args) {
             var example = require("./ext-example"); //Your command's JS file
             return example.example2("World"); //Content to be sent in the message
         }
     },
     templateExample: {
         name: "command",
-        get: function() {
+        get: function(args) {
             //var command = require("./your-js-file-without-the-.js-at-the-end");
             //return command.thingToSendInMessage(args); 
             //args is sent your function, it is the command's arguments in an array

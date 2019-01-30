@@ -116,13 +116,13 @@ client.on('message', message => {
         //^ simplify.js first instance
       break;
     case "user:name":
-      message.channel.send(simpjs.simplify.users.getUser(message.mentions.first()));
+      message.channel.send(simpjs.simplify.users.getUser(message.content.mentions.first()));
     break;
     case "user:tag":
-      message.channel.send(simpjs.simplify.users.getTag(message.mentions.first()));
+      message.channel.send(simpjs.simplify.users.getTag(message.content.mentions.first()));
     break;
     case "user:id":
-      message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.mentions.first()));
+      message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.content.mentions.first()));
     break;
     case "about":
       message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS."));
@@ -174,7 +174,7 @@ client.on('message', message => {
       var external = require("./external");
       Object.keys(external.commands).forEach(function(key) {
         if (external.commands[key].name.toLowerCase() == command) {
-          message.channel.send(external.commands[key].get());
+          message.channel.send(external.commands[key].get(args));
         }
       });
   }
