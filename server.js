@@ -22,6 +22,9 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 var prefix = "/";
 
+//Constants required
+const constants = require("./constants");
+
 function ifProfile(authorid) {
   if (localStorage.getItem(authorid + "profile") && Number(localStorage.getItem(authorid + "profile")) >= -10) {
       var profile = localStorage.getItem(authorid + "profile");
@@ -67,9 +70,9 @@ client.on('message', message => {
   else {
    var args = false; 
   }
-  var helpcommand = "Help command";
+  
   if (message.content == "/sifcasino") {
-      message.channel.send(helpcommand);
+      message.channel.send(constants.helpCommand);
   }
   if (message.author.bot) {
      return false; 
@@ -82,14 +85,14 @@ client.on('message', message => {
     var profile = false;         
   }
   else {
-     var profile = 50; 
+     var profile = constants.profileStarterAmount; 
   }
   //Init simplify.js
   var simpjs = require("./simplify");
   //Check for command:
   switch (command) {
     case "casino":
-        message.channel.send(helpcommand);
+        message.channel.send(constants.helpCommand);
       break;
     case "roulette":
       
@@ -113,13 +116,13 @@ client.on('message', message => {
         //^ simplify.js first instance
       break;
     case "user:name":
-      message.channel.send(simpjs.simplify.users.getUser(message.mentions.first()));
+      message.channel.send(simpjs.simplify.users.getUser(message.content.mentions.first()));
     break;
     case "user:tag":
-      message.channel.send(simpjs.simplify.users.getTag(message.mentions.first()));
+      message.channel.send(simpjs.simplify.users.getTag(message.content.mentions.first()));
     break;
     case "user:id":
-      message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.mentions.first()));
+      message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.content.mentions.first()));
     break;
     case "about":
       message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS."));
@@ -151,7 +154,7 @@ client.on('message', message => {
         message.channel.send("You already have a casino profile.");
       }
       else {
-       profile = 50;
+       profile = constants.profileStarterAmount;
        localStorage.setItem(message.author.id + "profile", profile);
         message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
       }
@@ -166,6 +169,14 @@ client.on('message', message => {
         localStorage.setItem(message.author.id + "profile", -5);
       }
       break;
+    default:
+      //External commands go here
+      var external = require("./external");
+      Object.keys(external.commands).forEach(function(key) {
+        if (external.commands[key].name.toLowerCase() == command) {
+          message.channel.send(external.commands[key].get(args));
+        }
+      });
   }
 });
 
