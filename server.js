@@ -126,7 +126,7 @@ client.on('message', message => {
       message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.content.mentions.first()));
     break;
     case "about":
-      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS."));
+      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/tree/v1.0 \nInvite link: ||[Not yet public]||"));
     break;
     case "guess":
 
