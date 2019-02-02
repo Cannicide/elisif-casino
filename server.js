@@ -100,15 +100,15 @@ client.on('message', message => {
       break;
     case "double":
         var double = require("./double");
-        message.channel.send(double.dble(args, ifProfile(message.author.id), prefix));
+        message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
       break;
     case "coin":
         var coin = require("./coinflip");
-        message.channel.send(coin.flip(args, ifProfile(message.author.id), prefix));
+        message.channel.send(coin.flip(args, ifProfile(message.author.id), prefix, message));
       break;
     case "dice":
         var dice = require("./dice");
-        message.channel.send(dice.roll(args, ifProfile(message.author.id), prefix));
+        message.channel.send(dice.roll(args, ifProfile(message.author.id), prefix, message));
       break;
     case "user:all":
         message.channel.send(simpjs.simplify.users.getUser(message.author));
@@ -175,10 +175,10 @@ client.on('message', message => {
       var external = require("./external");
       Object.keys(external.commands).forEach(function(key) {
         if (external.commands[key].name.toLowerCase() == command) {
-          message.channel.send(external.commands[key].get(args));
+          message.channel.send(external.commands[key].get(args, message));
         }
       });
   }
 });
 
-client.login(process.env.TOKEN);
+client.login("your token here");
