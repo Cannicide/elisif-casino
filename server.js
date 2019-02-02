@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.static('public'));
 app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+  response.send("Running botserver");
 });
 const listener = app.listen(process.env.PORT, function() {
   console.log('Sif Casino listening on port ' + listener.address().port);
@@ -15,6 +15,7 @@ const listener = app.listen(process.env.PORT, function() {
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
   localStorage = new LocalStorage('./ls');
+  var ls = require("./ls");
 }
 
 //Discord.js initialized
@@ -26,10 +27,10 @@ var prefix = "/";
 const constants = require("./constants");
 
 function ifProfile(authorid) {
-  if (localStorage.getItem(authorid + "profile") && Number(localStorage.getItem(authorid + "profile")) >= -10) {
-      var profile = localStorage.getItem(authorid + "profile");
+  if (ls.get(authorid + "profile") && Number(ls.get(authorid + "profile")) >= -10) {
+      var profile = ls.get(authorid + "profile");
       }
-  else if (Number(localStorage.getItem(authorid + "profile")) < -10) {
+  else if (Number(ls.get(authorid + "profile")) < -10) {
     var profile = false;         
   }
   else {
@@ -55,11 +56,11 @@ client.on('message', message => {
    var splitter = message.content.replace(" ", ";:splitter185151813367::");
     var splitted = splitter.split(";:splitter185151813367::");
   var prefix;
-    if (localStorage.getItem(message.guild.id + "prefix")) {
-        prefix = localStorage.getItem(message.guild.id + "prefix");
+    if (ls.get(message.guild.id + "prefix")) {
+        prefix = ls.get(message.guild.id + "prefix");
         }
       else {
-         localStorage.setItem(message.guild.id + "prefix", "/");
+         ls.set(message.guild.id + "prefix", "/");
           prefix = "/";
       }
   var re = new RegExp(prefix);
@@ -77,11 +78,11 @@ client.on('message', message => {
   if (message.author.bot) {
      return false; 
   }
-  if (localStorage.getItem(message.author.id + "profile") && Number(localStorage.getItem(message.author.id + "profile")) >= -10) {
-      localStorage.setItem(message.author.id + "profile", Number(localStorage.getItem(message.author.id + "profile")) + 1);
-      var profile = localStorage.getItem(message.author.id + "profile");
+  if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
+      ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
+      var profile = ls.get(message.author.id + "profile");
       }
-  else if (Number(localStorage.getItem(message.author.id + "profile")) < -10) {
+  else if (Number(ls.get(message.author.id + "profile")) < -10) {
     var profile = false;         
   }
   else {
@@ -134,7 +135,7 @@ client.on('message', message => {
       
       break;
     case "profile":
-      if (localStorage.getItem(message.author.id + "profile") && profile) {
+      if (ls.get(message.author.id + "profile") && profile) {
         message.channel.send(`${message.author.username} has $${profile.toLocaleString()}.`);
       }
       else {
@@ -142,7 +143,7 @@ client.on('message', message => {
       }
       break;
     case "balance":
-      if (localStorage.getItem(message.author.id + "profile") && profile) {
+      if (ls.get(message.author.id + "profile") && profile) {
         message.channel.send(`${message.author.username} has $${profile.toLocaleString()}.`);
       }
       else {
@@ -150,23 +151,23 @@ client.on('message', message => {
       }
       break;
     case "create":
-      if (localStorage.getItem(message.author.id + "profile") && profile) {
+      if (ls.get(message.author.id + "profile") && profile) {
         message.channel.send("You already have a casino profile.");
       }
       else {
        profile = constants.profileStarterAmount;
-       localStorage.setItem(message.author.id + "profile", profile);
+       ls.set(message.author.id + "profile", profile);
         message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
       }
       break;
     case "delete":
-      if (localStorage.getItem(message.author.id + "profile") <= -1) {
+      if (ls.get(message.author.id + "profile") <= -1) {
          message.channel.send("Account deleted.");
-          localStorage.setItem(message.author.id + "profile", -100);
+          ls.set(message.author.id + "profile", -100);
       }
       else {
          message.channel.send("Are you sure you want to delete your casino account? Type `" + prefix + "delete` again to delete your account. This action is irreversible."); 
-        localStorage.setItem(message.author.id + "profile", -5);
+        ls.set(message.author.id + "profile", -5);
       }
       break;
     default:
