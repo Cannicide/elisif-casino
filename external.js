@@ -12,12 +12,17 @@
     You can get the command's arguments (that the user specifies, as shown in the templateExample) 
     using the variable "args". Specify an args argument
     in your get function itself, even if you do not require usage of the arguments.
+    Make sure your command objects have a set name, desc (description), and usage (for the help command).
     See the example below or contact Cannicide#2753 for more information.
 */
 
 const externalCommands = {
     extExample: {
         name: "example",
+        desc: "An example command to be used as a template for external developers who want to contribute to this project.",
+        usage: function(prefix) {
+           return prefix + "example [argument 1] [argument 2] <optional argument 3>";
+        },
         get: function(args) {
             var example = require("./ext-example"); //Your command's JS file
             return example.example2("World"); //Content to be sent in the message
@@ -25,6 +30,10 @@ const externalCommands = {
     },
     templateExample: {
         name: "command",
+        desc: "A functionless template command for external developers.",
+        usage: function(prefix) {
+            return prefix + "command <entirely optional argument>"
+        },
         get: function(args) {
             //var command = require("./your-js-file-without-the-.js-at-the-end");
             //return command.thingToSendInMessage(args); 

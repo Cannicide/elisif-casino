@@ -63,6 +63,7 @@ client.on('message', message => {
          ls.set(message.guild.id + "prefix", "/");
           prefix = "/";
       }
+  constants.setPrefix(prefix);
   var re = new RegExp(prefix);
   var command = splitted[0].replace(re, "");
   if (splitted[1]) {
@@ -73,7 +74,11 @@ client.on('message', message => {
   }
   
   if (message.content == "/sifcasino") {
-      message.channel.send(constants.helpCommand);
+      message.channel.send(constants.help("main"));
+      message.channel.send(constants.help("ext"));
+  }
+  else if (message.content == "/fetch prefix") {
+    message.channel.send(`The prefix for this guild is ${prefix}`);
   }
   if (message.author.bot) {
      return false; 
@@ -93,7 +98,8 @@ client.on('message', message => {
   //Check for command:
   switch (command) {
     case "casino":
-        message.channel.send(constants.helpCommand);
+        message.channel.send(constants.help("main"));
+        message.channel.send(constants.help("ext"));
       break;
     case "roulette":
       
@@ -116,17 +122,31 @@ client.on('message', message => {
         message.channel.send(simpjs.simplify.users.getTag(message.author));
         //^ simplify.js first instance
       break;
-    case "user:name":
-      message.channel.send(simpjs.simplify.users.getUser(message.content.mentions.first()));
-    break;
-    case "user:tag":
-      message.channel.send(simpjs.simplify.users.getTag(message.content.mentions.first()));
-    break;
-    case "user:id":
-      message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.content.mentions.first()));
-    break;
     case "about":
       message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/tree/v1.0 \nInvite link: ||[Not yet public]||"));
+    break;
+    case "prefix":
+      if (simpjs.discrim(message.member)) {
+        var nPref = args[0];
+        if (nPref.length > 1) {
+          //Too long prefix
+          message.channel.send("Error LengthException: Prefixes can only be at max one character long.");
+        }
+        else if (!nPref) {
+          //No prefix specified, send how to do command
+          message.channel.send(`**Usage of ${prefix}prefix**\n\n \`n${prefix}prefix [new prefix character]\`\n__Ex:__\`\`\`${prefix}prefix ?\`\`\`\nThe shown example will set the prefix to ?`);
+        }
+        else {
+          //Change the prefix
+          ls.set(message.guild.id + "prefix", nPref);
+          prefix = nPref;
+          message.channel.send(`Set the server's prefix to ${nPref}. Use \`/fetch prefix\` to identify this guild's current prefix.`);
+        }
+      }
+      else {
+        //Doesn't have admin perms
+        message.channel.send("Error PermissionError: You do not have the `ADMINISTRATOR` permission required to do this.");
+      }
     break;
     case "guess":
 
