@@ -21,5 +21,8 @@ var simp = {
 }
 
 module.exports = {
-    simplify: simp
+    simplify: simp,
+    discrim: function(member) {
+        return member.hasPermission("ADMINISTRATOR");
+    }
 }
