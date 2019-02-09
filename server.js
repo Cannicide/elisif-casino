@@ -75,6 +75,7 @@ client.on('message', message => {
   
   if (message.content == "/sifcasino") {
       message.channel.send(constants.help("main"));
+      message.channel.send(constants.help("main2"));
       message.channel.send(constants.help("ext"));
   }
   else if (message.content == "/fetch prefix") {
@@ -107,6 +108,7 @@ client.on('message', message => {
   switch (command) {
     case "casino":
         message.channel.send(constants.help("main"));
+        message.channel.send(constants.help("main2"));
         message.channel.send(constants.help("ext"));
       break;
     case "reset":

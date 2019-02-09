@@ -77,7 +77,8 @@ function getHelpCommands(parm) {
     ||\`\`\`${fix}profile\`\`\`
     Views your current balance {and donation levels}.||
 
-    ` + `
+    `
+    var main2 = `
     Casino Create
     ||\`\`\`${fix}create\`\`\`
     Creates a casino profile (necessary to play casino games).||
@@ -103,6 +104,9 @@ function getHelpCommands(parm) {
     }
     else if (parm == "ext") {
         return ext;
+    }
+    else if (parm == "main2") {
+        return main2;
     }
 }
 
