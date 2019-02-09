@@ -14,6 +14,7 @@ function getUserObject(author) {
     }
     return userObj;
 }
+
 function setAwaitObject(author, value) {
     var asyncUser = author.id + "asyncUserObj";
     var newObj = ls.getObj(asyncUser);

@@ -124,6 +124,15 @@ client.on('message', message => {
         var roulette = require("./roulette");
         message.channel.send(roulette.spin(message.content, ifProfile(message.author.id), prefix, message));
       break;
+    case "jackpot":
+        var jackpot = require("./jackpot");
+        if (args[0] == "end") {
+          message.channel.send(jackpot.end(message));
+        }
+        else {
+          message.channel.send(jackpot.start(args, ifProfile(message.author.id), prefix, message));
+        }
+      break;
     case "double":
         var double = require("./double");
         message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
