@@ -79,6 +79,14 @@ function getHelpCommands(parm) {
 
     `
     var main2 = `
+    Jackpot
+    ||\`\`\`${fix}jackpot [bet]\`\`\`
+    Casino game. Starts or joins a jackpot game. Multiplayer; anyone can join, winner takes all.||
+
+    Jackpot (end)
+    ||\`\`\`${fix}jackpot <end>\`\`\`
+    Ends any currently running jackpot game in the guild. Only the creator of the game or an administrator can do this.||
+
     Casino Create
     ||\`\`\`${fix}create\`\`\`
     Creates a casino profile (necessary to play casino games).||
