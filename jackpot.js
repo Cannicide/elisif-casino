@@ -4,8 +4,8 @@ var simpjs = require("./simplify");
 function jackpotStart(args, ifprofile, prefix, message) {
     var guildIdentifier = message.guild.id + "jackpotGame";
     var guildId = guildIdentifier;
-    var bet = args[0];
-    if (!bet || typeof bet != "number" || bet < 1 || bet <= Number(ifprofile)) {
+    var bet = Number(args[0]);
+    if (!bet || typeof bet != "number" || bet < 1 || bet > Number(ifprofile)) {
         return `Please specify a valid bet that is less than or equal to your current balance. Check with ${prefix}balance.`; 
     }
     else if (!ifprofile) {
@@ -23,6 +23,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
                 jackpotObj.bets[index] += bet;
                 var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
                 ls.setObj(guildId, jackpotObj);
+                ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
                 return `${message.author.username}, you added $${bet} more to the jackpot! Total jackpot value: **$${total}**`;
             }
             else {
@@ -32,6 +33,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
                 jackpotObj.bets.push(bet);
                 var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
                 ls.setObj(guildId, jackpotObj);
+                ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
                 return `${message.author.username}, you joined the jackpot with $${bet}! Total jackpot value: **$${total}**`;
             }
         }
@@ -43,13 +45,14 @@ function jackpotStart(args, ifprofile, prefix, message) {
     else {
         //Jackpot object must be created
         var jackpotObj = {
-            isEnabled = true,
+            isEnabled: true,
             participants: [],
             bets: []
         }
         jackpotObj.participants.push(message.author.id);
         jackpotObj.bets.push(bet);
         ls.setObj(guildId, jackpotObj);
+        ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
         return `${message.author.username}, you created a new jackpot with **$${bet}**`;
     }
 }
@@ -61,13 +64,20 @@ function jackpotEnd(message) {
         var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
         var jackpotLength = jackpotObj.participants.length;
         if (jackpotLength == 1) {
-            return `Sorry ${message.author.username}, nobody joined your jackpot game.`;
+            ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + Number(jackpotObj.bets[jackpotObj.participants.indexOf(message.author.id)]));
+            ls.remove(message.guild.id + "jackpotGame");
+            return `Sorry ${message.author.username}, nobody joined your jackpot game. You get your money back, though!`;
         }
         else {
             var randWinner = Math.floor(Math.random() * jackpotLength);
             var winner = jackpotObj.participants[randWinner];
             ls.set(winner + "profile", Number(ls.get(winner + "profile")) + Number(total));
             var winnerUsername = message.guild.fetchMember({ id: winner }).username;
+            jackpotObj.participants.forEach(function(id, index) {
+                var moneyLost = jackpotObj.bets[index];
+                ls.set(id + "profile", Number(ls.get(id + "profile")) - Number(moneyLost));
+            });
+            ls.remove(message.guild.id + "jackpotGame");
             return `Lucky ${winnerUsername}, you won the jackpot with a gain of **$${total}!**`;
         }
     }
