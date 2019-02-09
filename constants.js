@@ -41,6 +41,14 @@ function getHelpCommands(parm) {
     ||\`\`\`${fix}casino <help>\`\`\`
     Alternate form of Sifcasino command, but uses the current prefix.||
 
+    Casino Reset Balance
+    ||\`\`\`${fix}reset <balance>\`\`\`
+    Resets casino balance to $0, in case any bugs involving casino profile occur.||
+
+    Roulette
+    ||\`\`\`${fix}roulette [bet]\`\`\`
+    Casino game. Spins a roulette wheel with 38 numbered slots, returning green for 0, and red or black for the rest. Earn money for guessing the right color.||
+
     Double
     ||\`\`\`${fix}double [bet]\`\`\`
     Casino game. Gives you a chance to double the bet money you specify and collect it.||

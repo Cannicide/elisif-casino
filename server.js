@@ -83,6 +83,14 @@ client.on('message', message => {
   if (message.author.bot) {
      return false; 
   }
+  var pColor = message.content.toLowerCase();
+  var asyncUser = require("./asyncUser");
+  if ((pColor == "green" || pColor == "red" || pColor == "black") && asyncUser.getUserObj(message.author).awaitRoulette) {
+    command = "rouletteSpin";
+  }
+  else if (command == "rouletteSpin") {
+    command = "casino";
+  }
   if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
       ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
       var profile = ls.get(message.author.id + "profile");
@@ -101,8 +109,18 @@ client.on('message', message => {
         message.channel.send(constants.help("main"));
         message.channel.send(constants.help("ext"));
       break;
+    case "reset":
+        ls.set(message.author.id + "profile", 0);
+        profile = 0;
+        message.channel.send("Balance reset to 0");
+      break;
     case "roulette":
-      
+        var roulette = require("./roulette");
+        message.channel.send(roulette.specifyBet(args, ifProfile(message.author.id), prefix, message));
+      break;
+    case "rouletteSpin":
+        var roulette = require("./roulette");
+        message.channel.send(roulette.spin(message.content, ifProfile(message.author.id), prefix, message));
       break;
     case "double":
         var double = require("./double");
