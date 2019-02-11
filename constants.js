@@ -15,9 +15,10 @@ function extCommands() {
         var usage = ext.commands[key].usage(fix);
         var desc = ext.commands[key].desc;
         extList = extList + `
-            ${name}
-            ||\`\`\`${usage}\`\`\`
-            ${desc}||
+            ${name} - 
+            ||\`${usage}\`||
+            ${desc}
+
 
         `;
     });
@@ -29,71 +30,87 @@ function getHelpCommands(parm) {
     var main = `
     **Commands List**
     ~~-----------------~~
-    Sifcasino
-    ||\`\`\`/sifcasino\`\`\`
-    Sends you a list of the commands and how to use them, with a never-changing prefix.||
+    Sifcasino -
+    ||\`/sifcasino\`||
+    Sends you a list of the commands and how to use them, with a never-changing prefix.
 
-    Fetch Prefix
-    ||\`\`\`/fetch prefix\`\`\`
-    Sends you the bot's current prefix.||
 
-    Casino Help
-    ||\`\`\`${fix}casino <help>\`\`\`
-    Alternate form of Sifcasino command, but uses the current prefix.||
+    Fetch Prefix -
+    ||\`/fetch prefix\`||
+    Sends you the bot's current prefix.
 
-    Casino Reset Balance
-    ||\`\`\`${fix}reset <balance>\`\`\`
-    Resets casino balance to $0, in case any bugs involving casino profile occur.||
 
-    Roulette
-    ||\`\`\`${fix}roulette [bet]\`\`\`
-    Casino game. Spins a roulette wheel with 38 numbered slots, returning green for 0, and red or black for the rest. Earn money for guessing the right color.||
+    Casino Help -
+    ||\`${fix}casino <help>\`||
+    Alternate form of Sifcasino command, but uses the current prefix.
 
-    Double
-    ||\`\`\`${fix}double [bet]\`\`\`
-    Casino game. Gives you a chance to double the bet money you specify and collect it.||
 
-    Coinflip
-    ||\`\`\`${fix}coin [bet] [heads/tails]\`\`\`
-    Casino game. Gives you a 50-50 chance to win bet money based on a coinflip.||
+    Casino Reset Balance -
+    ||\`${fix}reset <balance>\`||
+    Resets casino balance to $0, in case any bugs involving casino profile occur.
 
-    Dice Roll
-    ||\`\`\`${fix}dice [bet]\`\`\`
-    Casino game. Rolls two dice. If you roll dual ONEs, you gain 3 times your bet. If you roll any other matching numbers, you gain 7 times your bet.||
 
-    User Self-Info
-    ||\`\`\`${fix}user:all <actuator>\`\`\`
-    Sends you some useful information about your discord account, including your ID and tag.||
+    Roulette -
+    ||\`${fix}roulette [bet]\`||
+    Casino game. Spins a roulette wheel with 38 numbered slots, returning green for 0, and red or black for the rest. Earn money for guessing the right color.
 
-    About The Bot
-    ||\`\`\`${fix}about\`\`\`
-    Sends you information about the bot, including the bot's creator, github page, and invite link.||
 
-    Prefix
-    ||\`\`\`${fix}prefix <new prefix>\`\`\`
-    Sets a new bot prefix for the current guild, if you have admin permissions.||
+    Double -
+    ||\`${fix}double [bet]\`||
+    Casino game. Gives you a chance to double the bet money you specify and collect it.
 
-    Casino Profile
-    ||\`\`\`${fix}profile\`\`\`
-    Views your current balance {and donation levels}.||
+
+    Coinflip -
+    ||\`${fix}coin [bet] [heads/tails]\`||
+    Casino game. Gives you a 50-50 chance to win bet money based on a coinflip.
+
+
+    Dice Roll -
+    ||\`${fix}dice [bet]\`||
+    Casino game. Rolls two dice. If you roll dual ONEs, you gain 3 times your bet. If you roll any other matching numbers, you gain 7 times your bet.
+
+
+    User Self-Info -
+    ||\`${fix}user:all <actuator>\`||
+    Sends you some useful information about your discord account, including your ID and tag.
+
+
+    About The Bot -
+    ||\`${fix}about\`||
+    Sends you information about the bot, including the bot's creator, github page, and invite link.
+
+
+    Prefix -
+    ||\`${fix}prefix <new prefix>\`||
+    Sets a new bot prefix for the current guild, if you have admin permissions.
+
+
+    Casino Profile -
+    ||\`${fix}profile\`||
+    Views your current balance {and donation levels}.
+
 
     `
     var main2 = `
-    Jackpot
-    ||\`\`\`${fix}jackpot [bet]\`\`\`
-    Casino game. Starts or joins a jackpot game. Multiplayer; anyone can join, winner takes all.||
+    Jackpot -
+    ||\`${fix}jackpot [bet]\`||
+    Casino game. Starts or joins a jackpot game. Multiplayer; anyone can join, winner takes all.
 
-    Jackpot (end)
-    ||\`\`\`${fix}jackpot <end>\`\`\`
-    Ends any currently running jackpot game in the guild. Only the creator of the game or an administrator can do this.||
 
-    Casino Create
-    ||\`\`\`${fix}create\`\`\`
-    Creates a casino profile (necessary to play casino games).||
+    Jackpot (end) -
+    ||\`${fix}jackpot <end>\`||
+    Ends any currently running jackpot game in the guild. Only the creator of the game or an administrator can do this.
 
-    Casino Delete
-    ||\`\`\`${fix}delete\`\`\`
-    Deletes your casino account, and consequently, your balance/profile. Also used to confirm your account deletion.||
+
+    Casino Create -
+    ||\`${fix}create\`||
+    Creates a casino profile (necessary to play casino games).
+
+
+    Casino Delete -
+    ||\`${fix}delete\`||
+    Deletes your casino account, and consequently, your balance/profile. Also used to confirm your account deletion.
+
 
     *Casino Command Format Guide:*
     \`<argument>\` = Optional parameter
@@ -101,6 +118,7 @@ function getHelpCommands(parm) {
     \`{argument or description}\` = Future feature that is not yet implemented
     \`[argument1/argument2]\` = You can use \`argument1\` or \`argument2\` as the parameter
     
+
     `; //Universal content for all variations of the help command
     var ext = `
     **External Commands (Made By Other Developers)**

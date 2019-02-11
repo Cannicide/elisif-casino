@@ -56,6 +56,12 @@ client.on('message', message => {
    var splitter = message.content.replace(" ", ";:splitter185151813367::");
     var splitted = splitter.split(";:splitter185151813367::");
   var prefix;
+    if (message.guild === null) {
+      if (message.author.id != "501862549739012106") {
+        message.reply("Sorry " + message.author.username + ", DM messages are not supported by this bot.");
+      }
+      return false;
+    }
     if (ls.get(message.guild.id + "prefix")) {
         prefix = ls.get(message.guild.id + "prefix");
         }
@@ -63,8 +69,9 @@ client.on('message', message => {
          ls.set(message.guild.id + "prefix", "/");
           prefix = "/";
       }
+  var fixRegExp = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   constants.setPrefix(prefix);
-  var re = new RegExp(prefix);
+  var re = new RegExp(fixRegExp);
   var command = splitted[0].replace(re, "");
   if (splitted[1]) {
     var args = splitted[1].split(" ");
@@ -74,9 +81,9 @@ client.on('message', message => {
   }
   
   if (message.content == "/sifcasino") {
-      message.channel.send(constants.help("main"));
-      message.channel.send(constants.help("main2"));
-      message.channel.send(constants.help("ext"));
+      message.author.send(constants.help("main"));
+      message.author.send(constants.help("main2"));
+      message.author.send(constants.help("ext"));
   }
   else if (message.content == "/fetch prefix") {
     message.channel.send(`The prefix for this guild is ${prefix}`);
@@ -107,9 +114,9 @@ client.on('message', message => {
   //Check for command:
   switch (command) {
     case "casino":
-        message.channel.send(constants.help("main"));
-        message.channel.send(constants.help("main2"));
-        message.channel.send(constants.help("ext"));
+        message.author.send(constants.help("main"));
+        message.author.send(constants.help("main2"));
+        message.author.send(constants.help("ext"));
       break;
     case "reset":
         ls.set(message.author.id + "profile", 0);
@@ -152,7 +159,7 @@ client.on('message', message => {
         //^ simplify.js first instance
       break;
     case "about":
-      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/tree/v1.0 \nInvite link: ||[Not yet public]||"));
+      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/tree/v1.0 \nInvite link: ||https://discordapp.com/api/oauth2/authorize?client_id=501862549739012106&permissions=470076480&scope=bot||"));
     break;
     case "prefix":
       if (simpjs.discrim(message.member)) {
@@ -224,7 +231,8 @@ client.on('message', message => {
       var external = require("./external");
       Object.keys(external.commands).forEach(function(key) {
         if (external.commands[key].name.toLowerCase() == command) {
-          message.channel.send(external.commands[key].get(args, message));
+          var secondaryCache = [prefix, ifProfile(message.author.id)];
+          message.channel.send(external.commands[key].get(args, message, secondaryCache));
         }
       });
   }

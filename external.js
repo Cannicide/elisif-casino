@@ -23,9 +23,9 @@ const externalCommands = {
         usage: function(prefix) {
            return prefix + "example [argument 1] [argument 2] <optional argument 3>";
         },
-        get: function(args) {
+        get: function(args, message, secondaryCache) {
             var example = require("./ext-example"); //Your command's JS file
-            return example.example2("World"); //Content to be sent in the message
+            return example.example2("World", message, secondaryCache[0]); //Content to be sent in the message
         }
     },
     templateExample: {
