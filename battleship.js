@@ -4,7 +4,7 @@ const constants = require('./constants');
 
 function createBoard() {
     var boardArr = [];
-    for (row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    for (var row in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
         boardArr.push(["O", "O", "O", "O", "O", "O", "O", "O", "O", "O"]);
     }
     return boardArr;
@@ -48,7 +48,7 @@ function displayBoard(user) {
     var board = userObj.board;
     var strBoard = "     1  2  3  4  5  6  7  8  9  10 (Columns)";
     var num = 0;
-    for (row in board) {
+    for (var row in board) {
         var newRow1 = row.join(", ");
         num += 1;
         var prtNum = num;
