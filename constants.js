@@ -26,6 +26,7 @@ function extCommands() {
 }
 //Constant variables - Will not and should not be changed in the code
 var profileStarterAmount1 = 50; //Amount given to new casino profiles to start off
+var battleshipTurnAmount = 4;
 function getHelpCommands(parm) {
     var main = `
     **Commands List**
@@ -102,6 +103,16 @@ function getHelpCommands(parm) {
     Ends any currently running jackpot game in the guild. Only the creator of the game or an administrator can do this.
 
 
+    Battleship (start) -
+    ||\`${fix}bs [bet]\`||
+    Casino game. Starts a battleship game with the specified bet.
+
+
+    Battleship (guess) -
+    ||\`${fix}bsguess [row] [column]||
+    Guesses the coordinates of a battleship in a 10x10 game board in an already started game.
+
+
     Casino Create -
     ||\`${fix}create\`||
     Creates a casino profile (necessary to play casino games).
@@ -140,5 +151,6 @@ function getHelpCommands(parm) {
 module.exports = {
     profileStarterAmount: profileStarterAmount1,
     help: getHelpCommands,
-    setPrefix: setFix
+    setPrefix: setFix,
+    battleshipTurnMax: battleshipTurnAmount
 }
