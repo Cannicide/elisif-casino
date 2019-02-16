@@ -27,7 +27,18 @@ function rand(min, max) {
     }
     return finalResult;
 }
+function character(array){
+    let index=internalRand(array.length + -1,0)
+    return array[index];
+}
+function limarandAlgorithm(array){
+    let chrctr=character(array)
+    let denominator=array.length/2
+    return Math.ceil((array.indexOf(chrctr) + denominator)/2);
+}
 
 module.exports = {
-    num: rand
+    num: rand,
+    char:character,
+    limaRand:limarandAlgorithm
 }
