@@ -12,12 +12,12 @@ function createBoard() {
 
 
 function randRowShip() {
-    var randRow = Math.floor(Math.random() * 11);
+    var randRow = Math.floor(Math.random() * 10) + 1;
     return Number(randRow);
 }
 
 function randColShip() {
-    var randCol = Math.floor(Math.random() * 11);
+    var randCol = Math.floor(Math.random() * 10) + 1;
     return Number(randCol);
 }
 

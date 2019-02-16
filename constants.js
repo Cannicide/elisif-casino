@@ -26,7 +26,7 @@ function extCommands() {
 }
 //Constant variables - Will not and should not be changed in the code
 var profileStarterAmount1 = 50; //Amount given to new casino profiles to start off
-var battleshipTurnAmount = 10;
+var battleshipTurnAmount = 25;
 function getHelpCommands(parm) {
     var main = `
     **Commands List**
