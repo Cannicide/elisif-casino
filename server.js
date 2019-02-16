@@ -53,6 +53,7 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
+  try {
    var splitter = message.content.replace(" ", ";:splitter185151813367::");
     var splitted = splitter.split(";:splitter185151813367::");
   var prefix;
@@ -193,7 +194,7 @@ client.on('message', message => {
       }
     break;
     case "guess":
-
+      throw "CommandUtilizationError: This command does not exist yet!";
     break;
     case "donate":
         var donate = require("./donate");
@@ -257,6 +258,10 @@ client.on('message', message => {
           message.channel.send(external.commands[key].get(args, message, secondaryCache));
         }
       });
+  }
+  }
+  catch(err) {
+    message.channel.send(`Errors found:\n\`\`\`${err}\`\`\``);
   }
 });
 
