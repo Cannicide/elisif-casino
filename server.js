@@ -140,6 +140,14 @@ client.on('message', message => {
           message.channel.send(jackpot.start(args, ifProfile(message.author.id), prefix, message));
         }
       break;
+    case "bs":
+        var battleship = require("./battleship");
+        message.channel.send(battleship.start(args, ifProfile(message.author.id), prefix, message));
+      break;
+    case "bsguess":
+        var battleship = require("./battleship");
+        message.channel.send(battleship.guess(args, message));
+      break;
     case "double":
         var double = require("./double");
         message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
@@ -192,7 +200,7 @@ client.on('message', message => {
       break;
     case "profile":
       if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send(`${message.author.username} has $${profile.toLocaleString()}.`);
+        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
       }
       else {
          message.channel.send(`Use ${prefix}create to create a casino profile.`); 
@@ -200,7 +208,7 @@ client.on('message', message => {
       break;
     case "balance":
       if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send(`${message.author.username} has $${profile.toLocaleString()}.`);
+        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
       }
       else {
          message.channel.send(`Use ${prefix}create to create a casino profile.`); 
