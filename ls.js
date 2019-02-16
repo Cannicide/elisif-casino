@@ -39,7 +39,9 @@ module.exports = {
     },
     clear: function() {
         return localStorage.clear();
-    }
+    },
+    append:function(key,value){ return localStorage.setItem(key,localStorage.getItem(key)+value); },
+    renameKey:function(key,newk){ let value=localStorage.getItem(key);return localStorage.setItem(newk,value); }
 }
 
 //The node-localstorage module can be found at:
