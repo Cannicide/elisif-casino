@@ -196,11 +196,25 @@ client.on('message', message => {
 
     break;
     case "donate":
-      
+        var donate = require("./donate");
+        var receiver = message.mentions.users.first();
+        if (!receiver) {
+          message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`");
+        }
+        else if (receiver.id == message.author.id) {
+          message.channel.send("You cannot donate to yourself.");
+        }
+        else {
+          message.channel.send(donate.toUser([receiver, args[1]], ifProfile(message.author.id), ifProfile(receiver.id), prefix, message));
+        }
       break;
     case "profile":
       if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
+        var donations = 0;
+        if (ls.get(message.author.id + "donations")) {
+          donations = ls.get(message.author.id + "donations");
+        }
+        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
       }
       else {
          message.channel.send(`Use ${prefix}create to create a casino profile.`); 
