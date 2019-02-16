@@ -26,7 +26,7 @@ function extCommands() {
 }
 //Constant variables - Will not and should not be changed in the code
 var profileStarterAmount1 = 50; //Amount given to new casino profiles to start off
-var battleshipTurnAmount = 4;
+var battleshipTurnAmount = 10;
 function getHelpCommands(parm) {
     var main = `
     **Commands List**
@@ -93,6 +93,8 @@ function getHelpCommands(parm) {
 
     `
     var main2 = `
+    ** **
+    ** **
     Jackpot -
     ||\`${fix}jackpot [bet]\`||
     Casino game. Starts or joins a jackpot game. Multiplayer; anyone can join, winner takes all.
@@ -105,11 +107,11 @@ function getHelpCommands(parm) {
 
     Battleship (start) -
     ||\`${fix}bs [bet]\`||
-    Casino game. Starts a battleship game with the specified bet.
+    Casino game. Starts a battleship game with the specified bet. Play for a chance to win 20 TIMES YOUR BET!
 
 
     Battleship (guess) -
-    ||\`${fix}bsguess [row] [column]||
+    ||\`${fix}bsguess [row] [column]\`||
     Guesses the coordinates of a battleship in a 10x10 game board in an already started game.
 
 
@@ -128,8 +130,8 @@ function getHelpCommands(parm) {
     \`[argument]\` = Required parameter
     \`{argument or description}\` = Future feature that is not yet implemented
     \`[argument1/argument2]\` = You can use \`argument1\` or \`argument2\` as the parameter
-    
-
+    ** **    
+    ** **
     `; //Universal content for all variations of the help command
     var ext = `
     **External Commands (Made By Other Developers)**

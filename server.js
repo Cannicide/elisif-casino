@@ -142,7 +142,7 @@ client.on('message', message => {
       break;
     case "bs":
         var battleship = require("./battleship");
-        message.channel.send(battleship.start(args, ifprofile, prefix, message));
+        message.channel.send(battleship.start(args, ifProfile(message.author.id), prefix, message));
       break;
     case "bsguess":
         var battleship = require("./battleship");

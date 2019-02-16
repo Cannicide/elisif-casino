@@ -36,7 +36,7 @@ function setBoard(user, obj) {
 }
 function setTurn(user, int) {
     var userObj = ls.getObj(user.id + "battleshipGame");
-    userObj.turn = int;
+    userObj["turn"] = int;
     ls.setObj(user.id + "battleshipGame", userObj);
 }
 function getTurn(user) {
@@ -46,19 +46,19 @@ function getTurn(user) {
 function displayBoard(user) {
     var userObj = ls.getObj(user.id + "battleshipGame");
     var board = userObj.board;
-    var strBoard = "     1  2  3  4  5  6  7  8  9  10 (Columns)";
+    var strBoard = "```  1  2  3  4  5  6  7  8  9  10 (<- Columns)\n";
     var num = 0;
     for (var row in board) {
-        var newRow1 = row.join(", ");
+        var newRow1 = board[row].join(", ");
         num += 1;
         var prtNum = num;
-        if (num.length == 1) {
+        if (num < 10) {
             prtNum = "0" + num;
         }
-        var newRow2 = prtNum + " [ " + newRow1 + " ] \n";
+        var newRow2 = "[ " + newRow1 + " ] " + prtNum + "\n";
         strBoard += newRow2;
     }
-    strBoard += "(Rows)";
+    strBoard += "                                (^ Rows)```";
     return strBoard;
 }
 function getBet(user) {
@@ -85,23 +85,21 @@ function guessBoard(row, column, user) {
     var shipCol = getCol(user);
     var turn = getTurn(user);
     var userLS = user.id + "profile";
-    turn += 1;
-    setTurn(turn);
     if (turn == constants.battleshipTurnMax) {
         //Max turns reached, end game and lose bet
         var loss = Number(ls.get(userLS)) - bet;
         ls.set(userLS, loss);
-        board[shipRow - 1][shipCol - 1] = "**Q**";
-        setBoard(board);
-        var ret = `Sorry ${user.username}, you ran out of turns and lost $${bet.toLocaleString()}. Correct location:\n\n${displayBoard(user)}`;
+        board[shipRow - 1][shipCol - 1] = "$";
+        setBoard(user, board);
+        var ret = `Sorry ${user.username}, you ran out of turns and lost $${bet.toLocaleString()}. Correct location:\n\n${displayBoard(user)}\n(Row: ${shipRow}, Column: ${shipCol})`;
         endGame(user);
         return ret;
     }
     turn += 1;
-    setTurn(turn);
+    setTurn(user, turn);
     if (row == shipRow && column == shipCol) {
         //Victory, win bet
-        var gain = Number(ls.get(userLS)) + bet;
+        var gain = Number(ls.get(userLS)) + (bet * 20);
         ls.set(userLS, gain);
         endGame(user);
         var turnAdditive = "turn";
@@ -109,20 +107,20 @@ function guessBoard(row, column, user) {
         if (trueTurn != 1) {
             turnAdditive += "s";
         }
-        return `Congratulations ${user.username}, you hit the battleship and gained **$${bet.toLocaleString()}** in ${trueTurn} ${turnAdditive}!`;
-    }
-    else if (board[row - 1][column - 1] == "X") {
-        //This value was already guessed...
-        return `||Turn: ${turn - 1}/${constants.battleshipTurnMax}|| Those coordinates have already been guessed. Try different ones! Current board:\n\n${displayBoard(user)}`;
+        return `Congratulations ${user.username}, you hit the battleship and gained **$${(bet * 20).toLocaleString()}** in ${trueTurn} ${turnAdditive}!`;
     }
     else if (row > 10 || column > 10 || row <= 0 || column <= 0) {
         //Value is outside the battleship board array's bounds
         return `||Turn: ${turn - 1}/${constants.battleshipTurnMax}|| Those coordinates aren't even in the ocean, ${user.username}! Keep row and column guesses between 1 and 10.`;
     }
+    else if (board[row - 1][column - 1] == "X") {
+        //This value was already guessed...
+        return `||Turn: ${turn - 1}/${constants.battleshipTurnMax}|| Those coordinates have already been guessed. Try different ones! Current board:\n\n${displayBoard(user)}`;
+    }
     else {
         //Incorrect guess
         board[row - 1][column - 1] = "X";
-        setBoard(board);
+        setBoard(user, board);
         return `||Turn: ${turn - 1}/${constants.battleshipTurnMax}|| Missed the battleship. Keep trying! Current board:\n\n${displayBoard(user)}`;
     }
 }
@@ -171,7 +169,7 @@ function startGame(args, ifprofile, prefix, message) {
         return "You already have an active battleship game running. Use `/bsguess [row] [column]` to continue.\nExample: `/bsguess 1 7` will attempt to find a battleship at row 1, column 7.";
     }
     else {
-        return `Please specify a valid bet that is less than or equal to your current balance. Check with ${prefix}balance. Use \`/bsguess [row] [column]\` to continue.\nExample: \`/bsguess 1 7\` will attempt to find a battleship at row 1, column 7.`; 
+        return `Please specify a valid bet that is less than or equal to your current balance. Check with ${prefix}balance. Use \`/bs [bet]\` to continue.\nExample: \`/bs 17\` will create a battleship game with $17 at stake.`; 
     }
 }
 function guessGame(args, message) {
@@ -179,7 +177,12 @@ function guessGame(args, message) {
         //Game exists, continue guessing
         var row = args[0];
         var col = args[1];
-        return guessBoard(row, col, message.author);
+        if (row && col) {
+            return guessBoard(row, col, message.author);
+        }
+        else {
+            return `Please specify *both* a row and a column. Use \`/bsguess [row] [column]\` to continue.\nExample: \`/bsguess 1 7\` will attempt to find a battleship at row 1, column 7.`;
+        }
     }
     else {
         //Game hasn't been made yet
