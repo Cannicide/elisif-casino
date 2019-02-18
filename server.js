@@ -201,6 +201,11 @@ client.on('message', message => {
     case "guess":
         throw "CommandUtilizationError: This command does not exist yet!";
       break;
+    case "hm":
+        //Hangman game commands
+        var hm = require("./hangman");
+        message.channel.send(hm.do(args, ifProfile(message.author.id), prefix, message));
+      break;
     case "blackjack":
         var blackjack = require("./blackjack");
         if (ls.exist(message.author.id + "blackjackGame")) {
