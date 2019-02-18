@@ -115,6 +115,26 @@ function getHelpCommands(parm) {
     Guesses the coordinates of a battleship in a 10x10 game board in an already started game.
 
 
+    Blackjack -
+    ||\`${fix}blackjack [bet]\`||
+    Casino game. Starts a blackjack card game against the computer where the highest card wins, with some special exceptions.
+
+
+    Hit -
+    ||\`${fix}hit\`||
+    Used in games like blackjack and double to continue playing.
+
+
+    Stand -
+    ||\`${fix}stand\`||
+    Used in games like blackjack and double to stop playing and attempt to collect the bet money.
+
+
+    Hangman -
+    ||\`${fix}hm [start/end/guess]\`||
+    Casino game. Starts a guild-based hangman game, ends it, or guesses a letter in it, respectively. All participants gain $5000 dollars each upon victory.
+
+
     Casino Create -
     ||\`${fix}create\`||
     Creates a casino profile (necessary to play casino games).
