@@ -151,7 +151,12 @@ client.on('message', message => {
       break;
     case "double":
         var double = require("./double");
-        message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
+        if (ls.exist(message.author.id + "doubleGame")) {
+          throw "GameExistenceError: User already has a game running!\nAt server.js:154:5\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+        else {
+          message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
+        }
       break;
     case "coin":
         var coin = require("./coinflip");
@@ -194,8 +199,45 @@ client.on('message', message => {
       }
     break;
     case "guess":
-      throw "CommandUtilizationError: This command does not exist yet!";
-    break;
+        throw "CommandUtilizationError: This command does not exist yet!";
+      break;
+    case "blackjack":
+        var blackjack = require("./blackjack");
+        if (ls.exist(message.author.id + "blackjackGame")) {
+          throw "GameExistenceError: User already has a game running!\nAt server.js:201:5\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+        else {
+          message.channel.send(blackjack.start(args, ifProfile(message.author.id), prefix, message));
+        }
+      break;
+    case "hit":
+        //blackjack hit-subcommand AND double subcommand
+        var blackjack = require("./blackjack");
+        var double = require("./double");
+        if (ls.exist(message.author.id + "blackjackGame")) {
+          message.channel.send(blackjack.hit(message.author, message, prefix));
+        }
+        else if (ls.exist(message.author.id + "doubleGame")) {
+          message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
+        }
+        else {
+          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+      break;
+    case "stand":
+        //blackjack stand-subcommand AND double subcommand
+        var blackjack = require("./blackjack");
+        var double = require("./double");
+        if (ls.exist(message.author.id + "blackjackGame")) {
+          message.channel.send(blackjack.stand(message));
+        }
+        else if (ls.exist(message.author.id + "doubleGame")) {
+          message.channel.send(double.stand(message));
+        }
+        else {
+          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+      break;
     case "donate":
         var donate = require("./donate");
         var receiver = message.mentions.users.first();
@@ -261,7 +303,7 @@ client.on('message', message => {
   }
   }
   catch(err) {
-    message.channel.send(`Errors found:\n\`\`\`${err}\`\`\``);
+    message.channel.send(`Errors found:\n\`\`\`${err}\nAt ${err.stack}\`\`\``);
   }
 });
 
