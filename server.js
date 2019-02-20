@@ -80,6 +80,10 @@ client.on('message', message => {
   else {
    var args = false; 
   }
+  if (!splitted[0] || !splitted[0].match(prefix)) {
+    return false;
+    //No prefix detected
+  }
   
   if (message.content == "/sifcasino") {
       message.author.send(constants.help("main"));
@@ -200,6 +204,14 @@ client.on('message', message => {
     break;
     case "guess":
         throw "CommandUtilizationError: This command does not exist yet!";
+      break;
+    case "play":
+        var music = require("./music");
+        message.channel.send(music.play([args.join(" "), process.env.YT_API], message));
+      break;
+    case "stop":
+        var music = require("./music");
+        message.channel.send(music.stop(client, message));
       break;
     case "hm":
         //Hangman game commands
