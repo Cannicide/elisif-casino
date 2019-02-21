@@ -25,6 +25,7 @@ function playMusic(args, message) {
         var vidID = data.items[0].id.videoId;
         url = "https://www.youtube.com/watch?v=" + vidID;
       })
+    setTimeout(function() {
     voiceChannel.join().then(connection => {
         message.channel.send(`Joined music channel, ${message.author.username}.`);
         const stream = ytdl(url, { filter : 'audioonly', quality : 'highestaudio' });
@@ -34,7 +35,8 @@ function playMusic(args, message) {
             voiceChannel.leave();
         });
     }).catch(err => message.channel.send(`Errors found:\n \`\`\`${err}, ${err.stack}\`\`\``));
-    return "** **";
+        return "** **";
+    }, 1000);
 }
 
 function stopMusic(message) {

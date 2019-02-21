@@ -96,13 +96,20 @@ client.on('message', message => {
   if (message.author.bot) {
      return false; 
   }
+  var works = false;
   var pColor = message.content.toLowerCase();
   var asyncUser = require("./asyncUser");
   if ((pColor == "green" || pColor == "red" || pColor == "black") && asyncUser.getUserObj(message.author).awaitRoulette) {
     command = "rouletteSpin";
+    works = true;
   }
   else if (command == "rouletteSpin") {
     command = "casino";
+    works = true;
+  }
+  if ((!splitted[0] || !splitted[0].match(prefix)) && !works) {
+    return false;
+    //No prefix detected
   }
   if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
       ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
