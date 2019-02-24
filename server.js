@@ -80,14 +80,11 @@ client.on('message', message => {
   else {
    var args = false; 
   }
-  if (!splitted[0] || !splitted[0].match(prefix)) {
-    return false;
-    //No prefix detected
-  }
   
   if (message.content == "/sifcasino") {
       message.author.send(constants.help("main"));
       message.author.send(constants.help("main2"));
+      message.author.send(constants.help("main3"));
       message.author.send(constants.help("ext"));
   }
   else if (message.content == "/fetch prefix") {
@@ -128,6 +125,7 @@ client.on('message', message => {
     case "casino":
         message.author.send(constants.help("main"));
         message.author.send(constants.help("main2"));
+        message.author.send(constants.help("main3"));
         message.author.send(constants.help("ext"));
       break;
     case "reset":

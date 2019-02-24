@@ -128,6 +128,25 @@ function getHelpCommands(parm) {
     Stand -
     ||\`${fix}stand\`||
     Used in games like blackjack and double to stop playing and attempt to collect the bet money.
+    ** **
+    ** **
+    `
+    var main3 = `
+
+
+    Music (Play) -
+    ||\`${fix}play [song title or lyrics]\`||
+    Searches youtube with the specified keywords and plays that song/video to you in voice channel.
+
+
+    Music (Stop) -
+    ||\`${fix}stop\`||
+    Stops the music currently playing in your voice channel.
+
+
+    Statistics -
+    ||\`${fix}stats\`|| or ||\`${fix}statistics\`||
+    Views bot statistics, including ping, uptime, and number of guilds.
 
 
     Hangman -
@@ -167,6 +186,9 @@ function getHelpCommands(parm) {
     else if (parm == "main2") {
         return main2;
     }
+    else if (parm == "main3") {
+        return main3;
+    } 
 }
 
 
