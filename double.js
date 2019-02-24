@@ -20,7 +20,8 @@ function dble(args, ifprofile, prefix, message) {
           else if (probability == 0 || probability == 1 || probability == 4 || probability == 5) {
             //Lose
             ls.remove(message.author.id + "doubleGame");
-            ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - amount);
+            ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(ls.getObj(message.author.id + "doubleBetAmount")[0]));
+            ls.remove(message.author.id + "doubleBetAmount");
             return "Unlucky " + message.author.username + ", you lost ||$" + amount + "||.";
           }
           else {
@@ -46,9 +47,15 @@ function dblHit(prefix, message, ifprofile) {
 
 function dblStand(message) {
   var amount = ls.get(message.author.id + "doubleGame");
-  ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + Number(amount));
-  ls.remove(message.author.id + "doubleGame");
-  return message.author.username + ", you gained **$" + amount + "!**";
+  if (amount > 0) {
+    ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + Number(amount));
+    ls.remove(message.author.id + "doubleGame");
+    ls.remove(message.author.id + "doubleBetAmount")
+    return message.author.username + ", you gained **$" + amount + "!**";
+  }
+  else {
+    return `${message.author.username}, please start a double game first.`
+  }
 }
 
 module.exports = {
