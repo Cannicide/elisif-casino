@@ -213,6 +213,12 @@ client.on('message', message => {
     case "guess":
         throw "CommandUtilizationError: This command does not exist yet!";
       break;
+    case "stats":
+    case "statistics":
+        var statistics = require("./statistics");
+        var Bot = new statistics.Bot(client);
+        message.channel.send(statistics.view(Bot));
+      break;
     case "play":
         var music = require("./music");
         message.channel.send(music.play([args.join(" "), process.env.YT_API], message));
