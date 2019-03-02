@@ -136,12 +136,22 @@ function getHelpCommands(parm) {
 
     Music (Play) -
     ||\`${fix}play [song title or lyrics]\`||
-    Searches youtube with the specified keywords and plays that song/video to you in voice channel.
+    Searches youtube with the specified keywords and plays that song/video to you in voice channel, or adds that song/video to your queue.
 
 
     Music (Stop) -
     ||\`${fix}stop\`||
-    Stops the music currently playing in your voice channel.
+    Stops the music currently playing in your voice channel, and deletes your queue.
+
+
+    Music (List Queue) -
+    ||\`${fix}queue\`||
+    Lists currently playing music and your queue.
+
+
+    Music (Loop Queue) -
+    ||\`${fix}loop\`||
+    Loops your current queue once by adding the entire queue onto itself.
 
 
     Statistics -
