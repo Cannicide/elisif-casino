@@ -105,8 +105,8 @@ function playMusic(args, message, qPlay) {
 function stopMusic(message) {
     var voiceChannel = message.member.voiceChannel;
     if (!voiceChannel) return `You need to be in a voice channel first!`;
-    voiceChannel.leave(voiceChannel);
     ls.remove(message.author.id + "musicQueue");
+    voiceChannel.leave(voiceChannel);
     return `${message.author.username} stopped the music.`;
 }
 
