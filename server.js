@@ -328,6 +328,11 @@ client.on('message', message => {
         ls.set(message.author.id + "profile", -5);
       }
       break;
+    // Nug's text adventure game thing
+    case "adventure": 
+      var game = require("./rpg-game");
+      splash(message, ifProfile(message.author.id));
+      break;
     default:
       //External commands go here
       var external = require("./external");
