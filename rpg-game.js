@@ -28,7 +28,7 @@ function createChar(playerGold, prefix) {
     if  (message.content.startWith(prefix)) {
         var classCheck = message.content.slice(prefix.length)
     }
-    characterData.push({profile : message.author.id, hasCharacter : true, class: classCheck, playerGold: playerGold});
+    characterData.push({profile : message.author.id, hasCharacter : true, class: classCheck, level : 1, playerGold: playerGold});
     town(playerGold, prefix);
 }
 
@@ -39,10 +39,22 @@ function town(playerGold, prefix) {
     }
     switch (choice) {
         case `1`:
+            encounter(message.author.id);
         break;
 
     }
 
+}
+
+function encounter() {
+    try {
+        for (var x = 0; characterData[x].profile == message.author.id; x++) {
+
+        }
+    }
+    catch {
+        message.channel.send(`error could not find character`);
+    }
 }
 
 function BattleFunc(playerGold, playerHealth, enemydefense, defense, weaponDamage, enemyDamage, minorHealthPotion, mediumHealthPotion, largeHealthPotion, enemyHealth, prefix) {
