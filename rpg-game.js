@@ -2,37 +2,46 @@ const fs = require('fs')
 
 var characterData = [];
 
-function splash(message, profile, prefix) {
+function splash(message, playerGold, prefix) {
     message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem()`);
-    if (!profile) {
+    if (!playerGold) {
         return `Create a profile first with ${prefix}create if you want to play, pleeblian`;
     }
     else {
         var doesCharExist = false;
-        for (const x of characterData) {
-            if (characterData[x] == profile) {
+        for (var x = 0; x < characterData.length; x++) {
+            if (characterData[x].hasCharacter && characterData[x].profile == message.author.id) {
                 doesCharExist = true;
             }
         }
         if (!doesCharExist) {
-            createChar(profile, prefix);
+            createChar(playerGold, prefix);
         }
         else {
-            town(profile, prefix);
+            town(playerGold, prefix);
         }
     }
 }
 
-function createChar(profile, prefix) {
+function createChar(playerGold, prefix) {
     message.channel.send(`Would you like to be a mage (send ${prefix}mage), fighter (send ${prefix}fighter), or rouge (send ${prefix}rouge)`);
     if  (message.content.startWith(prefix)) {
         var classCheck = message.content.slice(prefix.length)
     }
-    characterData[characterData.length] = {"Profile": profile, "Class": classCheck}
-    town(profile, prefix);
+    characterData.push({profile : message.author.id, hasCharacter : true, class: classCheck, playerGold: playerGold});
+    town(playerGold, prefix);
 }
 
-function town(profile, prefix) {
+function town(playerGold, prefix) {
+    message.channel.send(`1. Battle\n2. Shop\n3. Player Info.\n4. Exit`);
+    if  (message.content.startWith(prefix)) {
+        var choice = message.content.slice(prefix.length)
+    }
+    switch (choice) {
+        case `1`:
+        break;
+
+    }
 
 }
 
