@@ -1,6 +1,7 @@
 const fs = require('fs')
 
 var characterData = [];
+var characterIndex;
 
 function splash(message, playerGold, prefix) {
     message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem()`);
@@ -12,6 +13,7 @@ function splash(message, playerGold, prefix) {
         for (var x = 0; x < characterData.length; x++) {
             if (characterData[x].hasCharacter && characterData[x].profile == message.author.id) {
                 doesCharExist = true;
+                characterIndex = x;
             }
         }
         if (!doesCharExist) {
@@ -29,6 +31,7 @@ function createChar(playerGold, prefix) {
         var classCheck = message.content.slice(prefix.length)
     }
     characterData.push({profile : message.author.id, hasCharacter : true, class: classCheck, level : 1, playerGold: playerGold});
+    characterIndex = characterData.length - 1;
     town(playerGold, prefix);
 }
 
@@ -47,13 +50,8 @@ function town(playerGold, prefix) {
 }
 
 function encounter() {
-    try {
-        for (var x = 0; characterData[x].profile == message.author.id; x++) {
-
-        }
-    }
-    catch {
-        message.channel.send(`error could not find character`);
+    if (characterData[characterIndex].level < 5) {
+        
     }
 }
 
