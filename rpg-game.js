@@ -1,7 +1,12 @@
 const fs = require('fs')
+const ls = require("./ls")
+
+var Skills = require('./rpg-skills');
 
 var characterData = [];
 var characterIndex;
+
+ls.setObj("characterArray", characterData);
 
 function splash(message, playerGold, prefix) {
     message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem()`);
@@ -26,9 +31,15 @@ function splash(message, playerGold, prefix) {
 }
 
 function createChar(playerGold, prefix) {
-    message.channel.send(`Would you like to be a mage (send ${prefix}mage), fighter (send ${prefix}fighter), or rouge (send ${prefix}rouge)`);
-    if  (message.content.startWith(prefix)) {
-        var classCheck = message.content.slice(prefix.length)
+    var classChosen = false;
+    while (!classChosen) {
+        message.channel.send(`Would you like to be a mage (send ${prefix}mage), fighter (send ${prefix}fighter), or rouge (send ${prefix}rouge)`);
+        if  (message.content.startWith(prefix)) {
+            var classCheck = message.content.slice(prefix.length)
+        }
+        if (classCheck == `mage` || classCheck == `fighter` || classCheck == `rouge` ) {
+
+        }
     }
     characterData.push({profile : message.author.id, hasCharacter : true, class: classCheck, level : 1, playerGold: playerGold});
     characterIndex = characterData.length - 1;
@@ -67,9 +78,10 @@ function BattleFunc(playerGold, playerHealth, enemydefense, defense, weaponDamag
 }
 
 function turn(playerHealth, enemydefense, defense, weaponDamage, enemyDamage, minorHealthPotion, mediumHealthPotion, largeHealthPotion, enemyHealth, prefix) {
-    message.channel.send("```1. Attack\n2. Inventory\n3. Check\n4. Run\n```");
-    var fightOption;
-    cin >> fightOption;
+    message.channel.send("```1. Attack\n2. Inventory\n3. Check\n4. Run (anything after defaults to check)\n```");
+    if  (message.content.startWith(prefix)) {
+        var fightOption = message.content.slice(prefix.length)
+    }
     if (fightOption == 1) {
         attack(weaponDamage, enemyHealth, enemydefense);
         takeDamage(playerHealth, enemyDamage, defense);
@@ -82,12 +94,50 @@ function turn(playerHealth, enemydefense, defense, weaponDamage, enemyDamage, mi
     }
     else if (fightOption == 4) {
         run(weaponDamage, enemyHealth, enemydefense, playerGold);
+    }else {
+        checkEnemy(enemyHealth, enemydefense, enemyDamage);
     }
     message.channel.send("You have " + playerHealth + "/100 HP.");
 }
 
 function attack(weaponDamage, enemyHealth, enemydefense) {
-    var baseDamage = 14;
+    message.channel.send(`Choose an attack!`)
+    switch (characterData[characterIndex].class) {
+        case "mage":
+            message.channel.send(`Here are your skills ${Skills.Mage.getSkillNames(level)}`);
+            try {
+            var deltDamage = ((Skills.Mage.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
+            enemyHealth = enemyHealth - deltDamage;
+            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
+            } catch {
+                message.channel.send(`There is no skill with that name`);
+            }
+
+        break;
+        case "fighter":
+            message.channel.send(`Here are your skills ${Skills.Fighter.getSkillNames(level)}`);
+            try {
+            var deltDamage = ((Skills.Fighter.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
+            enemyHealth = enemyHealth - deltDamage;
+            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
+            } catch {
+                message.channel.send(`There is no skill with that name`);
+            }
+
+        break;
+        case "rouge":
+            message.channel.send(`Here are your skills ${Skills.Rouge.getSkillNames(level)}`);
+            try {
+            var deltDamage = ((Skills.Rouge.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
+            enemyHealth = enemyHealth - deltDamage;
+            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
+            } catch {
+                message.channel.send(`There is no skill with that name`);
+            }
+
+        break;
+        
+    }
     var deltDamage = ((baseDamage + weaponDamage) + (rand() % 6)) - enemydefense;
     enemyHealth = enemyHealth - deltDamage;
     message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");
