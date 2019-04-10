@@ -1,0 +1,9 @@
+diff a/rpg-game.js b/rpg-game.js	(rejected hunks)
+@@ -8,7 +8,10 @@
+ 
+ ls.setObj("characterArray", characterData);
+ 
+function splash(message, playerGold, prefix) {
+     message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem()`);
+     if (!playerGold) {
+         return `Create a profile first with ${prefix}create if you want to play, pleeblian`;
