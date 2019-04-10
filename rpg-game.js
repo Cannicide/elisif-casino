@@ -8,7 +8,10 @@ var characterIndex;
 
 ls.setObj("characterArray", characterData);
 
-function splash(message, playerGold, prefix) {
+var message = {};
+
+function splash(msg, playerGold, prefix) {
+    message = msg;
     message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem()`);
     if (!playerGold) {
         return `Create a profile first with ${prefix}create if you want to play, pleeblian`;
