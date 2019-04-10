@@ -109,7 +109,7 @@ function attack(weaponDamage, enemyHealth, enemydefense) {
             var deltDamage = ((Skills.Mage.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
             enemyHealth = enemyHealth - deltDamage;
             message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
-            } catch {
+            } catch (err) {
                 message.channel.send(`There is no skill with that name`);
             }
 
@@ -120,7 +120,7 @@ function attack(weaponDamage, enemyHealth, enemydefense) {
             var deltDamage = ((Skills.Fighter.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
             enemyHealth = enemyHealth - deltDamage;
             message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
-            } catch {
+            } catch (err) {
                 message.channel.send(`There is no skill with that name`);
             }
 
@@ -131,7 +131,7 @@ function attack(weaponDamage, enemyHealth, enemydefense) {
             var deltDamage = ((Skills.Rouge.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
             enemyHealth = enemyHealth - deltDamage;
             message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
-            } catch {
+            } catch (err) {
                 message.channel.send(`There is no skill with that name`);
             }
 
