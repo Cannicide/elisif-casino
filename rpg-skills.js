@@ -1,16 +1,16 @@
-static class Skills {
+class Skills {
     constructor(level) {
         this.level = level;
     }
 }
 
-static class Mage extends Skills {
+class Mage extends Skills {
 
     getSkills() {
         var skills = [];
 
         if (this.level >= 60) {
-            skills.unshift({name : "Explosion!", damage : (15 * this.level)+ 1, description: "casts a massive exploion (over 9000)"});
+            skills.unshift({name : "Explosion!", damage : 15 * this.level, description: "casts a massive exploion over 900"});
         } else if (this.level >= 45) {
             skills.unshift({name : "Hellstorm", damage :  7 * this.level, description: "summons hellfire from the sky"});
         } else if (this.level >= 30) {
@@ -57,7 +57,7 @@ static class Mage extends Skills {
     }
 }
 
-static class Fighter extends Skills {
+class Fighter extends Skills {
 
     getSkills() {
         var skills = [];
@@ -108,15 +108,15 @@ static class Fighter extends Skills {
     }
 }
 
-static class Rouge extends Skills {
+class Rouge extends Skills {
    
     getSkills() {
         var skills = [];
 
         if (this.level >= 60) {
-            skills.unshift({name : "Assassinate", damage : 6 * this.level + Math.floor(Math.random() * (6 * this.level)), description: "a sneaky assaination stab thing"});
+            skills.unshift({name : "Assassinate", damage : 9 * this.level + Math.floor(Math.random() * (9 * this.level)), description: "a sneaky assaination stab thing"});
         } else if (this.level >= 45) {
-            skills.unshift({name : "Throw Daggers", damage : 3 * this.level + Math.floor(Math.random() * (3 * this.level)), description: "you throw a ton of small bladed weapons called daggers at your enemy"});
+            skills.unshift({name : "Throw Daggers", damage : 5 * this.level + Math.floor(Math.random() * (5 * this.level)), description: "you throw a ton of small bladed weapons called daggers at your enemy"});
         } else if (this.level >= 30) {
             skills.unshift({name : "Sneak Attack", damage : this.level + Math.floor(Math.random() * this.level), description: "you preform a sneak attack"});
         } else if (this.level >= 20) {

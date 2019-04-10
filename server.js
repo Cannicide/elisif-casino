@@ -330,8 +330,8 @@ client.on('message', message => {
       break;
     // Nug's text adventure game thing
     case "adventure": 
-      var game = require("./rpg-game");
-      splash(message, ifProfile(message.author.id), prefix);
+      const game = require("./rpg-game");
+      game.splash(message, ifProfile(message.author.id), prefix);
       break;
     default:
       //External commands go here
