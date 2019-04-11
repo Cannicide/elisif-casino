@@ -9,14 +9,7 @@ var characterIndex;
 
 ls.setObj("characterArray", characterData);
 
-<<<<<<< .merge_file_a06172
 function splash(message, profile, prefix) {
-=======
-var message = {};
-
-function splash(msg, playerGold, prefix) {
-    message = msg;
->>>>>>> .merge_file_a12140
     message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem()`);
     if (!profile) {
         return `Create a profile first with ${prefix}create if you want to play, pleeblian`;
@@ -130,17 +123,10 @@ function attack(enemy) {
         case "mage":
             message.channel.send(`Here are your skills ${skills.Mage.getSkillNames(level)}`);
             try {
-<<<<<<< .merge_file_a06172
                 var deltDamage = ((skills.Mage.useSkills(prefix, enemy) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
                 enemy.baseHealth -= deltDamage;
                 message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemy.baseHealth + "100 HP");                
-            } catch {
-=======
-            var deltDamage = ((Skills.Mage.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
-            enemyHealth = enemyHealth - deltDamage;
-            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
             } catch (err) {
->>>>>>> .merge_file_a12140
                 message.channel.send(`There is no skill with that name`);
             }
 
@@ -148,17 +134,10 @@ function attack(enemy) {
         case "fighter":
             message.channel.send(`Here are your skills ${skills.Fighter.getSkillNames(level)}`);
             try {
-<<<<<<< .merge_file_a06172
                 var deltDamage = ((skills.Fighter.useSkills(prefix, enemy) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
                 enemy.baseHealth -= deltDamage;
                 message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemy.baseHealth + "100 HP");                
-            } catch {
-=======
-            var deltDamage = ((Skills.Fighter.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
-            enemyHealth = enemyHealth - deltDamage;
-            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
             } catch (err) {
->>>>>>> .merge_file_a12140
                 message.channel.send(`There is no skill with that name`);
             }
 
@@ -166,23 +145,15 @@ function attack(enemy) {
         case "rouge":
             message.channel.send(`Here are your skills ${skills.Rouge.getSkillNames(level)}`);
             try {
-<<<<<<< .merge_file_a06172
                 var deltDamage = ((skills.Rouge.useSkills(prefix, enemy) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
                 enemy.baseHealth -= deltDamage;
                 message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemy.baseHealth + "100 HP");                
-            } catch {
-=======
-            var deltDamage = ((Skills.Rouge.useSkills(prefix, enemy) + weaponDamage) + (rand() % 6)) - enemydefense;
-            enemyHealth = enemyHealth - deltDamage;
-            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemyHealth + "100 HP");                
             } catch (err) {
->>>>>>> .merge_file_a12140
                 message.channel.send(`There is no skill with that name`);
             }
-
         break;
-        
     }
+    
 }
 
 function takeDamage(enemy) {
@@ -279,10 +250,6 @@ function run(enemy) {
     }
 }
 
-<<<<<<< .merge_file_a06172
-module.exports = {splash: splash}
-=======
 module.exports = {
     splash: splash
 }
->>>>>>> .merge_file_a12140
