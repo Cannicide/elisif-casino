@@ -36,8 +36,8 @@ class Mage extends Skills {
     }
 
     useSkill( prefix, enemy) {
-        if (message.content.startingWith(prefix)) {
-            var skillRequested = message.content.slice(prefix.length);
+        if (msg.content.startingWith(prefix)) {
+            var skillRequested = msg.content.slice(prefix.length);
             var skillExists = false;
             var skillIndex;
             for (var x = 0; x > this.getSkills().length; x++) {
@@ -47,12 +47,12 @@ class Mage extends Skills {
                 }
             }
             if (!skillExists) {
-                message.channel.send(`No such skill exists`);
+                msg.channel.send(`No such skill exists`);
                 return null;
             }
             return this.getSkills()[x].damage
         }
-        message.channel.send()
+        msg.channel.send()
         this.getSkills()
     }
 }
@@ -87,8 +87,8 @@ class Fighter extends Skills {
     }
 
     useSkill(prefix, enemy) {
-        if (message.content.startingWith(prefix)) {
-            var skillRequested = message.content.slice(prefix.length);
+        if (msg.content.startingWith(prefix)) {
+            var skillRequested = msg.content.slice(prefix.length);
             var skillExists = false;
             var skillIndex;
             for (var x = 0; x > this.getSkills().length; x++) {
@@ -98,12 +98,12 @@ class Fighter extends Skills {
                 }
             }
             if (!skillExists) {
-                message.channel.send(`No such skill exists`);
+                msg.channel.send(`No such skill exists`);
                 return null;
             }
             return this.getSkills()[x].damage
         }
-        message.channel.send()
+        msg.channel.send()
         this.getSkills()
     }
 }
@@ -138,8 +138,8 @@ class Rouge extends Skills {
     }
 
     useSkill( prefix, enemy) {
-        if (message.content.startingWith(prefix)) {
-            var skillRequested = message.content.slice(prefix.length);
+        if (msg.content.startingWith(prefix)) {
+            var skillRequested = msg.content.slice(prefix.length);
             var skillExists = false;
             var skillIndex;
             for (var x = 0; x > this.getSkills().length; x++) {
@@ -149,12 +149,12 @@ class Rouge extends Skills {
                 }
             }
             if (!skillExists) {
-                message.channel.send(`No such skill exists`);
+                msg.channel.send(`No such skill exists`);
                 return null;
             }
             return this.getSkills()[x].damage
         }
-        message.channel.send()
+        msg.channel.send()
         this.getSkills()
     }
 }
