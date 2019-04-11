@@ -46,7 +46,7 @@ function createChar(profile, prefix) {
 
         }
     }
-    characterData.push({profile : msg.author.id, hasCharacter : true, class: classCheck, level : 1, 
+    characterData.push({name : msg.author.username, hasCharacter : true, class: classCheck, level : 1, 
                         playerGold: profile, maxHealth: 100, currHealth: 100, defense: 0, weaponDamage: 0,
                         potions: {minorHealthPotion: 0, mediumHealthPotion: 0, largeHealthPotion: 0}});
 
@@ -55,21 +55,39 @@ function createChar(profile, prefix) {
 }
 
 function town(prefix) {
-    msg.channel.send(`1. Battle\n2. Shop\n3. Player Info.\n4. Exit`);
-    if  (message.content.startWith(prefix)) {
-        var choice = message.content.slice(prefix.length)
-        msg = message;
+    var playingGame = true;
+    while (playingGame) {
+        msg.channel.send(`1. Battle\n2. Shop\n3. Player Info.\n4. Exit`);
+        if  (message.content.startWith(prefix)) {
+            var choice = message.content.slice(prefix.length)
+            msg = message;
+        }
+        switch (choice) {
+            case `1`:
+                encounter();
+            break;
+            case `2`:
+                msg.channel.send(`comming soon`);
+            break;
+            case `3`:
+                msg.channel.send("```Name: " + characterData[characterIndex].name + 
+                                    "\nClass: " + characterData[characterIndex].class + 
+                                    "\nLevel: " + characterData[characterIndex].level.toString() + 
+                                    "\nHealth: " + characterData[characterIndex].currHealth.toString() + "/" + characterData[characterIndex].maxHealth.toString() + 
+                                    "\nGold: " + characterData[characterIndex].playerGold.toString() + 
+                                    "\nDefense: " + characterData[characterIndex].defense.toString() + 
+                                    "\nDamage from Current Weapon: " + characterData[characterIndex].weaponDamage.toString() + 
+                                    "\nAmount of Minor Health Potion: " + characterData[characterIndex].potion.minorHealthPotion.toString() + 
+                                    "\nAmount of Medium Health Potion: " + characterData[characterIndex].potion.mediumHealthPotion.toString() + 
+                                    "\nAmount of Large Health Potion: " + characterData[characterIndex].potion.largeHealthPotion.toString() + "```");
+            break;
+            case `4`:
+                playingGame = false;
+            break;
+            default:
+                msg.channel.send(`Try again (only numbers 1 - 4)`);
+        }
     }
-    switch (choice) {
-        case `1`:
-            encounter();
-        break;
-        case `2`:
-            msg.channel.send(`comming soon`);
-        break;
-
-    }
-
 }
 
 function encounter() {
@@ -86,7 +104,6 @@ function battleFunc(enemy, prefix) {
     turn(enemy, prefix);
     characterData[characterIndex].playerGold = characterData[characterIndex].playerGold + ((Math.Random() *  25) + 25);
     msg.channel.send("Enemy DEFEATED!!!" + characterData[characterIndex].playerGold);
-    town(prefix);
 
 }
 
