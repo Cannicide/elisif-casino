@@ -28,7 +28,7 @@ class Mage extends Skills {
 
     getSkillNames() {
         var skillNames;
-        for (var x = 0; x > this.getSkills().length; x++) {
+        for (var x = 0; x < this.getSkills().length; x++) {
             skillNames += `${x+1}. ${this.getSkills()[x].name}`;
         }
 
@@ -40,7 +40,7 @@ class Mage extends Skills {
             var skillRequested = msg.content.slice(prefix.length);
             var skillExists = false;
             var skillIndex;
-            for (var x = 0; x > this.getSkills().length; x++) {
+            for (var x = 0; x < this.getSkills().length; x++) {
                 if (skillRequested == this.getSkills()[x].name) {
                     skillExists = true;
                     skillIndex = x;
@@ -79,7 +79,7 @@ class Fighter extends Skills {
 
     getSkillNames() {
         var skillNames;
-        for (var x = 0; x > this.getSkills().length; x++) {
+        for (var x = 0; x < this.getSkills().length; x++) {
             skillNames += `${x+1}. ${this.getSkills()[x].name}`;
         }
 
@@ -91,7 +91,7 @@ class Fighter extends Skills {
             var skillRequested = msg.content.slice(prefix.length);
             var skillExists = false;
             var skillIndex;
-            for (var x = 0; x > this.getSkills().length; x++) {
+            for (var x = 0; x < this.getSkills().length; x++) {
                 if (skill == this.getSkills()[x].name) {
                     skillExists = true;
                     skillIndex = x;
@@ -130,7 +130,7 @@ class Rouge extends Skills {
 
     getSkillNames() {
         var skillNames;
-        for (var x = 0; x > this.getSkills().length; x++) {
+        for (var x = 0; x < this.getSkills().length; x++) {
             skillNames += `${x+1}. ${this.getSkills()[x].name}`;
         }
 
@@ -142,7 +142,7 @@ class Rouge extends Skills {
             var skillRequested = msg.content.slice(prefix.length);
             var skillExists = false;
             var skillIndex;
-            for (var x = 0; x > this.getSkills().length; x++) {
+            for (var x = 0; x < this.getSkills().length; x++) {
                 if (skill == this.getSkills()[x].name) {
                     skillExists = true;
                     skillIndex = x;
