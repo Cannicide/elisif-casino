@@ -333,6 +333,30 @@ client.on('message', message => {
       const game = require("./rpg-game");
       game.splash(message, ifProfile(message.author.id), prefix);
       break;
+    case "class":
+      var classCheck = args[0];
+      if (classCheck == `mage` || classCheck == `fighter` || classCheck == `rouge` ) {
+          game.createChar(message, ifProfile(message.author.id), prefix);
+      } else {
+          message.channel.send("you bad, try agian");
+      }
+    break;
+    case "town":
+      var choice = args[0];
+      game.town(message, choice);
+    break;
+    case "fightOption":
+      var fightOption = args[0];
+      game.turn(prefix, message, fightOption);
+    break;
+    case "potion":
+      var potionType = args[0];
+      game.usePotion(message, potionType);
+    break;
+    case "attack":
+      var skillSearchingFor = args[0];
+      game.useSkill(prefix, message, skillSearchingFor);
+    break;
     default:
       //External commands go here
       var external = require("./external");

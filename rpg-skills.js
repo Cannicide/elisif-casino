@@ -10,19 +10,16 @@ class Mage extends Skills {
         var skills = [];
 
         if (this.level >= 60) {
-            skills.unshift({name : "Explosion!", damage : 15 * this.level, description: "casts a massive exploion over 900"});
+            skills.unshift({name : "Explosion! (/attack expolsion)", id: "expolsion", damage : 15 * this.level, description: "casts a massive exploion over 900"});
         } else if (this.level >= 45) {
-            skills.unshift({name : "Hellstorm", damage :  7 * this.level, description: "summons hellfire from the sky"});
+            skills.unshift({name : "Hellstorm (/attack hellstom)", id: "hellstom", damage :  7 * this.level, description: "summons hellfire from the sky"});
         } else if (this.level >= 30) {
-            skills.unshift({name : "Ice Javalin", damage : 4 * this.level, description: "impale an enemy with a ice spike"});
+            skills.unshift({name : "Ice Javalin (/attack iceJavalin)", id: "iceJavalin", damage : 4 * this.level, description: "impale an enemy with a ice spike"});
         } else if (this.level >= 20) {
-            skills.unshift({name : "Lightning", damage : 60, description: "a lightning bolt zaps your foes"});
+            skills.unshift({name : "Lightning (/attack lightning)", id: "lightning", damage : 60, description: "a lightning bolt zaps your foes"});
         } else if (this.level >= 10) {
-            skills.unshift({name : "Firebolt", damage : 30, description: "you hurl a ball of fire at your target"});
-        } else {
-            skills.unshift({name : "Kindle", damage : 12, description: "makes your foe warm and toasty"});
+            skills.unshift({name : "Firebolt (/attack firebolt)", id: "firebolt", damage : 30, description: "you hurl a ball of fire at your target"});
         }
-
         return skills;
     }
 
@@ -35,13 +32,15 @@ class Mage extends Skills {
         return skillNames;
     }
 
-    useSkill( prefix, enemy) {
+    useSkill(prefix, msg) {
+        var skillRequested;
         if (msg.content.startingWith(prefix)) {
-            var skillRequested = msg.content.slice(prefix.length);
+            skillRequested = msg.content.slice(prefix.length);
+        }
             var skillExists = false;
             var skillIndex;
             for (var x = 0; x < this.getSkills().length; x++) {
-                if (skillRequested == this.getSkills()[x].name) {
+                if (skillRequested == this.getSkills()[x].id) {
                     skillExists = true;
                     skillIndex = x;
                 }
@@ -50,10 +49,7 @@ class Mage extends Skills {
                 msg.channel.send(`No such skill exists`);
                 return null;
             }
-            return this.getSkills()[x].damage
-        }
-        msg.channel.send()
-        this.getSkills()
+        return this.getSkills()[skillIndex].damage
     }
 }
 
@@ -63,15 +59,15 @@ class Fighter extends Skills {
         var skills = [];
 
         if (this.level >= 60) {
-            skills.unshift({name : "Falcon Punch!", damage : 10 * this.level, description: "FAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLLLLLLLLLCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOONNNNNNNNNNNNNNNNNNNN PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPUUUUUUUUUUUUUUUUUUUUUUUUUUUUUNNNNNNNNNNNNNNNNNNNNNNNNNNNNCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCHHHHHHHHHHHHHHHHHHHH"});
+            skills.unshift({name : "Falcon Punch! (/attack falconPunch)", id: "falconPunch", damage : 10 * this.level, description: "FAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLLLLLLLLLCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOONNNNNNNNNNNNNNNNNNNN PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPUUUUUUUUUUUUUUUUUUUUUUUUUUUUUNNNNNNNNNNNNNNNNNNNNNNNNNNNNCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCHHHHHHHHHHHHHHHHHHHH"});
         } else if (this.level >= 45) {
-            skills.unshift({name : "Suplex", damage : 3 * this.level, description: "a sick suplex"});
+            skills.unshift({name : "Suplex (/attack suplex)", id: "suplex", damage : 3 * this.level, description: "a sick suplex"});
         } else if (this.level >= 30) {
-            skills.unshift({name : "Charge", damage : 150, description: "a charge, what do you expect"});
+            skills.unshift({name : "Charge (/attack charge)", id: "charge", damage : 150, description: "a charge, what do you expect"});
         } else if (this.level >= 20) {
-            skills.unshift({name : "Slam", damage : 25, description: "you strike your foe witha downward... blow? i guess"});
+            skills.unshift({name : "Slam (/attack slam)", id: "slam", damage : 25, description: "you strike your foe witha downward... blow? i guess"});
         } else if (this.level >= 10) {
-            skills.unshift({name : "Punch", damage : 10, description: "you take your hand meat and connect it to someone's face"});
+            skills.unshift({name : "Punch (/attack punch)", id: "punch", damage : 10, description: "you take your hand meat and connect it to someone's face"});
         }
 
         return skills;
@@ -86,13 +82,15 @@ class Fighter extends Skills {
         return skillNames;
     }
 
-    useSkill(prefix, enemy) {
+    useSkill(prefix, msg) {
+        var skillRequested;
         if (msg.content.startingWith(prefix)) {
-            var skillRequested = msg.content.slice(prefix.length);
+            skillRequested = msg.content.slice(prefix.length);
+        }
             var skillExists = false;
             var skillIndex;
             for (var x = 0; x < this.getSkills().length; x++) {
-                if (skill == this.getSkills()[x].name) {
+                if (skillRequested == this.getSkills()[x].id) {
                     skillExists = true;
                     skillIndex = x;
                 }
@@ -101,10 +99,7 @@ class Fighter extends Skills {
                 msg.channel.send(`No such skill exists`);
                 return null;
             }
-            return this.getSkills()[x].damage
-        }
-        msg.channel.send()
-        this.getSkills()
+        return this.getSkills()[skillIndex].damage
     }
 }
 
@@ -114,15 +109,15 @@ class Rouge extends Skills {
         var skills = [];
 
         if (this.level >= 60) {
-            skills.unshift({name : "Assassinate", damage : 9 * this.level + Math.floor(Math.random() * (9 * this.level)), description: "a sneaky assaination stab thing"});
+            skills.unshift({name : "Assassinate (/attack assassinate)", id: "assassinate", damage : 9 * this.level + Math.floor(Math.random() * (9 * this.level)), description: "a sneaky assaination stab thing"});
         } else if (this.level >= 45) {
-            skills.unshift({name : "Throw Daggers", damage : 5 * this.level + Math.floor(Math.random() * (5 * this.level)), description: "you throw a ton of small bladed weapons called daggers at your enemy"});
+            skills.unshift({name : "Throw Daggers (/attack throwDaggers)", id: "throwDaggers", damage : 5 * this.level + Math.floor(Math.random() * (5 * this.level)), description: "you throw a ton of small bladed weapons called daggers at your enemy"});
         } else if (this.level >= 30) {
-            skills.unshift({name : "Sneak Attack", damage : this.level + Math.floor(Math.random() * this.level), description: "you preform a sneak attack"});
+            skills.unshift({name : "Sneak Attack (/attack sneakAttack)", id: "sneakAttack", damage : this.level + Math.floor(Math.random() * this.level), description: "you preform a sneak attack"});
         } else if (this.level >= 20) {
-            skills.unshift({name : "Back Stab", damage : this.level * 2, description: "french man"});
+            skills.unshift({name : "Back Stab (/attack backStab)", id: "backStab", damage : this.level * 2, description: "french man"});
         } else if (this.level >= 10) {
-            skills.unshift({name : "Stab", damage : 11, description: "you inject a foe with metal and then you take it out"});
+            skills.unshift({name : "Stab (/attack stab)", id: "stab", damage : 11, description: "you inject a foe with metal and then you take it out"});
         }
 
         return skills;
@@ -137,13 +132,15 @@ class Rouge extends Skills {
         return skillNames;
     }
 
-    useSkill( prefix, enemy) {
+    useSkill(prefix, msg) {
+        var skillRequested;
         if (msg.content.startingWith(prefix)) {
-            var skillRequested = msg.content.slice(prefix.length);
+            skillRequested = msg.content.slice(prefix.length);
+        }
             var skillExists = false;
             var skillIndex;
             for (var x = 0; x < this.getSkills().length; x++) {
-                if (skill == this.getSkills()[x].name) {
+                if (skillRequested == this.getSkills()[x].id) {
                     skillExists = true;
                     skillIndex = x;
                 }
@@ -152,10 +149,7 @@ class Rouge extends Skills {
                 msg.channel.send(`No such skill exists`);
                 return null;
             }
-            return this.getSkills()[x].damage
-        }
-        msg.channel.send()
-        this.getSkills()
+        return this.getSkills()[skillIndex].damage
     }
 }
 

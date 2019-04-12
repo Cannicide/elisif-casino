@@ -25,53 +25,39 @@ function splash(message, profile, prefix) {
             }
         }
         if (!doesCharExist) {
-            createChar(message, profile, prefix);
+            message.channel.send(`Would you like to be a mage (send ${prefix}class mage), fighter (send ${prefix}class fighter), or rouge (send ${prefix}class rouge)`);
         }
         else {
             characterData[characterIndex].playerGold = profile;
-            town(prefix);
+            message.channel.send(`${prefix}town battle\n${prefix}town shop\n${prefix}town playerInfo.\n${prefix}town exit`);
         }
     }
 }
 
 function createChar(message, profile, prefix) {
-    console.log("creating character");
-    var classChosen = false;
-    while (!classChosen) {
-        message.channel.send(`Would you like to be a mage (send ${prefix}mage), fighter (send ${prefix}fighter), or rouge (send ${prefix}rouge)`);
-        if  (message.content.startsWith(prefix)) {
-            var classCheck = message.content.slice(prefix.length);
-        }
-        if (classCheck == `mage` || classCheck == `fighter` || classCheck == `rouge` ) {
-            classChosen = true;
-        }
-    }
     characterData.push({name : message.author.username, hasCharacter : true, class: classCheck, level : 1, 
                         playerGold: profile, maxHealth: 100, currHealth: 100, defense: 0, weaponDamage: 0,
-                        potions: {minorHealthPotion: 0, mediumHealthPotion: 0, largeHealthPotion: 0}});
+                        potions: {minorHealthPotion: 0, mediumHealthPotion: 0, largeHealthPotion: 0},
+                        enemy: null});
 
     characterIndex = characterData.length - 1;
     ls.setObj("characterArray", characterData);
-    town(profile, prefix);
+    message.channel.send(`${prefix}town battle\n${prefix}town shop\n${prefix}town playerInfo.\n${prefix}town exit`);
 }
 
-function town(prefix) {
-    console.log("in town");
-    var playingGame = true;
-    while (playingGame) {
-        message.channel.send(`${prefix}1. Battle\n${prefix}2. Shop\n${prefix}3. Player Info.\n${prefix}4. Exit`);
-        if  (message.content.startsWith(prefix)) {
-            var choice = message.content.slice(prefix.length)
-            
-        }
+function town(message, choice) {
         switch (choice) {
-            case `1`:
-                encounter();
+            case `battle`:
+                if (characterData[characterIndex].level < 5) {
+                    characterData[characterIndex].enemy = enemies.Enemies.getEnemies()[Math.random() * enemies.Enemies.levelOneToFive.length];
+                    ls.setObj("characterArray", characterData);
+                    message.channel.send(`${prefix}fightOption attack\n${prefix}fightOption inventory\n${prefix}fightOption check\n${prefix}fightOption run`);
+                }
             break;
-            case `2`:
+            case `shop`:
                 message.channel.send(`comming soon`);
             break;
-            case `3`:
+            case `playerInfo`:
                 message.channel.send("```Name: " + characterData[characterIndex].name + 
                                     "\nClass: " + characterData[characterIndex].class + 
                                     "\nLevel: " + characterData[characterIndex].level.toString() + 
@@ -83,118 +69,129 @@ function town(prefix) {
                                     "\nAmount of Medium Health Potion: " + characterData[characterIndex].potion.mediumHealthPotion.toString() + 
                                     "\nAmount of Large Health Potion: " + characterData[characterIndex].potion.largeHealthPotion.toString() + "```");
             break;
-            case `4`:
-                playingGame = false;
+            case `exit`:
             break;
             default:
                 message.channel.send(`Try again (only numbers 1 - 4)`);
         }
-    }
 }
 
-function encounter() {
-    if (characterData[characterIndex].level < 5) {
-        var enemy = enemies.Enemies.getEnemies()[Math.random() * enemies.Enemies.levelOneToFive.length];
-        turn(enemy, prefix)
-    } else {
+
+function turn(prefix, message, fightOption) {
+    if (fightOption == "attack") {
+        attack(prefix, message);
+        takeDamage(message);
+    }
+    else if (fightOption == "inventory") {
+        message.channel.send("You Have " + potions.minorHealthPotion + " Minor Health Potions, " + 
+                              potions.mediumHealthPotion + " Medium Health Potions, and " + 
+                              potions.largeHealthPotion + " Large Health Potions.");
+
+        message.channel.send(`Type ${prefix}potion minor, ${prefix}potion medium, or ${prefix}potion large to choose`);    
+        usePotion(prefix);
         
+        takeDamage(message)
     }
+    else if (fightOption == "check") {
+        checkEnemy();
+    }
+    else if (fightOption == "run") {
+        if (run()) {
+            characterData[characterIndex].enemy = null;
+        } else {
+            takeDamage(message);
+        }
+    } else {
+        message.channel.send(`Try again`);
+    }    
 }
 
-function turn(enemy, prefix) {
-    var battleEnd = false;
-    while (!battleEnd) {
-        message.channel.send(`${prefix}1. Attack\n${prefix}2. Inventory\n${prefix}3. Check\n${prefix}4. Run`);
-        if  (message.content.startsWith(prefix)) {
-            var fightOption = message.content.slice(prefix.length);
-            
-        }
-        var choiceMade = false;
-        while (!choiceMade) {
-            if (fightOption == 1) {
-                choiceMade = true;
-                attack(enemy, prefix);
-                takeDamage(enemy);
-            }
-            else if (fightOption == 2) {
-                choiceMade = true;
-                usePotion(prefix);
-                takeDamage(enemy)
-            }
-            else if (fightOption == 3) {
-                choiceMade = true;
-                checkEnemy(enemy);
-            }
-            else if (fightOption == 4) {
-                choiceMade = true;
-                if (run()) {
-                    battleEnd = true;
-                } else {
-                    takeDamage(enemy);
-                }
-            } else {
-                message.channel.send(`Try again`);
-                message.channel.send(`${prefix}1. Attack\n${prefix}2. Inventory\n${prefix}3. Check\n${prefix}4. Run`);
-            }
-        }
-        if (enemy.baseHealth < 1) {
-            battleEnd = false;
-            characterData[characterIndex].playerGold = characterData[characterIndex].playerGold + ((Math.Random() *  25) + 25);
-            message.channel.send("Enemy DEFEATED!!!" + characterData[characterIndex].playerGold);
-        }
-    }
-    if (characterData[characterIndex].currHealth < 1){
-        message.channel.send(`as punishment for your death your character get deleted`);
-        characterData.splice(characterIndex, 1);
-        message.channel.send(`you will now be exited from the game`);
-    }
-}
-
-function attack(enemy, prefix) {
-    message.channel.send(`Choose an attack!`)
+function attack(prefix, message) {
+    message.channel.send(`Choose an attack! (use the command in the parenthesis)`)
     switch (characterData[characterIndex].class) {
         case "mage":
             message.channel.send(`Here are your skills ${skills.Mage.getSkillNames(level)}`);
-            var deltDamage = ((skills.Mage.useSkill(prefix, enemy) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
-            enemy.baseHealth -= deltDamage;
-            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemy.baseHealth + "100 HP"); 
+            var deltDamage = ((useSkill(prefix, message) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
+            characterData[characterIndex].enemy.baseHealth -= deltDamage;
+            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + characterData[characterIndex].enemy.baseHealth + "100 HP"); 
         break;
         case "fighter":
             message.channel.send(`Here are your skills ${skills.Fighter.getSkillNames(level)}`);
-            var deltDamage = ((skills.Fighter.useSkill(prefix, enemy) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
-            enemy.baseHealth -= deltDamage;
-            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemy.baseHealth + "100 HP");
+            var deltDamage = ((useSkill(prefix, message) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
+            characterData[characterIndex].enemy.baseHealth -= deltDamage;
+            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + characterData[characterIndex].enemy.baseHealth + "100 HP");
         break;
         case "rouge":
             message.channel.send(`Here are your skills ${skills.Rouge.getSkillNames(level)}`);
-            var deltDamage = ((skills.Rouge.useSkill(prefix, enemy) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
-            enemy.baseHealth -= deltDamage;
-            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + enemy.baseHealth + "100 HP");
+            var deltDamage = ((useSkill(prefix, message) + characterData[characterIndex].weaponDamage) + (Math.Random() *  6)) - enemy.defense;
+            characterData[characterIndex].enemy.baseHealth -= deltDamage;
+            message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + characterData[characterIndex].enemy.baseHealth + "100 HP");
         break;
+    }
+    if (characterData[characterIndex].enemy.baseHealth < 1) {
+        characterData[characterIndex].playerGold = characterData[characterIndex].playerGold + ((Math.Random() *  25) + 25);
+        ls.setObj("characterArray", characterData);
+        message.channel.send("Enemy DEFEATED!!!" + characterData[characterIndex].playerGold);
     }
 }
 
-function takeDamage(enemy) {
+function useSkill(prefix, msg, skillSearchingFor) {
+    var skillRequested = skillSearchingFor;
+    if (msg.content.startingWith(prefix)) {
+        skillRequested = msg.content.slice(prefix.length);
+    }
+    var classSkills;
+    switch (characterData[characterIndex].class) {
+        case "mage":
+            classSkills = skills.Mage;
+        break;
+        case "fighter":
+            classSkills = skills.Fighter;
+        break;
+        case "rouge":
+            classSkills = skills.Rouge;
+        break;
+    }
+    var skillExists = false;
+    var skillIndex;
+    for (var x = 0; x < classSkills.getSkills().length; x++) {
+        if (skillRequested == classSkills.getSkills()[x].id) {
+            skillExists = true;
+            skillIndex = x;
+        }
+    }
+    if (!skillExists) {
+        msg.channel.send(`No such skill exists`);
+        return null;
+    }
+        return this.getSkills()[skillIndex].damage
+}
+
+function takeDamage(message) {
     if (characterData[characterIndex].currHealth > 0) {
-        if (enemy.baseHealth > 0) {
-            var enemyAttack = enemy.attacks[enemy.attacks.length * Math.Random()]
-            message.channel.send(`${enemy.name} used ${enemyAttack.name}`)
-            var DamageTaken = enemy.damage - characterData[characterIndex].defense;
+        if (characterData[characterIndex].enemy.baseHealth > 0) {
+            var enemyAttack = characterData[characterIndex].enemy.attacks[characterData[characterIndex].enemy.attacks.length * Math.Random()]
+            message.channel.send(`${characterData[characterIndex].enemy.name} used ${enemyAttack.name}`)
+            var DamageTaken = characterData[characterIndex].enemy.damage - characterData[characterIndex].defense;
             characterData[characterIndex].currHealth -= DamageTaken;
+            ls.setObj("characterArray", characterData);
             message.channel.send("You have taken " + DamageTaken + " damage.");
             message.channel.send("You have " + characterData[characterIndex].currHealth + "/100 HP.");
         }
     } else {
-        battleEnd = true;
         message.channel.send("You have died.");
+        message.channel.send(`as punishment for your death your character get deleted`);
+        characterData.splice(characterIndex, 1);
+        ls.setObj("characterArray", characterData);
+        message.channel.send(`you will now be exited from the game`);
     }
 }
 
-function minorHealthPotionCheck() {
+function minorHealthPotionCheck(message) {
     if (potions.minorHealthPotion > 0) {
         message.channel.send("Gained 10 HP");
         characterData[characterIndex].currHealth += 10;
-        potions.minorHealthPotion -= 1;
+        characterData[characterIndex].potions.minorHealthPotion -= 1;
         if (characterData[characterIndex].currHealth > characterData[characterIndex].maxHealth) {
             message.channel.send("Overdose inflicted. Lost 20 HP");
             characterData[characterIndex].currHealth -= 20;
@@ -204,11 +201,11 @@ function minorHealthPotionCheck() {
     }
 }
 
-function mediumHealthPotionCheck() {
+function mediumHealthPotionCheck(message) {
     if (potions.mediumHealthPotion > 0) {
         message.channel.send("Gained 25 HP");
         characterData[characterIndex].currHealth += 25;
-        potions.mediumHealthPotion -= 1;
+        characterData[characterIndex].potions.mediumHealthPotion -= 1;
         if (characterData[characterIndex].currHealth > 100) {
             message.channel.send("Overdose inflicted. Lost 35 HP");
             characterData[characterIndex].currHealth -= 50;
@@ -218,42 +215,38 @@ function mediumHealthPotionCheck() {
     }
 }
 
-function largeHealthPotionCheck() {
+function largeHealthPotionCheck(message) {
     if (potions.largeHealthPotion > 0) {
         message.channel.send("Restored All Health");
         characterData[characterIndex].currHealth = characterData[characterIndex].maxHealth;
-        potions.largeHealthPotion -= 1;
+        characterData[characterIndex].potions.largeHealthPotion -= 1;
     } else {
         message.channel.send(`You have no large HP potions`);
     }
 }
 
-function usePotion(prefix) {
-    message.channel.send("You Have " + potions.minorHealthPotion + " Minor Health Potions, " + potions.mediumHealthPotion + " Medium Health Potions, and " + potions.largeHealthPotion + " Large Health Potions.");
-    message.channel.send(`Type ${prefix}minor, ${prefix}medium, or ${prefix}large to choose`);
-    if (message.content.startsWith(prefix)) {
-        var potionType = message.content.slice(prefix.length)
-        
-    }
+function usePotion(message, potionType) {
     switch (potionType) {
         case minor:
-            minorHealthPotionCheck();
+            minorHealthPotionCheck(message);
             break;
         case medium:
-            mediumHealthPotionCheck()
+            mediumHealthPotionCheck(message)
             break;
         case large:
-            largeHealthPotionCheck();
+            largeHealthPotionCheck(message);
             break;
         default:
             message.channel.send("you failure");
     }
+    ls.setObj("characterArray", characterData);
 }
 
-function checkEnemy(enemy) {
-    message.channel.send("The Enemy has:" + enemy.baseHealth + " /"+ enemy.maxHealth +" HP\n"
-                         + enemy.defense + " Defense\n" +
-                         "And the attacks are: " + Enemies.checkEnemyAttacks(enemy));
+function checkEnemy() {
+    message.channel.send("The Enemy has:" + characterData[characterIndex].enemy.baseHealth + " /" 
+                        + characterData[characterIndex].enemy.maxHealth +" HP\n"
+                        + characterData[characterIndex].enemy.defense + " Defense\n" +
+                         "And the attacks are: " + Enemies.checkEnemyAttacks(characterData[characterIndex].enemy));
 }
 
 function run() {
@@ -261,6 +254,7 @@ function run() {
     if (runawayChance == 1) {
         message.channel.send("You Ran away. Lost 25 gold.");
         characterData[characterIndex].playerGold -= 25;
+        ls.setObj("characterArray", characterData);
         return true;
     }
     else {
@@ -270,5 +264,11 @@ function run() {
 }
 
 module.exports = {
-    splash: splash
+    splash: splash,
+    createChar: createChar,
+    town: town,
+    turn: turn,
+    usePotion: usePotion,
+    player: characterData[characterIndex],
+    useSkill: useSkill,
 }
