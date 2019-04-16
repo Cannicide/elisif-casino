@@ -330,20 +330,23 @@ client.on('message', message => {
       break;
     // Nug's text adventure game thing
     case "adventure": 
-      const game = require("./rpg-game");
+      var game = require("./rpg-game");
       game.splash(message, ifProfile(message.author.id), prefix);
-      break;
+    break;
     case "class":
       var classCheck = args[0];
       if (classCheck == `mage` || classCheck == `fighter` || classCheck == `rouge` ) {
-          game.createChar(message, ifProfile(message.author.id), prefix);
+          game.createChar(message, ifProfile(message.author.id), prefix, classCheck);
       } else {
           message.channel.send("you bad, try agian");
       }
     break;
     case "town":
       var choice = args[0];
-      game.town(message, choice);
+      if (choice != "battle" && choice != "shop" && choice != "playerInfo"){
+        message.channel.send(`Try again (only numbers 1 - 4)`);
+      }
+      game.town(message, choice, prefix);
     break;
     case "fightOption":
       var fightOption = args[0];
@@ -356,6 +359,16 @@ client.on('message', message => {
     case "attack":
       var skillSearchingFor = args[0];
       game.useSkill(prefix, message, skillSearchingFor);
+    break;
+    case "create":
+      if (ls.get(message.author.id + "profile") && profile) {
+        message.channel.send("You already have a casino profile.");
+      }
+      else {
+       profile = constants.profileStarterAmount;
+       ls.set(message.author.id + "profile", profile);
+        message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
+      }
     break;
     default:
       //External commands go here
