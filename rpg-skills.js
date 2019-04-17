@@ -1,7 +1,7 @@
 var skills = {
     Mage: {
         getSkills: function(level) {
-            var skills = [];
+            var skills = [{name: "Whack (/attack whack)", id: "whack", damage: 15, description:"you attack with your weapon"}];
     
             if (level >= 60) {
                 skills.unshift({name : "Explosion! (/attack expolsion)", id: "expolsion", damage : 15 * this.level, description: "casts a massive exploion over 900"});
@@ -14,7 +14,6 @@ var skills = {
             }  if (level >= 10) {
                 skills.unshift({name : "Firebolt (/attack firebolt)", id: "firebolt", damage : 30, description: "you hurl a ball of fire at your target"});
             }
-            skills.unshift({name: "Attack (/attack attack)", id: "attack", damage: 15, description:"you attack with your weapon"})
             return skills;
         },
     
@@ -51,7 +50,7 @@ var skills = {
     
     Fighter: {
         getSkills: function(level) {
-            var skills = [];
+            var skills = [{name: "Jab (/attack jab)", id: "jab", damage: 15, description:"you attack with your weapon"}];
     
             if (level >= 60) {
                 skills.unshift({name : "Falcon Punch! (/attack falconPunch)", id: "falconPunch", damage : 10 * this.level, description: "FAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLLLLLLLLLCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOONNNNNNNNNNNNNNNNNNNN PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPUUUUUUUUUUUUUUUUUUUUUUUUUUUUUNNNNNNNNNNNNNNNNNNNNNNNNNNNNCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCHHHHHHHHHHHHHHHHHHHH"});
@@ -64,7 +63,6 @@ var skills = {
             }  if (level >= 10) {
                 skills.unshift({name : "Punch (/attack punch)", id: "punch", damage : 10, description: "you take your hand meat and connect it to someone's face"});
             }
-            skills.unshift({name: "Attack (/attack attack)", id: "attack", damage: 15, description:"you attack with your weapon"})
     
             return skills;
         },
@@ -102,7 +100,7 @@ var skills = {
     
     Rouge: {
         getSkills: function(level) {
-            var skills = [];
+            var skills = [{name: "Poke (/attack poke)", id: "poke", damage: 15, description:"you attack with your weapon"}];
     
             if (level >= 60) {
                 skills.unshift({name : "Assassinate (/attack assassinate)", id: "assassinate", damage : 9 * this.level + Math.floor(Math.random() * (9 * this.level)), description: "a sneaky assaination stab thing"});
@@ -115,7 +113,6 @@ var skills = {
             }  if (level >= 10) {
                 skills.unshift({name : "Stab (/attack stab)", id: "stab", damage : 11, description: "you inject a foe with metal and then you take it out"});
             }
-            skills.unshift({name: "Attack (/attack attack)", id: "attack", damage: 15, description:"you attack with your weapon"})
     
             return skills;
         },

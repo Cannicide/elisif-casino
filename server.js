@@ -350,15 +350,27 @@ client.on('message', message => {
     break;
     case "fightOption":
       var fightOption = args[0];
-      game.turn(prefix, message, fightOption);
-    break;
+      if (game.player.enemy != null) {
+        game.turn(prefix, message, fightOption);
+      } else {
+        message.channel.send(`Wait what enemy`)
+      }
+      break;
     case "potion":
       var potionType = args[0];
-      game.usePotion(message, potionType);
+      if (game.player.enemy != null) {
+        game.usePotion(message, potionType);
+      } else {
+        message.channel.send(`Wait what enemy`)
+      }
     break;
     case "attack":
       var skillSearchingFor = args[0];
-      game.useSkill(prefix, message, skillSearchingFor);
+      if (game.player.enemy != null) {
+        game.useSkill(prefix, message, skillSearchingFor);
+      } else {
+        message.channel.send(`Wait what enemy`)
+      }
     break;
     case "create":
       if (ls.get(message.author.id + "profile") && profile) {
