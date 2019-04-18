@@ -328,7 +328,7 @@ client.on('message', message => {
         ls.set(message.author.id + "profile", -5);
       }
       break;
-    // Nug's text adventure game thing
+    // Nug's text adventure game thing (NugPG (get it like rpg))
     case "adventure": 
       var game = require("./rpg-game");
       game.splash(message, ifProfile(message.author.id), prefix);
@@ -338,39 +338,28 @@ client.on('message', message => {
       if (classCheck == `mage` || classCheck == `fighter` || classCheck == `rouge` ) {
           game.createChar(message, ifProfile(message.author.id), prefix, classCheck);
       } else {
-          message.channel.send("you bad, try agian");
+          message.channel.send("you bad, try again");
       }
     break;
     case "town":
       var choice = args[0];
       if (choice != "battle" && choice != "shop" && choice != "playerInfo"){
-        message.channel.send(`Try again (only numbers 1 - 4)`);
+        message.channel.send(`Try again`);
       }
       game.town(message, choice, prefix);
     break;
     case "fightOption":
       var fightOption = args[0];
-      if (game.player.enemy != null) {
-        game.turn(prefix, message, fightOption);
-      } else {
-        message.channel.send(`Wait what enemy`)
-      }
-      break;
+      game.turn(prefix, message, fightOption);
+    break;
     case "potion":
       var potionType = args[0];
-      if (game.player.enemy != null) {
-        game.usePotion(message, potionType);
-      } else {
-        message.channel.send(`Wait what enemy`)
-      }
+      game.usePotion(message, potionType);
+      
     break;
     case "attack":
       var skillSearchingFor = args[0];
-      if (game.player.enemy != null) {
-        game.useSkill(prefix, message, skillSearchingFor);
-      } else {
-        message.channel.send(`Wait what enemy`)
-      }
+      game.useSkill(prefix, message, skillSearchingFor);
     break;
     case "create":
       if (ls.get(message.author.id + "profile") && profile) {

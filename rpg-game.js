@@ -74,39 +74,43 @@ function town(message, choice, prefix) {
 
 
 function turn(prefix, message, fightOption) {
-    if (fightOption == "attack") {
-        message.channel.send(`Choose an attack! (use the command in the parenthesis)`)
-        switch (characterData[characterIndex].class) {
-            case "mage":
-                message.channel.send(`Here are your skills ${skills.skills.Mage.getSkillNames(characterData[characterIndex].level)}`);
-            break;
-            case "fighter":
-                message.channel.send(`Here are your skills ${skills.skills.Fighter.getSkillNames(characterData[characterIndex].level)}`);
-            break;
-            case "rouge":
-                message.channel.send(`Here are your skills ${skills.skills.Rouge.getSkillNames(characterData[characterIndex].level)}`);
-            break;
+    if (characterData[characterIndex].enemy != null) {
+        if (fightOption == "attack") {
+            message.channel.send(`Choose an attack! (use the command in the parenthesis)`)
+            switch (characterData[characterIndex].class) {
+                case "mage":
+                    message.channel.send(`Here are your skills ${skills.skills.Mage.getSkillNames(characterData[characterIndex].level)}`);
+                break;
+                case "fighter":
+                    message.channel.send(`Here are your skills ${skills.skills.Fighter.getSkillNames(characterData[characterIndex].level)}`);
+                break;
+                case "rouge":
+                    message.channel.send(`Here are your skills ${skills.skills.Rouge.getSkillNames(characterData[characterIndex].level)}`);
+                break;
+            }
         }
-    }
-    else if (fightOption == "potion") {
-        message.channel.send("You Have " + characterData[characterIndex].potions.minorHealthPotion + " Minor Health Potions, " + 
-                              characterData[characterIndex].potions.mediumHealthPotion + " Medium Health Potions, and " + 
-                              characterData[characterIndex].potions.largeHealthPotion + " Large Health Potions.");
+        else if (fightOption == "potion") {
+            message.channel.send("You Have " + characterData[characterIndex].potions.minorHealthPotion + " Minor Health Potions, " + 
+                                characterData[characterIndex].potions.mediumHealthPotion + " Medium Health Potions, and " + 
+                                characterData[characterIndex].potions.largeHealthPotion + " Large Health Potions.");
 
-        message.channel.send(`Type ${prefix}potion minor, ${prefix}potion medium, or ${prefix}potion large to choose`);    
-    }
-    else if (fightOption == "check") {
-        checkEnemy(message);
-    }
-    else if (fightOption == "run") {
-        if (run(message)) {
-            characterData[characterIndex].enemy = null;
+            message.channel.send(`Type ${prefix}potion minor, ${prefix}potion medium, or ${prefix}potion large to choose`);    
+        }
+        else if (fightOption == "check") {
+            checkEnemy(message);
+        }
+        else if (fightOption == "run") {
+            if (run(message)) {
+                characterData[characterIndex].enemy = null;
+            } else {
+                takeDamage(message);
+            }
         } else {
-            takeDamage(message);
+            message.channel.send(`Try again`);
         }
     } else {
-        message.channel.send(`Try again`);
-    }    
+        message.channel.send(`wait so who are we fighting?`)
+    }
 }
 
 function attack(prefix, message, damage) {
@@ -125,31 +129,35 @@ function attack(prefix, message, damage) {
 }
 
 function useSkill(prefix, msg, skillSearchingFor) {
-    var skillRequested = skillSearchingFor;
-    var classSkills;
-    switch (characterData[characterIndex].class) {
-        case "mage":
-            classSkills = skills.skills.Mage;
-        break;
-        case "fighter":
-            classSkills = skills.skills.Fighter;
-        break;
-        case "rouge":
-            classSkills = skills.skills.Rouge;
-        break;
-    }
-    var skillExists = false;
-    var skillIndex;
-    for (var x = 0; x < classSkills.getSkills(characterData[characterIndex].level).length; x++) {
-        if (skillRequested == classSkills.getSkills(characterData[characterIndex].level)[x].id) {
-            skillExists = true;
-            skillIndex = x;
+    if (characterData[characterIndex].enemy != null) {
+        var skillRequested = skillSearchingFor;
+        var classSkills;
+        switch (characterData[characterIndex].class) {
+            case "mage":
+                classSkills = skills.skills.Mage;
+            break;
+            case "fighter":
+                classSkills = skills.skills.Fighter;
+            break;
+            case "rouge":
+                classSkills = skills.skills.Rouge;
+            break;
         }
-    }
-    if (!skillExists) {
-        msg.channel.send(`No such skill exists`);
+        var skillExists = false;
+        var skillIndex;
+        for (var x = 0; x < classSkills.getSkills(characterData[characterIndex].level).length; x++) {
+            if (skillRequested == classSkills.getSkills(characterData[characterIndex].level)[x].id) {
+                skillExists = true;
+                skillIndex = x;
+            }
+        }
+        if (!skillExists) {
+            msg.channel.send(`No such skill exists`);
+        } else {
+            attack(prefix, msg, classSkills.getSkills(characterData[characterIndex].level)[skillIndex].damage);
+        }
     } else {
-        attack(prefix, msg, classSkills.getSkills(characterData[characterIndex].level)[skillIndex].damage);
+        msg.channel.send(`wait what enemy`)
     }
 }
 
@@ -175,12 +183,12 @@ function takeDamage(message) {
 
 function minorHealthPotionCheck(message) {
     if (characterData[characterIndex].potions.minorHealthPotion > 0) {
-        message.channel.send("Gained 10 HP");
-        characterData[characterIndex].currHealth += 10;
+        message.channel.send("Gained 25 HP");
+        characterData[characterIndex].currHealth += 25;
         characterData[characterIndex].potions.minorHealthPotion -= 1;
         if (characterData[characterIndex].currHealth > characterData[characterIndex].maxHealth) {
-            message.channel.send("Overdose inflicted. Lost 20 HP");
-            characterData[characterIndex].currHealth -= 20;
+            message.channel.send("Overdose inflicted. Lost 30 HP");
+            characterData[characterIndex].currHealth -= 30;
         }
     } else {
         message.channel.send(`You have no minor HP potions`);
@@ -189,12 +197,12 @@ function minorHealthPotionCheck(message) {
 
 function mediumHealthPotionCheck(message) {
     if (characterData[characterIndex].potions.mediumHealthPotion > 0) {
-        message.channel.send("Gained 25 HP");
-        characterData[characterIndex].currHealth += 25;
+        message.channel.send("Gained 50 HP");
+        characterData[characterIndex].currHealth += 50;
         characterData[characterIndex].potions.mediumHealthPotion -= 1;
         if (characterData[characterIndex].currHealth > 100) {
-            message.channel.send("Overdose inflicted. Lost 35 HP");
-            characterData[characterIndex].currHealth -= 50;
+            message.channel.send("Overdose inflicted. Lost 70 HP");
+            characterData[characterIndex].currHealth -= 70;
         }
     } else {
         message.channel.send(`You have no medium HP potions`);
@@ -212,21 +220,25 @@ function largeHealthPotionCheck(message) {
 }
 
 function usePotion(message, potionType) {
-    switch (potionType) {
-        case "minor":
-            minorHealthPotionCheck(message);
-            break;
-        case "medium":
-            mediumHealthPotionCheck(message)
-            break;
-        case "large":
-            largeHealthPotionCheck(message);
-            break;
-        default:
-            message.channel.send("you failure");
+    if (characterData[characterIndex].enemy != null) {
+        switch (potionType) {
+            case "minor":
+                minorHealthPotionCheck(message);
+                break;
+            case "medium":
+                mediumHealthPotionCheck(message)
+                break;
+            case "large":
+                largeHealthPotionCheck(message);
+                break;
+            default:
+                message.channel.send("you failure");
+        }
+        ls.setObj("characterData", characterData);
+        takeDamage(message);
+    } else {
+        message.channel.send(`wait what enemy`);
     }
-    ls.setObj("characterData", characterData);
-    takeDamage(message);
 }
 
 function checkEnemy(message) {
