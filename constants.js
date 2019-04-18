@@ -115,6 +115,55 @@ function getHelpCommands(parm) {
     Guesses the coordinates of a battleship in a 10x10 game board in an already started game.
 
 
+    Blackjack -
+    ||\`${fix}blackjack [bet]\`||
+    Casino game. Starts a blackjack card game against the computer where the highest card wins, with some special exceptions.
+
+
+    Hit -
+    ||\`${fix}hit\`||
+    Used in games like blackjack and double to continue playing.
+
+
+    Stand -
+    ||\`${fix}stand\`||
+    Used in games like blackjack and double to stop playing and attempt to collect the bet money.
+    ** **
+    ** **
+    `
+    var main3 = `
+
+
+    Music (Play) -
+    ||\`${fix}play [song title or lyrics]\`||
+    Searches youtube with the specified keywords and plays that song/video to you in voice channel, or adds that song/video to your queue.
+
+
+    Music (Stop) -
+    ||\`${fix}stop\`||
+    Stops the music currently playing in your voice channel, and deletes your queue.
+
+
+    Music (List Queue) -
+    ||\`${fix}queue\`||
+    Lists currently playing music and your queue.
+
+
+    Music (Loop Queue) -
+    ||\`${fix}loop\`||
+    Loops your current queue once by adding the entire queue onto itself.
+
+
+    Statistics -
+    ||\`${fix}stats\`|| or ||\`${fix}statistics\`||
+    Views bot statistics, including ping, uptime, and number of guilds.
+
+
+    Hangman -
+    ||\`${fix}hm [start/end/guess]\`||
+    Casino game. Starts a guild-based hangman game, ends it, or guesses a letter in it, respectively. All participants gain $5000 dollars each upon victory.
+
+
     Casino Create -
     ||\`${fix}create\`||
     Creates a casino profile (necessary to play casino games).
@@ -147,6 +196,9 @@ function getHelpCommands(parm) {
     else if (parm == "main2") {
         return main2;
     }
+    else if (parm == "main3") {
+        return main3;
+    } 
 }
 
 

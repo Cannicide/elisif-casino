@@ -53,6 +53,7 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
+  try {
    var splitter = message.content.replace(" ", ";:splitter185151813367::");
     var splitted = splitter.split(";:splitter185151813367::");
   var prefix;
@@ -83,6 +84,7 @@ client.on('message', message => {
   if (message.content == "/sifcasino") {
       message.author.send(constants.help("main"));
       message.author.send(constants.help("main2"));
+      message.author.send(constants.help("main3"));
       message.author.send(constants.help("ext"));
   }
   else if (message.content == "/fetch prefix") {
@@ -91,13 +93,20 @@ client.on('message', message => {
   if (message.author.bot) {
      return false; 
   }
+  var works = false;
   var pColor = message.content.toLowerCase();
   var asyncUser = require("./asyncUser");
   if ((pColor == "green" || pColor == "red" || pColor == "black") && asyncUser.getUserObj(message.author).awaitRoulette) {
     command = "rouletteSpin";
+    works = true;
   }
   else if (command == "rouletteSpin") {
     command = "casino";
+    works = true;
+  }
+  if ((!splitted[0] || !splitted[0].match(prefix)) && !works) {
+    return false;
+    //No prefix detected
   }
   if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
       ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
@@ -116,6 +125,7 @@ client.on('message', message => {
     case "casino":
         message.author.send(constants.help("main"));
         message.author.send(constants.help("main2"));
+        message.author.send(constants.help("main3"));
         message.author.send(constants.help("ext"));
       break;
     case "reset":
@@ -150,7 +160,13 @@ client.on('message', message => {
       break;
     case "double":
         var double = require("./double");
-        message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
+        if (ls.exist(message.author.id + "doubleGame")) {
+          throw "GameExistenceError: User already has a game running!\nAt server.js:154:5\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+        else {
+          ls.setObj(message.author.id + "doubleBetAmount", args);
+          message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
+        }
       break;
     case "coin":
         var coin = require("./coinflip");
@@ -193,8 +209,72 @@ client.on('message', message => {
       }
     break;
     case "guess":
-
-    break;
+        throw "CommandUtilizationError: This command does not exist yet!";
+      break;
+    case "stats":
+    case "statistics":
+        var statistics = require("./statistics");
+        var Bot = new statistics.Bot(client);
+        message.channel.send(statistics.view(Bot));
+      break;
+    case "play":
+        var music = require("./music");
+        message.channel.send(music.play([args.join(" "), process.env.YT_API], message, false));
+      break;
+    case "stop":
+        var music = require("./music");
+        message.channel.send(music.stop(message));
+      break;
+    case "loop":
+        var music = require("./music");
+        music.loop(message.author.id, message);
+      break;
+    case "queue":
+        var music = require("./music");
+        message.channel.send(music.getQueue(message));
+      break;
+    case "hm":
+        //Hangman game commands
+        var hm = require("./hangman");
+        message.channel.send(hm.do(args, ifProfile(message.author.id), prefix, message));
+      break;
+    case "blackjack":
+        var blackjack = require("./blackjack");
+        if (ls.exist(message.author.id + "blackjackGame")) {
+          throw "GameExistenceError: User already has a game running!\nAt server.js:201:5\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+        else {
+          message.channel.send(blackjack.start(args, ifProfile(message.author.id), prefix, message));
+        }
+      break;
+    case "hit":
+        //blackjack hit-subcommand AND double subcommand
+        var blackjack = require("./blackjack");
+        var double = require("./double");
+        if (ls.exist(message.author.id + "blackjackGame")) {
+          message.channel.send(blackjack.hit(message.author, message, prefix));
+        }
+        else if (ls.exist(message.author.id + "doubleGame")) {
+          message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
+        }
+        else {
+          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+      break;
+    case "stand":
+        //blackjack stand-subcommand AND double subcommand
+        var blackjack = require("./blackjack");
+        var double = require("./double");
+        if (ls.exist(message.author.id + "blackjackGame")) {
+          message.channel.send(blackjack.stand(message));
+        }
+        else if (ls.exist(message.author.id + "doubleGame")) {
+          message.channel.send(double.stand(message));
+        }
+        else {
+          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
+        }
+      break;
     case "donate":
         var donate = require("./donate");
         var receiver = message.mentions.users.first();
@@ -257,6 +337,10 @@ client.on('message', message => {
           message.channel.send(external.commands[key].get(args, message, secondaryCache));
         }
       });
+  }
+  }
+  catch(err) {
+    message.channel.send(`Errors found:\n\`\`\`${err}\nAt ${err.stack}\`\`\``);
   }
 });
 
