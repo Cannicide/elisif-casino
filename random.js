@@ -1,5 +1,5 @@
 //Algorithm to return random numbers
-//Random Edition: versaillesRandAlgorithm-v1.4
+//Random Edition: authenticRandAlgorithm-v1.5
 
 function rand(min, max) {
     var numbers = [];
@@ -27,8 +27,9 @@ function rand(min, max) {
     }
     return finalResult;
 }
+
 function character(array){
-    let index=internalRand(array.length + -1,0)
+    let index=realRand(array.length + -1,0);
     return array[index];
 }
 function limarandAlgorithm(array){
@@ -37,8 +38,14 @@ function limarandAlgorithm(array){
     return Math.ceil((array.indexOf(chrctr) + denominator)/2);
 }
 
+function realRand(min, max) {
+    var rnd1 = Math.floor(Math.random() * max) + min;
+    return rnd1;
+}
+
 module.exports = {
     num: rand,
     char:character,
-    limaRand:limarandAlgorithm
+    limaRand:limarandAlgorithm,
+    int: realRand
 }
