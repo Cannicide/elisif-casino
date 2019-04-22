@@ -37,7 +37,7 @@ function createChar(message, profile, prefix, classCheck) {
     characterData.push({name : message.author.username, id: message.author.id, class: classCheck, level : 1,
                         playerGold: profile, maxHealth: 100, currHealth: 100, defense: 0, weaponDamage: 0,
                         potions: {minorHealthPotion: 3, mediumHealthPotion: 0, largeHealthPotion: 0},
-                        enemy: null});
+                        enemy: null, experience: 0});
 
     characterIndex = characterData.length - 1;
     ls.setObj("characterData", characterData);
@@ -48,7 +48,7 @@ function town(message, choice, prefix) {
         switch (choice) {
             case `battle`:
                 if (characterData[characterIndex].level < 5) {
-                    characterData[characterIndex].enemy = enemies.getEnemies[Math.floor(Math.random() * enemies.getEnemies.length)];
+                    characterData[characterIndex].enemy = new enemies.getEnemies()[Math.floor(Math.random() * enemies.getEnemies().length)];
                     ls.setObj("characterData", characterData);
                     message.channel.send(`A wild ${characterData[characterIndex].enemy.name} approached`)
                     message.channel.send(`Choose one:\n${prefix}fightOption attack\n${prefix}fightOption potion\n${prefix}fightOption check\n${prefix}fightOption run`);
@@ -120,9 +120,10 @@ function attack(prefix, message, damage) {
         
     if (characterData[characterIndex].enemy.baseHealth < 1) {
         characterData[characterIndex].playerGold += (Math.floor(Math.random() *  25) + 25);
+        characterData[characterIndex].experience += characterData[characterIndex].enemy.experience
         characterData[characterIndex].enemy = null;
         ls.setObj("characterData", characterData);
-        message.channel.send("Enemy DEFEATED!!!\n You now have " + characterData[characterIndex].playerGold + "gold!");
+        message.channel.send("Enemy DEFEATED!!!\n You now have " + characterData[characterIndex].playerGold + " gold!");
     } else {
         takeDamage(message);
     }
@@ -162,22 +163,21 @@ function useSkill(prefix, msg, skillSearchingFor) {
 }
 
 function takeDamage(message) {
-    if (characterData[characterIndex].currHealth > 0) {
-        if (characterData[characterIndex].enemy.baseHealth > 0) {
-            var enemyAttack = characterData[characterIndex].enemy.attacks[Math.floor(characterData[characterIndex].enemy.attacks.length * Math.random())]
-            message.channel.send(`${characterData[characterIndex].enemy.name} used ${enemyAttack.name}`)
-            var DamageTaken = enemyAttack.damage - characterData[characterIndex].defense;
-            characterData[characterIndex].currHealth -= DamageTaken;
-            ls.setObj("characterData", characterData);
-            message.channel.send("You have taken " + DamageTaken + " damage.");
-            message.channel.send("You have " + characterData[characterIndex].currHealth + "/100 HP.");
-        }
-    } else {
-        message.channel.send("You have died.");
-        message.channel.send(`as punishment for your death your character gets deleted`);
-        characterData.splice(characterIndex, 1);
+    if (characterData[characterIndex].enemy.baseHealth > 0) {
+        var enemyAttack = characterData[characterIndex].enemy.attacks[Math.floor(characterData[characterIndex].enemy.attacks.length * Math.random())]
+        message.channel.send(`${characterData[characterIndex].enemy.name} used ${enemyAttack.name}`)
+        var DamageTaken = enemyAttack.damage - characterData[characterIndex].defense;
+        characterData[characterIndex].currHealth -= DamageTaken;
         ls.setObj("characterData", characterData);
-        message.channel.send(`you will now be exited from the game`);
+        message.channel.send("You have taken " + DamageTaken + " damage.");
+        message.channel.send("You have " + characterData[characterIndex].currHealth + "/100 HP.");
+        if (characterData[characterIndex].currHealth < 0) {
+            message.channel.send("You have died.");
+            message.channel.send(`as punishment for your death your character gets deleted`);
+            characterData.splice(characterIndex, 1);
+            ls.setObj("characterData", characterData);
+            message.channel.send(`you will now be exited from the game`);
+        }
     }
 }
 
