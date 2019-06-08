@@ -152,7 +152,7 @@ function createCardCollection(user, bet) {
 }
 
 function startGame(args, ifprofile, prefix, message) {
-    if (ifprofile && args[0] && typeof Number(args[0]) === "number") {
+    if (ifprofile && args[0] && typeof Number(args[0]) === "number" && (Number(args[0]) <= Number(ifprofile))) {
         createCardCollection(message.author, args[0]);
         var starterCard = ls.getObj(message.author.id + "blackjackGame").userTotal[0];
         return `${message.author.username} started a new blackjack game with $${args[0]}.\n${message.author.username} has ${starterCard.val + " " + starterCard.suite}.\nDo \`${prefix}hit\` or \`${prefix}stand\``;
