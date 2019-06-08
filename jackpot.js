@@ -53,7 +53,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
         jackpotObj.bets.push(bet);
         ls.setObj(guildId, jackpotObj);
         ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
-        return `${message.author.username}, you created a new jackpot with **$${bet}**`;
+        return `${message.author.username}, you created a new jackpot with **$${bet}**\nDo \`${prefix}jackpot [bet]\` to join for a chance to win over **$${Number(bet).toLocaleString()}**!\nEx: \`${prefix}jackpot 2500\` enters the jackpot with $2500, giving the winner a chance to earn over $${Number(bet) + 2500}!`;
     }
 }
 

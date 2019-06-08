@@ -8,7 +8,7 @@ function donateToUser(args, ifprofile, targetProfile, prefix, message) {
     else {
         return "Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`";
     }
-    if (ifprofile && targetProfile && donations <= Number(ifprofile)) {
+    if (ifprofile && targetProfile && donations <= Number(ifprofile) && donations >= 1) {
         var donorBal = Number(ifprofile) - donations;
         var targetBal = Number(targetProfile) + donations;
         var donor = message.author.id + "profile";

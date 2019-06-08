@@ -27,6 +27,7 @@ function rand(min, max) {
     }
     return finalResult;
 }
+
 function character(array){
     let index=internalRand(array.length + -1,0)
     return array[index];
