@@ -1,7 +1,7 @@
 //Algorithm to return random numbers
-//Random Edition: versaillesRandAlgorithm-v1.4
+//Random Edition: evolvedRandAlgorithm-v1.5
 
-function rand(min, max) {
+function oldRand(min, max) {
     var numbers = [];
     for (var i = min; i < max; i++) {
         numbers.push(i);
@@ -28,18 +28,16 @@ function rand(min, max) {
     return finalResult;
 }
 
-function character(array){
-    let index=internalRand(array.length + -1,0)
-    return array[index];
-}
-function limarandAlgorithm(array){
-    let chrctr=character(array)
-    let denominator=array.length/2
-    return Math.ceil((array.indexOf(chrctr) + denominator)/2);
+function rand(min, max) {
+    max = max + 1;
+    if (min != 0) {
+        max -= min;
+    }
+    var rnd = Math.round(Math.random() * max) + min;
+    return rnd;
 }
 
 module.exports = {
     num: rand,
-    char:character,
-    limaRand:limarandAlgorithm
+    oldRand: oldRand
 }
