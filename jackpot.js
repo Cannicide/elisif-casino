@@ -5,7 +5,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
     var guildIdentifier = message.guild.id + "jackpotGame";
     var guildId = guildIdentifier;
     var bet = Number(args[0]);
-    if (!bet || typeof bet != "number" || bet < 1 || bet > Number(ifprofile)) {
+    if (!bet || isNaN(args[0]) || args[0] != " " || bet < 1 || bet > Number(ifprofile)) {
         return `Please specify a valid bet that is less than or equal to your current balance. Check with ${prefix}balance.`; 
     }
     else if (!ifprofile) {
