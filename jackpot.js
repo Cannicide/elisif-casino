@@ -72,11 +72,12 @@ function jackpotEnd(message) {
             var randWinner = Math.floor(Math.random() * jackpotLength);
             var winner = jackpotObj.participants[randWinner];
             ls.set(winner + "profile", Number(ls.get(winner + "profile")) + Number(total));
-            var winnerUsername = message.guild.fetchMember({ id: winner }).username;
-            jackpotObj.participants.forEach(function(id, index) {
+            var winnerUsername;
+            message.guild.fetchMember(winner).then(mem => winnerUsername = mem.user.username);
+            /*jackpotObj.participants.forEach(function(id, index) {
                 var moneyLost = jackpotObj.bets[index];
-                ls.set(id + "profile", Number(ls.get(id + "profile")) - Number(moneyLost));
-            });
+                //ls.set(id + "profile", Number(ls.get(id + "profile")) - Number(moneyLost));
+            });*/
             ls.remove(message.guild.id + "jackpotGame");
             return `Lucky ${winnerUsername}, you won the jackpot with a gain of **$${total}!**`;
         }
