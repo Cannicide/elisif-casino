@@ -30,7 +30,7 @@ function randCard() {
     var randSuit = rand.num(1, 4);
     var suites = [null, ":spades:", ":hearts:", ":diamonds:", ":clubs:"];
     function internalCardSuit(suite) {
-        var fullCollection = [];
+        var fullCollection = [null];
         for (var x in [1, 2, 3, 4]) {
             fullCollection.push(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "J", "Q", "Q", "Q", "K", "K"]);
             //Higher chances of getting J/Q/K
