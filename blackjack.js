@@ -26,18 +26,14 @@ function Card(value) {
 }
 
 function randCard() {
-    var randCardInt = rand.num(1, 17);
-    var randSuit = rand.num(1, 4);
-    var suites = [null, ":spades:", ":hearts:", ":diamonds:", ":clubs:"];
-    function internalCardSuit(suite) {
-        var fullCollection = [null];
-        for (var x in [1, 2, 3, 4]) {
-            fullCollection.push(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "J", "Q", "Q", "Q", "K", "K"]);
-            //Higher chances of getting J/Q/K
-        }
-        return fullCollection[suite];
-    }
-    return [internalCardSuit(randSuit)[randCardInt - 1], suites[randSuit]];
+    var randCardInt = rand.num(1, 20);
+    var randSuit = rand.num(0, 3);
+    var suites = [":spades:", ":hearts:", ":diamonds:", ":clubs:"];
+    var fullCollection = ["A", "A", "2", "2", "3", "4", "5", "6", "7", "8", "9", "9", "9", "9", "10", "J", "J", "Q", "Q", "K", "K"];
+        
+    //Higher chances of getting certain cards
+        
+    return [fullCollection[randCardInt - 1], suites[randSuit]];
 }
 
 function arrCardCalc(arr) {
