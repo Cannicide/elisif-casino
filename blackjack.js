@@ -18,6 +18,15 @@ function ToInteger(card) {
     }
 }
 
+function aceCheck(value, total) {
+    if (total + value > 21 && value == 11) {
+        return 1;
+    }
+    else {
+        return value;
+    }
+}
+
 function Card(value) {
     this.toInteger = ToInteger(value[0]);
     this.val = value[0];
@@ -55,7 +64,7 @@ function userHit(user, message, prefix) {
     var cardsObj = ls.getObj(user.id + "blackjackGame");
     var card = new Card(randCard());
     var total = arrCardCalc(cardsObj.userTotal);
-    var newTotal = total[0] + card.toInteger;
+    var newTotal = total[0] + aceCheck(card.toInteger, total[0]);
     var userLS = user.id + "profile";
     var bet = Number(cardsObj.bet);
     message.channel.send(`${user.username} drew ${card.val + " " + card.suite}`);
@@ -86,7 +95,7 @@ function compHit(user, message) {
     var card = new Card(randCard());
     var userTotal = arrCardCalc(cardsObj.userTotal);
     var compTotal = arrCardCalc(cardsObj.compTotal);
-    var newTotal = compTotal[0] + card.toInteger;
+    var newTotal = compTotal[0] + aceCheck(card.toInteger, compTotal[0]);
     var userLS = user.id + "profile";
     var bet = Number(cardsObj.bet);
     message.channel.send(`Sif drew ${card.val + " " + card.suite}`);
