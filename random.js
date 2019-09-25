@@ -30,10 +30,8 @@ function oldRand(min, max) {
 
 function rand(min, max) {
     max = max + 1;
-    if (min != 0) {
-        max -= min;
-    }
-    var rnd = Math.round(Math.random() * max) + min;
+    max -= min;
+    var rnd = Math.floor(Math.random() * max) + min;
     return rnd;
 }
 
