@@ -21,9 +21,11 @@ module.exports = {
         return localStorage.getItem(key);
     },
     setObj: function(key, obj) {
+        //Soon to be deprecated
         return localStorage.setItem(key, JSON.stringify(obj));
     },
     getObj: function(key) {
+        //Soon to be deprecated
         return JSON.parse(localStorage.getItem(key));
     },
     exist: function(key) {
