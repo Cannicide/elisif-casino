@@ -1,4 +1,4 @@
-var fs = require('fs')
+var fs = require(`fs`)
 var ls = require("./ls")
 
 var skills = require(`./rpg-skills`);
@@ -72,6 +72,9 @@ function town(message, choice, prefix) {
         }
 }
 
+function chooseEnemy() {
+	
+}
 
 function turn(prefix, message, fightOption) {
     if (characterData[characterIndex].enemy != null) {
@@ -260,6 +263,20 @@ function run(message) {
         message.channel.send("Failed");
         return false;
     }
+}
+
+function level() {
+	var levelCap = 15;
+	if (characterData[characterIndex].level <= levelCap) {
+		if (characterData[characterIndex].experience >= (3 * (Math.pow(2, characterData[characterIndex].level) + (100 * characterData[characterIndex].level) - 2))) {
+			message.channel.send("You Leveled Up!");
+			characterData[characterIndex].level++;
+			characterData[characterIndex].maxHealth = Math.round(Math.pow(1.5, characterData[characterIndex].level) + (8 * characterData[characterIndex].level) + 100);
+			characterData[characterIndex].currHealth = characterData[characterIndex].maxHealth;
+		}
+	} else {
+		message.channel.send("You have reached the level cap (currently " + levelCap + ")");
+	}
 }
 
 module.exports = {
