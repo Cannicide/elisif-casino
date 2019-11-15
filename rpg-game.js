@@ -1,8 +1,8 @@
-var fs = require(`fs`)
+var fs = require('fs')
 var ls = require("./ls")
 
-var skills = require(`./rpg-skills`);
-var enemies = require(`./rpg-enemy`);
+var skills = require('./rpg-skills');
+var enemies = require('./rpg-enemy');
 
 var characterData = [];
 var characterIndex;
@@ -11,9 +11,9 @@ characterData = ls.getObj("characterData", characterData);
 
 
 function splash(message, profile, prefix) {
-    message.channel.send(`Welcome, ${message.author.username} to Adventure Gaem`);
+    message.channel.send('Welcome, ${message.author.username} to Adventure Gaem');
     if (!profile) {
-        return `Create a profile first with ${prefix}create if you want to play, pleeblian`;
+        return 'Create a profile first with ${prefix}create if you want to play, pleeblian';
     }
     else {
         var doesCharExist = false;
@@ -24,11 +24,11 @@ function splash(message, profile, prefix) {
             }
         }
         if (!doesCharExist) {
-            message.channel.send(`Would you like to be a mage (send ${prefix}class mage), fighter (send ${prefix}class fighter), or rouge (send ${prefix}class rouge)`);
+            message.channel.send('Would you like to be a mage (send ${prefix}class mage), fighter (send ${prefix}class fighter), or rouge (send ${prefix}class rouge)');
         }
         else {
             characterData[characterIndex].playerGold = profile;
-            message.channel.send(`Choose one:\n${prefix}town battle\n${prefix}town shop\n${prefix}town playerInfo`);
+            message.channel.send('Choose one:\n${prefix}town battle\n${prefix}town shop\n${prefix}town playerInfo');
         }
     }
 }
@@ -41,24 +41,26 @@ function createChar(message, profile, prefix, classCheck) {
 
     characterIndex = characterData.length - 1;
     ls.setObj("characterData", characterData);
-    message.channel.send(`Choose one:\n${prefix}town battle\n${prefix}town shop\n${prefix}town playerInfo`);
+    message.channel.send('Choose one:\n${prefix}town battle\n${prefix}town shop\n${prefix}town playerInfo');
 }
 
 function town(message, choice, prefix) {
         switch (choice) {
-            case `battle`:
+            case 'battle':
                 if (characterData[characterIndex].level < 5) {
-                    characterData[characterIndex].enemy = new enemies.getEnemies()[Math.floor(Math.random() * enemies.getEnemies().length)];
-                    ls.setObj("characterData", characterData);
-                    message.channel.send(`A wild ${characterData[characterIndex].enemy.name} approached`)
-                    message.channel.send(`Choose one:\n${prefix}fightOption attack\n${prefix}fightOption potion\n${prefix}fightOption check\n${prefix}fightOption run`);
+                    characterData[characterIndex].enemy = chooseEnemy;
+					if (characterData[characterIndex].enemy != null) {
+						ls.setObj("characterData", characterData);
+						message.channel.send('A wild ${characterData[characterIndex].enemy.name} approached')
+						message.channel.send('Choose one:\n${prefix}fightOption attack\n${prefix}fightOption potion\n${prefix}fightOption check\n${prefix}fightOption run');
+					}
                 }
             break;
-            case `shop`:
-                message.channel.send(`comming soon`);
+            case 'shop':
+                message.channel.send('comming soon');
             break;
-            case `playerInfo`:
-                message.channel.send("```Name: " + characterData[characterIndex].name + 
+            case 'playerInfo':
+                message.channel.send("'''Name: " + characterData[characterIndex].name + 
                                     "\nClass: " + characterData[characterIndex].class + 
                                     "\nLevel: " + characterData[characterIndex].level + 
                                     "\nHealth: " + characterData[characterIndex].currHealth + "/" + characterData[characterIndex].maxHealth + 
@@ -67,28 +69,45 @@ function town(message, choice, prefix) {
                                     "\nDamage from Current Weapon: " + characterData[characterIndex].weaponDamage + 
                                     "\nAmount of Minor Health Potion: " + characterData[characterIndex].potions.minorHealthPotion + 
                                     "\nAmount of Medium Health Potion: " + characterData[characterIndex].potions.mediumHealthPotion + 
-                                    "\nAmount of Large Health Potion: " + characterData[characterIndex].potions.largeHealthPotion + "```");
+                                    "\nAmount of Large Health Potion: " + characterData[characterIndex].potions.largeHealthPotion + "'''");
             break;
         }
 }
 
 function chooseEnemy() {
+	var index = 0;
+	var potentialEnemy = new enemies.getEnemies()[index];
+	var enemyChosen = false;
 	
+	while (!enemyChosen) {
+		if (index >= enemies.getEnemies().length) {
+			message.channel.send("Looks like there is nothing around");
+			return null;
+		} else {
+			if (Math.abs(characterData[characterIndex].level - potentialEnemy.level) <= 5) {
+				potentialEnemy = new enemies.getEnemies()[index];
+				enemyChosen = true;
+			} else {
+				index++;
+			}
+		}
+	}
+	return potentialEnemy;
 }
 
 function turn(prefix, message, fightOption) {
     if (characterData[characterIndex].enemy != null) {
         if (fightOption == "attack") {
-            message.channel.send(`Choose an attack! (use the command in the parenthesis)`)
+            message.channel.send('Choose an attack! (use the command in the parenthesis)')
             switch (characterData[characterIndex].class) {
                 case "mage":
-                    message.channel.send(`Here are your skills ${skills.skills.Mage.getSkillNames(characterData[characterIndex].level)}`);
+                    message.channel.send('Here are your skills ${skills.skills.Mage.getSkillNames(characterData[characterIndex].level)}');
                 break;
                 case "fighter":
-                    message.channel.send(`Here are your skills ${skills.skills.Fighter.getSkillNames(characterData[characterIndex].level)}`);
+                    message.channel.send('Here are your skills ${skills.skills.Fighter.getSkillNames(characterData[characterIndex].level)}');
                 break;
                 case "rouge":
-                    message.channel.send(`Here are your skills ${skills.skills.Rouge.getSkillNames(characterData[characterIndex].level)}`);
+                    message.channel.send('Here are your skills ${skills.skills.Rouge.getSkillNames(characterData[characterIndex].level)}');
                 break;
             }
         }
@@ -97,7 +116,7 @@ function turn(prefix, message, fightOption) {
                                 characterData[characterIndex].potions.mediumHealthPotion + " Medium Health Potions, and " + 
                                 characterData[characterIndex].potions.largeHealthPotion + " Large Health Potions.");
 
-            message.channel.send(`Type ${prefix}potion minor, ${prefix}potion medium, or ${prefix}potion large to choose`);    
+            message.channel.send('Type ${prefix}potion minor, ${prefix}potion medium, or ${prefix}potion large to choose');    
         }
         else if (fightOption == "check") {
             checkEnemy(message);
@@ -109,10 +128,10 @@ function turn(prefix, message, fightOption) {
                 takeDamage(message);
             }
         } else {
-            message.channel.send(`Try again`);
+            message.channel.send('Try again');
         }
     } else {
-        message.channel.send(`wait so who are we fighting?`)
+        message.channel.send('wait so who are we fighting?')
     }
 }
 
@@ -156,19 +175,19 @@ function useSkill(prefix, msg, skillSearchingFor) {
             }
         }
         if (!skillExists) {
-            msg.channel.send(`No such skill exists`);
+            msg.channel.send('No such skill exists');
         } else {
             attack(prefix, msg, classSkills.getSkills(characterData[characterIndex].level)[skillIndex].damage);
         }
     } else {
-        msg.channel.send(`wait what enemy`)
+        msg.channel.send('wait what enemy')
     }
 }
 
 function takeDamage(message) {
     if (characterData[characterIndex].enemy.baseHealth > 0) {
         var enemyAttack = characterData[characterIndex].enemy.attacks[Math.floor(characterData[characterIndex].enemy.attacks.length * Math.random())]
-        message.channel.send(`${characterData[characterIndex].enemy.name} used ${enemyAttack.name}`)
+        message.channel.send('${characterData[characterIndex].enemy.name} used ${enemyAttack.name}')
         var DamageTaken = enemyAttack.damage - characterData[characterIndex].defense;
         characterData[characterIndex].currHealth -= DamageTaken;
         ls.setObj("characterData", characterData);
@@ -176,10 +195,10 @@ function takeDamage(message) {
         message.channel.send("You have " + characterData[characterIndex].currHealth + "/100 HP.");
         if (characterData[characterIndex].currHealth < 0) {
             message.channel.send("You have died.");
-            message.channel.send(`as punishment for your death your character gets deleted`);
+            message.channel.send('as punishment for your death your character gets deleted');
             characterData.splice(characterIndex, 1);
             ls.setObj("characterData", characterData);
-            message.channel.send(`you will now be exited from the game`);
+            message.channel.send('you will now be exited from the game');
         }
     }
 }
@@ -194,7 +213,7 @@ function minorHealthPotionCheck(message) {
             characterData[characterIndex].currHealth -= 30;
         }
     } else {
-        message.channel.send(`You have no minor HP potions`);
+        message.channel.send('You have no minor HP potions');
     }
 }
 
@@ -208,7 +227,7 @@ function mediumHealthPotionCheck(message) {
             characterData[characterIndex].currHealth -= 70;
         }
     } else {
-        message.channel.send(`You have no medium HP potions`);
+        message.channel.send('You have no medium HP potions');
     }
 }
 
@@ -218,7 +237,7 @@ function largeHealthPotionCheck(message) {
         characterData[characterIndex].currHealth = characterData[characterIndex].maxHealth;
         characterData[characterIndex].potions.largeHealthPotion -= 1;
     } else {
-        message.channel.send(`You have no large HP potions`);
+        message.channel.send('You have no large HP potions');
     }
 }
 
@@ -240,15 +259,15 @@ function usePotion(message, potionType) {
         ls.setObj("characterData", characterData);
         takeDamage(message);
     } else {
-        message.channel.send(`wait what enemy`);
+        message.channel.send('wait what enemy');
     }
 }
 
 function checkEnemy(message) {
-    message.channel.send("```The Enemy has:\n\n\t" + characterData[characterIndex].enemy.baseHealth + "/" 
+    message.channel.send("'''The Enemy has:\n\n\t" + characterData[characterIndex].enemy.baseHealth + "/" 
                         + characterData[characterIndex].enemy.maxHealth +" HP,\n\t"
                         + characterData[characterIndex].enemy.defense + " Defense,\n\n" +
-                         "And the attacks are:\n\n " + enemies.checkEnemyAttacks(characterData[characterIndex].enemy) + "```");
+                         "And the attacks are:\n\n " + enemies.checkEnemyAttacks(characterData[characterIndex].enemy) + "'''");
 }
 
 function run(message) {
