@@ -1,6 +1,7 @@
 //A built-in youtube musice server for the discord bot
 //Powered by Youtube and Muzzy Tool API Spellchecker
-//Dependencies: youtube-finder, ytdl-core, opusscript
+//Dependencies: youtube-finder, ytdl-core*, opusscript*, YT Evergreen
+//*these dependencies may no longer be required due to YT Evergreen abstraction
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 var youtube = require('youtube-finder');
@@ -69,13 +70,13 @@ function playMusic(args, message, qPlay) {
         ytClient.search(params, function (err, data) {
             // your magic..
             var vidID = data.items[0].id.videoId;
-            url = "https://www.youtube.com/watch?v=" + vidID;
+            url = /*"https://www.youtube.com/watch?v=" + */vidID;
         })
         setTimeout(function () {
             voiceChannel.join().then(connection => {
                 if (!qPlay) message.channel.send(`Joined music channel, ${message.author.username}.`);
                 if (qPlay) message.channel.send(`Now playing the next song on your queue: **${args[0]}**.`);
-                const stream = ytdl(url, { filter: 'audioonly', quality: 'highestaudio' });
+                /*const stream = ytdl(url, { filter: 'audioonly', quality: 'highestaudio' });
                 const dispatcher = connection.playStream(stream, streamOptions);
                 dispatcher.on("end", end => {
                     if (getQueue(message.author.id)) {
@@ -95,11 +96,34 @@ function playMusic(args, message, qPlay) {
                         message.channel.send(`Queue has ended. Left music channel, ${message.author.username}.`);
                         voiceChannel.leave();
                     }
+                });*/
+              console.log(url);
+              const dispatcher = connection.playArbitraryInput("https://yt-evergreen.glitch.me/audio/" + url);
+              dispatcher.on("end", end => {
+                    if (getQueue(message.author.id)) {
+                        var queue = getQueue(message.author.id);
+                        queue.shift();
+                        if (queue.length == 0) {
+                            ls.remove(message.author.id + "musicQueue");
+                            message.channel.send(`Left music channel, ${message.author.username}.`);
+                            voiceChannel.leave();
+                        }
+                        else {
+                            ls.setObj(message.author.id + "musicQueue", queue);
+                            return playMusic([queue[0], args[1]], message, true);
+                        }
+                    }
+                    else {
+                        message.channel.send(`Queue has ended. Left music channel, ${message.author.username}.`);
+                        voiceChannel.leave();
+                    }
                 });
+              
             }).catch(err => message.channel.send(`Errors found:\n \`\`\`${err}, ${err.stack}\`\`\``));
             return "** **";
-        }, 2000);
+        }, 6000);
     }
+  return "Beginning your Sif Casino Audio experience... Please wait for optimal quality...";
 }
 
 function stopMusic(message) {
