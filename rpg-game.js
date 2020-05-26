@@ -84,7 +84,7 @@ function chooseEnemy() {
 			message.channel.send("Looks like there is nothing around");
 			return null;
 		} else {
-			if (Math.abs(characterData[characterIndex].level - potentialEnemy.level) <= 5) {
+			if (Math.abs(characterData[characterIndex].level - potentialEnemy.level) <= 5 && characterData[characterIndex].level >= potentialEnemy.level) {
 				potentialEnemy = new enemies.getEnemies()[index];
 				enemyChosen = true;
 			} else {
@@ -137,7 +137,7 @@ function turn(prefix, message, fightOption) {
 
 function attack(prefix, message, damage) {
     var deltDamage = ((damage + characterData[characterIndex].weaponDamage) + Math.floor(Math.random() *  6)) - characterData[characterIndex].enemy.defense;
-    characterData[characterIndex].enemy.baseHealth -= deltDamage;
+    characterData[characterIndex].enemy.baseHealth -= (deltDamage - characterData[characterIndex].enemy.defense);
     message.channel.send("You did " + deltDamage + " damage.\nEnemy has " + characterData[characterIndex].enemy.baseHealth + " HP"); 
         
     if (characterData[characterIndex].enemy.baseHealth < 1) {
@@ -188,11 +188,16 @@ function takeDamage(message) {
     if (characterData[characterIndex].enemy.baseHealth > 0) {
         var enemyAttack = characterData[characterIndex].enemy.attacks[Math.floor(characterData[characterIndex].enemy.attacks.length * Math.random())]
         message.channel.send('${characterData[characterIndex].enemy.name} used ${enemyAttack.name}')
-        var DamageTaken = enemyAttack.damage - characterData[characterIndex].defense;
-        characterData[characterIndex].currHealth -= DamageTaken;
-        ls.setObj("characterData", characterData);
-        message.channel.send("You have taken " + DamageTaken + " damage.");
-        message.channel.send("You have " + characterData[characterIndex].currHealth + "/100 HP.");
+		if (enemyAttack.damage != 0) {	
+			var DamageTaken = enemyAttack.damage - characterData[characterIndex].defense;
+			characterData[characterIndex].currHealth -= DamageTaken;
+			ls.setObj("characterData", characterData);
+			message.channel.send("You have taken " + DamageTaken + " damage.");
+			message.channel.send("You have " + characterData[characterIndex].currHealth + "/100 HP.");
+		}
+		if (enemyAttack.effect != null) {
+			enemyAttack.effect;
+		}
         if (characterData[characterIndex].currHealth < 0) {
             message.channel.send("You have died.");
             message.channel.send('as punishment for your death your character gets deleted');
@@ -297,6 +302,9 @@ function level() {
 		message.channel.send("You have reached the level cap (currently " + levelCap + ")");
 	}
 }
+
+
+
 
 module.exports = {
     splash: splash,

@@ -21,7 +21,7 @@ var skills = {
             var skillNames;
             var knownSkills = this.getSkills(level);
             for (var x = 0; x < knownSkills.length; x++) {
-                skillNames += `${x+1}. ${this.getSkills(level)[x].name}`;
+                skillNames += '${x+1}. ${this.getSkills(level)[x].name}';
             }
     
             return skillNames;
@@ -41,7 +41,7 @@ var skills = {
                     }
                 }
                 if (!skillExists) {
-                    msg.channel.send(`No such skill exists`);
+                    msg.channel.send('No such skill exists');
                     return null;
                 }
             return this.getSkills(level)[skillIndex].damage
@@ -71,7 +71,7 @@ var skills = {
             var skillNames;
             var knownSkills = this.getSkills(level);
             for (var x = 0; x < knownSkills.length; x++) {
-                skillNames += `${x+1}. ${this.getSkills(level)[x].name}`;
+                skillNames += '${x+1}. ${this.getSkills(level)[x].name}';
             }
     
             return skillNames;
@@ -91,7 +91,7 @@ var skills = {
                     }
                 }
                 if (!skillExists) {
-                    msg.channel.send(`No such skill exists`);
+                    msg.channel.send('No such skill exists');
                     return null;
                 }
             return this.getSkills(level)[skillIndex].damage
@@ -121,7 +121,7 @@ var skills = {
             var skillNames;
             var knownSkills = this.getSkills(level);
             for (var x = 0; x < knownSkills.length; x++) {
-                skillNames += `${x+1}. ${this.getSkills(level)[x].name}`;
+                skillNames += '${x+1}. ${this.getSkills(level)[x].name}';
             }
     
             return skillNames;
@@ -141,7 +141,7 @@ var skills = {
                     }
                 }
                 if (!skillExists) {
-                    msg.channel.send(`No such skill exists`);
+                    msg.channel.send('No such skill exists');
                     return null;
                 }
             return this.getSkills(level)[skillIndex].damage

@@ -88,7 +88,7 @@ client.on('message', message => {
       message.author.send(constants.help("ext"));
   }
   else if (message.content == "/fetch prefix") {
-    message.channel.send(`The prefix for this guild is ${prefix}`);
+    message.channel.send('The prefix for this guild is ${prefix}');
   }
   if (message.author.bot) {
      return false; 
@@ -183,7 +183,7 @@ client.on('message', message => {
         //^ simplify.js first instance
       break;
     case "about":
-      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/ \nInvite link: ||https://discordapp.com/api/oauth2/authorize?client_id=501862549739012106&permissions=470076480&scope=bot|| \nBot Support Server: https://discord.gg/wYKRB9n"));
+      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo '" + prefix + "casino' to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/ \nInvite link: ||https://discordapp.com/api/oauth2/authorize?client_id=501862549739012106&permissions=470076480&scope=bot|| \nBot Support Server: https://discord.gg/wYKRB9n"));
     break;
     case "prefix":
       if (simpjs.discrim(message.member)) {
@@ -194,18 +194,18 @@ client.on('message', message => {
         }
         else if (!nPref) {
           //No prefix specified, send how to do command
-          message.channel.send(`**Usage of ${prefix}prefix**\n\n \`n${prefix}prefix [new prefix character]\`\n__Ex:__\`\`\`${prefix}prefix ?\`\`\`\nThe shown example will set the prefix to ?`);
+          message.channel.send('**Usage of ${prefix}prefix**\n\n \'n${prefix}prefix [new prefix character]\'\n__Ex:__\'\'\'${prefix}prefix ?\'\'\'\nThe shown example will set the prefix to ?');
         }
         else {
           //Change the prefix
           ls.set(message.guild.id + "prefix", nPref);
           prefix = nPref;
-          message.channel.send(`Set the server's prefix to ${nPref}. Use \`/fetch prefix\` to identify this guild's current prefix.`);
+          message.channel.send('Set the server's prefix to ${nPref}. Use \'/fetch prefix\' to identify this guild's current prefix.');
         }
       }
       else {
         //Doesn't have admin perms
-        message.channel.send("Error PermissionError: You do not have the `ADMINISTRATOR` permission required to do this.");
+        message.channel.send("Error PermissionError: You do not have the 'ADMINISTRATOR' permission required to do this.");
       }
     break;
     case "guess":
@@ -279,7 +279,7 @@ client.on('message', message => {
         var donate = require("./donate");
         var receiver = message.mentions.users.first();
         if (!receiver) {
-          message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`");
+          message.channel.send("Please specify a valid user and amount to donate to them.\nUse '" + prefix + "donate [user] [donation]' to continue.\nExample: '" + prefix + "donate @Cannicide#2753 5000'");
         }
         else if (receiver.id == message.author.id) {
           message.channel.send("You cannot donate to yourself.");
@@ -294,18 +294,18 @@ client.on('message', message => {
         if (ls.get(message.author.id + "donations")) {
           donations = ls.get(message.author.id + "donations");
         }
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
+        message.channel.send('${message.author.username} has $${Number(profile).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.');
       }
       else {
-         message.channel.send(`Use ${prefix}create to create a casino profile.`); 
+         message.channel.send('Use ${prefix}create to create a casino profile.'); 
       }
       break;
     case "balance":
       if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
+        message.channel.send('${message.author.username} has $${Number(profile).toLocaleString()}.');
       }
       else {
-         message.channel.send(`Use ${prefix}create to create a casino profile.`); 
+         message.channel.send('Use ${prefix}create to create a casino profile.'); 
       }
       break;
     case "create":
@@ -315,7 +315,7 @@ client.on('message', message => {
       else {
        profile = constants.profileStarterAmount;
        ls.set(message.author.id + "profile", profile);
-        message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
+        message.channel.send('Created a profile for ${message.author.username} with a beginning amount of $50.');
       }
       break;
     case "delete":
@@ -324,18 +324,18 @@ client.on('message', message => {
           ls.set(message.author.id + "profile", -100);
       }
       else {
-         message.channel.send("Are you sure you want to delete your casino account? Type `" + prefix + "delete` again to delete your account. This action is irreversible."); 
+         message.channel.send("Are you sure you want to delete your casino account? Type '" + prefix + "delete' again to delete your account. This action is irreversible."); 
         ls.set(message.author.id + "profile", -5);
       }
       break;
-    // Nug's text adventure game thing (NugPG (get it like rpg))
+    // Nug's text adventure game thing (NugPG (get it like rpg, LAUGH))
     case "adventure": 
       var game = require("./rpg-game");
       game.splash(message, ifProfile(message.author.id), prefix);
     break;
     case "class":
       var classCheck = args[0];
-      if (classCheck == `mage` || classCheck == `fighter` || classCheck == `rouge` ) {
+      if (classCheck == 'mage' || classCheck == 'fighter' || classCheck == 'rouge' ) {
           game.createChar(message, ifProfile(message.author.id), prefix, classCheck);
       } else {
           message.channel.send("you bad, try again");
@@ -344,7 +344,7 @@ client.on('message', message => {
     case "town":
       var choice = args[0];
       if (choice != "battle" && choice != "shop" && choice != "playerInfo"){
-        message.channel.send(`Try again`);
+        message.channel.send('Try again');
       }
       game.town(message, choice, prefix);
     break;
@@ -368,7 +368,7 @@ client.on('message', message => {
       else {
        profile = constants.profileStarterAmount;
        ls.set(message.author.id + "profile", profile);
-        message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
+        message.channel.send('Created a profile for ${message.author.username} with a beginning amount of $50.');
       }
     break;
     default:
@@ -383,7 +383,7 @@ client.on('message', message => {
   }
   }
   catch(err) {
-    message.channel.send(`Errors found:\n\`\`\`${err}\nAt ${err.stack}\`\`\``);
+    message.channel.send('Errors found:\n\'\'\'${err}\nAt ${err.stack}\'\'\'');
   }
 });
 
