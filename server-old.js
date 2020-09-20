@@ -122,12 +122,12 @@ client.on('message', message => {
   var simpjs = require("./simplify");
   //Check for command:
   switch (command) {
-    case "casino":
-        message.author.send(constants.help("main"));
-        message.author.send(constants.help("main2"));
-        message.author.send(constants.help("main3"));
-        message.author.send(constants.help("ext"));
-      break;
+    // case "casino":
+    //     message.author.send(constants.help("main"));
+    //     message.author.send(constants.help("main2"));
+    //     message.author.send(constants.help("main3"));
+    //     message.author.send(constants.help("ext"));
+    //   break;
     case "reset":
         ls.set(message.author.id + "profile", 0);
         profile = 0;
@@ -185,29 +185,29 @@ client.on('message', message => {
     case "about":
       message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/ \nInvite link: ||https://discordapp.com/api/oauth2/authorize?client_id=501862549739012106&permissions=470076480&scope=bot|| \nBot Support Server: https://discord.gg/wYKRB9n"));
     break;
-    case "prefix":
-      if (simpjs.discrim(message.member)) {
-        var nPref = args[0];
-        if (nPref.length > 1) {
-          //Too long prefix
-          message.channel.send("Error LengthException: Prefixes can only be at max one character long.");
-        }
-        else if (!nPref) {
-          //No prefix specified, send how to do command
-          message.channel.send(`**Usage of ${prefix}prefix**\n\n \`n${prefix}prefix [new prefix character]\`\n__Ex:__\`\`\`${prefix}prefix ?\`\`\`\nThe shown example will set the prefix to ?`);
-        }
-        else {
-          //Change the prefix
-          ls.set(message.guild.id + "prefix", nPref);
-          prefix = nPref;
-          message.channel.send(`Set the server's prefix to ${nPref}. Use \`/fetch prefix\` to identify this guild's current prefix.`);
-        }
-      }
-      else {
-        //Doesn't have admin perms
-        message.channel.send("Error PermissionError: You do not have the `ADMINISTRATOR` permission required to do this.");
-      }
-    break;
+    // case "prefix":
+    //   if (simpjs.discrim(message.member)) {
+    //     var nPref = args[0];
+    //     if (nPref.length > 1) {
+    //       //Too long prefix
+    //       message.channel.send("Error LengthException: Prefixes can only be at max one character long.");
+    //     }
+    //     else if (!nPref) {
+    //       //No prefix specified, send how to do command
+    //       message.channel.send(`**Usage of ${prefix}prefix**\n\n \`n${prefix}prefix [new prefix character]\`\n__Ex:__\`\`\`${prefix}prefix ?\`\`\`\nThe shown example will set the prefix to ?`);
+    //     }
+    //     else {
+    //       //Change the prefix
+    //       ls.set(message.guild.id + "prefix", nPref);
+    //       prefix = nPref;
+    //       message.channel.send(`Set the server's prefix to ${nPref}. Use \`/fetch prefix\` to identify this guild's current prefix.`);
+    //     }
+    //   }
+    //   else {
+    //     //Doesn't have admin perms
+    //     message.channel.send("Error PermissionError: You do not have the `ADMINISTRATOR` permission required to do this.");
+    //   }
+    // break;
     case "guess":
         throw "CommandUtilizationError: This command does not exist yet!";
       break;

@@ -79,20 +79,6 @@ client.on('message', message => {
 
             //if (ls contains prefix) then do stuff
 
-        //Universal help command:
-
-        if (message.content == "/sifcasino") {
-            // TODO: Change this to help command
-            message.author.send(constants.help("main"));
-            message.author.send(constants.help("main2"));
-            message.author.send(constants.help("main3"));
-            message.author.send(constants.help("ext"));
-        }
-        else if (message.content == "/fetch prefix") {
-            // TODO: Change this to prefix command
-          message.channel.send(`The prefix for this guild is ${prefix}`);
-        }
-
         //Command determination:
 
         var splitter = message.content.replace(" ", ";:splitter185151813367::");
@@ -114,11 +100,35 @@ client.on('message', message => {
         // DM determination:
 
         if (message.guild === null) {
-            if (splitted[0].match(prefix)) {
-                message.reply("Sorry " + message.author.username + ", DM commands are not supported by this bot.");
-            }
+            message.reply("Sorry " + message.author.username + ", DM commands are not supported by this bot.");
 
             return false;
+        }
+
+        //Universal help command:
+
+        if (message.content == "/sifcasino" || message.content == "/elisif" || message.content == "/elisifhelp") {
+            
+            var usable = commands.find(c => c.getName() == "help");
+            usable.set(message);
+
+            usable.execute([prefix, args]).catch((err) => {
+                message.reply("An error occurred: " + err);
+            });
+
+            return;
+        }
+        else if (message.content == "/elisifprefix") {
+            //Fetches the prefix (setting the prefix through this is not enabled)
+
+            var usable = commands.find(c => c.getName() == "prefix");
+            usable.set(message);
+
+            usable.execute([]).catch((err) => {
+                message.reply("An error occurred: " + err);
+            });
+
+            return;
         }
 
         //Check for command:
