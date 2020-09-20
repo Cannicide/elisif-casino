@@ -282,18 +282,18 @@ client.on('message', message => {
           message.channel.send(donate.toUser([receiver, args[1]], ifProfile(message.author.id), ifProfile(receiver.id), prefix, message));
         }
       break;
-    case "profile":
-      if (ls.get(message.author.id + "profile") && profile) {
-        var donations = 0;
-        if (ls.get(message.author.id + "donations")) {
-          donations = ls.get(message.author.id + "donations");
-        }
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
-      }
-      else {
-         message.channel.send(`Use ${prefix}create to create a casino profile.`); 
-      }
-      break;
+    // case "profile":
+    //   if (ls.get(message.author.id + "profile") && profile) {
+    //     var donations = 0;
+    //     if (ls.get(message.author.id + "donations")) {
+    //       donations = ls.get(message.author.id + "donations");
+    //     }
+    //     message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
+    //   }
+    //   else {
+    //      message.channel.send(`Use ${prefix}create to create a casino profile.`); 
+    //   }
+    //   break;
     case "balance":
       if (ls.get(message.author.id + "profile") && profile) {
         message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
@@ -322,15 +322,15 @@ client.on('message', message => {
         ls.set(message.author.id + "profile", -5);
       }
       break;
-    default:
-      //External commands go here
-      var external = require("./external");
-      Object.keys(external.commands).forEach(function(key) {
-        if (external.commands[key].name.toLowerCase() == command) {
-          var secondaryCache = [prefix, ifProfile(message.author.id)];
-          message.channel.send(external.commands[key].get(args, message, secondaryCache));
-        }
-      });
+    // default:
+    //   //External commands go here
+    //   var external = require("./external");
+    //   Object.keys(external.commands).forEach(function(key) {
+    //     if (external.commands[key].name.toLowerCase() == command) {
+    //       var secondaryCache = [prefix, ifProfile(message.author.id)];
+    //       message.channel.send(external.commands[key].get(args, message, secondaryCache));
+    //     }
+    //   });
   }
   // }
   // catch(err) {
