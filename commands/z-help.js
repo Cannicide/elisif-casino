@@ -91,7 +91,7 @@ module.exports = {
             }
 
 
-            message.channel.send(embed);
+            message.author.send(embed);
 
         }, false, false, "Gets a list of all commands, parameters, and their descriptions.").attachArguments([
             {
@@ -102,6 +102,7 @@ module.exports = {
 
         new Alias("elisifhelp", "help"),
         new Alias("elisif", "help"),
-        new Alias("sifcasino", "help")
+        new Alias("sifcasino", "help"),
+        new Alias("casino", "help")
     ]
 };

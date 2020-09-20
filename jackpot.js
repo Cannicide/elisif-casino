@@ -1,5 +1,4 @@
 var ls = require("./ls");
-var simpjs = require("./simplify");
 
 function jackpotStart(args, ifprofile, prefix, message) {
     var guildIdentifier = message.guild.id + "jackpotGame";
@@ -59,7 +58,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
 
 function jackpotEnd(message) {
     var jackpotObj = ls.getObj(message.guild.id + "jackpotGame");
-    if (simpjs.discrim(message.member) || jackpotObj.participants[0] == message.author.id) {
+    if (message.member.hasPermission("ADMINISTRATOR") || jackpotObj.participants[0] == message.author.id) {
         //End the jackpot game
         var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
         var jackpotLength = jackpotObj.participants.length;

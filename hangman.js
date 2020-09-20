@@ -1,7 +1,6 @@
 //Casino-based hangman game based on Project Sif's hangman game...
 //(changed to allow entire guilds to participate)
 var ls = require("./ls");
-var simp = require("./simplify");
 
 function hangmanStart(ifprofile, prefix, message) {
     if (ls.getObj(message.guild.id + "hangmanGame")) {
@@ -37,7 +36,7 @@ function hangmanStart(ifprofile, prefix, message) {
 
 function hangmanEnd(message) {
     if (ls.exist(message.guild.id + "hangmanGame")) {
-        if (ls.getObj(message.guild.id + "hangmanGame").participants[0] == message.author.id || simp.discrim(message.member)) {
+        if (ls.getObj(message.guild.id + "hangmanGame").participants[0] == message.author.id || message.member.hasPermission("ADMINISTRATOR")) {
             ls.remove(message.guild.id + "hangmanGame");
             return `Ended hangman game, ${message.author.username}!`;
         }

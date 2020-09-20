@@ -118,8 +118,6 @@ client.on('message', message => {
   else {
      var profile = constants.profileStarterAmount; 
   }
-  //Init simplify.js
-  var simpjs = require("./simplify");
   //Check for command:
   switch (command) {
     // case "casino":
@@ -176,15 +174,11 @@ client.on('message', message => {
         var dice = require("./dice");
         message.channel.send(dice.roll(args, ifProfile(message.author.id), prefix, message));
       break;
-    case "user:all":
-        message.channel.send(simpjs.simplify.users.getUser(message.author));
-        message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.author));
-        message.channel.send(simpjs.simplify.users.getTag(message.author));
-        //^ simplify.js first instance
-      break;
-    case "about":
-      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/ \nInvite link: ||https://discordapp.com/api/oauth2/authorize?client_id=501862549739012106&permissions=470076480&scope=bot|| \nBot Support Server: https://discord.gg/wYKRB9n"));
-    break;
+    // case "user:all":
+    //   break;
+    // case "about":
+    //   
+    // break;
     // case "prefix":
     //   if (simpjs.discrim(message.member)) {
     //     var nPref = args[0];
@@ -208,9 +202,9 @@ client.on('message', message => {
     //     message.channel.send("Error PermissionError: You do not have the `ADMINISTRATOR` permission required to do this.");
     //   }
     // break;
-    case "guess":
+    /* case "guess":
         throw "CommandUtilizationError: This command does not exist yet!";
-      break;
+      break; */
     case "stats":
     case "statistics":
         var statistics = require("./statistics");
