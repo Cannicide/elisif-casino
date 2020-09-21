@@ -302,16 +302,16 @@ client.on('message', message => {
          message.channel.send(`Use ${prefix}create to create a casino profile.`); 
       }
       break;
-    case "create":
-      if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send("You already have a casino profile.");
-      }
-      else {
-      //  profile = constants.profileStarterAmount;
-       ls.set(message.author.id + "profile", profile);
-        message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
-      }
-      break;
+    // case "create":
+    //   if (ls.get(message.author.id + "profile") && profile) {
+    //     message.channel.send("You already have a casino profile.");
+    //   }
+    //   else {
+    //   //  profile = constants.profileStarterAmount;
+    //    ls.set(message.author.id + "profile", profile);
+    //     message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
+    //   }
+    //   break;
     case "delete":
       if (ls.get(message.author.id + "profile") <= -1) {
          message.channel.send("Account deleted.");

@@ -4,9 +4,9 @@ var Command = require('../command');
 var evg = (require('../evg'))("profiles");
 var settings = require('../settings');
 
-function Profile(message) {
+function Profile(message, specifiedId) {
 
-    var id = message.author.id;
+    var id = specifiedId || message.author.id;
     var storage;
 
     var defaultProfile = {
@@ -76,11 +76,26 @@ module.exports = {
         new Command("profile", (message, args) => {
 
             var profile = new Profile(message.author.id);
+            var username = message.author.username;
+
+            if (args.length >= 1) {
+                var tag = args.toString().replace(/\]/g, "").replace(/ /g, "").split(",", 2)[1].replace(/,/g, " ");
+                var found = message.guild.members.find(m => m.tag == tag);
+
+                if (found) {
+                    profile = new Profile(found.id);
+                    username = found.username;
+                }
+                else {
+                    message.channel.send(`You must specify both a valid username and tag to do that.\nEx: \`Cannicide#2753\``);
+                    return;
+                }
+            }
 
             var bal = profile.getBal();
             var donations = profile.getDonations();
 
-            message.channel.send(`${message.author.username} has $${Number(bal).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
+            message.channel.send(`${username} has $${Number(bal).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
         })
 
         //TODO: All of the other profile commands
