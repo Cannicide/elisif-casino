@@ -108,16 +108,16 @@ client.on('message', message => {
   //   return false;
   //   //No prefix detected
   // }
-  if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
-      ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
-      var profile = ls.get(message.author.id + "profile");
-      }
-  else if (Number(ls.get(message.author.id + "profile")) < -10) {
-    var profile = false;         
-  }
-  else {
-     var profile = constants.profileStarterAmount; 
-  }
+  // if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
+  //     ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
+  //     var profile = ls.get(message.author.id + "profile");
+  //     }
+  // else if (Number(ls.get(message.author.id + "profile")) < -10) {
+  //   var profile = false;         
+  // }
+  // else {
+  //    var profile = constants.profileStarterAmount; 
+  // }
   //Check for command:
   switch (command) {
     // case "casino":

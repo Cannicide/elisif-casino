@@ -48,6 +48,9 @@ function getDefaultSettings() {
         music_channels: [],
         command_channels: [],
         custom_commands: [],
+        startingBalance: 50,
+        battleshipTurns: 25,
+        dollarsPerMessage: 1,
         music_disabled: false,
         bot_disabled: false
     }

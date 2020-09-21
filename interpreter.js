@@ -1,8 +1,14 @@
 //A non-command system to interpret messages that are not commands and auto-respond/auto-react if necessary
 
+var Profile = require("./commands/profile").Profile;
+
 function Interpreter(message) {
 
     this.interpret = (args) => {
+
+        //Always interpret adding money balance on non-command message:
+        var profile = new Profile(message.author.id);
+        profile.addForMessage();
 
         //Suggestion reactions:
         /*f (args[0].toLowerCase().match("suggestion:") && message.channel.name.toLowerCase().match("suggestions")) {
