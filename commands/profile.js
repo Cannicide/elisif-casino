@@ -6,9 +6,8 @@ var Interface = require('../interface');
 var evg = new (require('../evg'))("profiles");
 var settings = require('../settings');
 
-function Profile(message, specifiedId) {
+function Profile(id) {
 
-    var id = specifiedId || message.author.id;
     var storage;
     var user;
 

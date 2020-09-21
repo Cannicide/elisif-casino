@@ -139,15 +139,15 @@ client.on('message', message => {
     //     var roulette = require("./commands/roulette");
     //     message.channel.send(roulette.spin(message.content, ifProfile(message.author.id), prefix, message));
     //   break;
-    case "jackpot":
-        var jackpot = require("./jackpot");
-        if (args[0] == "end") {
-          message.channel.send(jackpot.end(message));
-        }
-        else {
-          message.channel.send(jackpot.start(args, ifProfile(message.author.id), prefix, message));
-        }
-      break;
+    // case "jackpot":
+    //     var jackpot = require("./jackpot");
+    //     if (args[0] == "end") {
+    //       message.channel.send(jackpot.end(message));
+    //     }
+    //     else {
+    //       message.channel.send(jackpot.start(args, ifProfile(message.author.id), prefix, message));
+    //     }
+    //   break;
     case "bs":
         var battleship = require("./battleship");
         message.channel.send(battleship.start(args, ifProfile(message.author.id), prefix, message));

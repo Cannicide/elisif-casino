@@ -31,7 +31,7 @@ var command = new Command("roulette", (message, args) => {
     }
 
     var prefix = settings.get(message.guild.id, "prefix");
-    var profile = new Profile(message);
+    var profile = new Profile(message.author.id);
 
     var bal = profile.getBal();
 
