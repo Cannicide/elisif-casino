@@ -1,27 +1,28 @@
-var ls = require("./ls");
+var settings = require('./settings');
 
-function donateToUser(args, ifprofile, targetProfile, prefix, message) {
-    if (args && args[0] && args[1] && typeof Number(args[1]) === "number") {
+function donateToUser(args, donor, target, message) {
+    var prefix = settings.get(message.guild.id, "prefix");
+
+    if (args && args[0] && args[1] && !isNan(args[1])) {
         var user = args[0];
         var donations = Number(args[1]);
     }
     else {
         return "Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`";
     }
-    if (ifprofile && targetProfile && donations <= Number(ifprofile) && donations >= 1) {
-        var donorBal = Number(ifprofile) - donations;
-        var targetBal = Number(targetProfile) + donations;
-        var donor = message.author.id + "profile";
-        var target = user.id + "profile";
-        var donorDonations = message.author.id + "donations";
-        var totalDonations = Number(ls.get(donorDonations)) + donations;
-        ls.set(donor, donorBal);
-        ls.set(target, targetBal);
-        ls.set(donorDonations, totalDonations);
+
+    if (donor && target && donations <= Number(donor.getBal()) && donations >= 1) {
+        var donorBal = Number(ifprofile.getBal()) - donations;
+        var targetBal = Number(targetProfile.getBal()) + donations;
+
+        donor.set(donorBal);
+        target.set(targetBal);
+        donor.addDonation(donations);
+
         return `Generous ${message.author.username}, you donated **$${Number(donations).toLocaleString()}** to ${user.username}!`;
     }
     else {
-        return `Create a profile first with \`${prefix}create\`\n(Either you or the person you are donating to does not have a profile).`;
+        return `Sorry ${message.author.username}, either you or the person you are donating to does not have a casino profile. Casino profiles are automatically generated when you send your first message in a guild with Elisif in it.`;
     }
 }
 

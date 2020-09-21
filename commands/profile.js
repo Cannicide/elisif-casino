@@ -22,6 +22,13 @@ function Profile(message, specifiedId) {
         storage[id] = defaultProfile;
     }
 
+    this.exists = () => {
+        storage = evg.get();
+
+        if (id in storage) return this;
+        return false;
+    }
+
     this.getBal = () => {
         generateProfileIfNoneExists();
         return storage["balance"];
@@ -96,7 +103,62 @@ module.exports = {
             var donations = profile.getDonations();
 
             message.channel.send(`${username} has $${Number(bal).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
-        })
+        }, false, false, "Sends you your casino profile: your balance and donation totals.").attachArguments([
+            {
+                name: 'usertag#1234',
+                optional: true
+            }
+        ]),
+
+        new Command("donate", (message, args) => {
+
+            var donate = require("../donate");
+            var receiver = message.mentions.users.first();
+
+            var profileRec = new Profile(receiver.id);
+            var profileDon = new Profile(message.author.id);
+
+            if (!receiver || args.length < 2) {
+                message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + settings.get(message.guild.id, "prefix") + "donate [user] [donation]` to continue.\nExample: `" + settings.get(message.guild.id, "prefix") + "donate @Cannicide#2753 5000`");
+            }
+            else if (receiver.id == message.author.id) {
+                message.channel.send("You cannot donate to yourself.");
+            }
+            else {
+                message.channel.send(donate.toUser([receiver, args[1]], profileDon.exists(), profileRec.exists(), message));
+            }
+
+        }, false, false, "Donate money to another user!"),
+
+        new Command("balance", (message, args) => {
+
+            var profile = new Profile(message.author.id);
+            var username = message.author.username;
+
+            if (args.length >= 1) {
+                var tag = args.toString().replace(/\]/g, "").replace(/ /g, "").split(",", 2)[1].replace(/,/g, " ");
+                var found = message.guild.members.find(m => m.tag == tag);
+
+                if (found) {
+                    profile = new Profile(found.id);
+                    username = found.username;
+                }
+                else {
+                    message.channel.send(`You must specify both a valid username and tag to do that.\nEx: \`Cannicide#2753\``);
+                    return;
+                }
+            }
+
+            var bal = profile.getBal();
+
+            message.channel.send(`${username} has $${Number(bal).toLocaleString()}.`);
+
+        }, false, false, "Sends you your casino balance.").attachArguments([
+            {
+                name: "usertag#1234",
+                optional: true
+            }
+        ])
 
         //TODO: All of the other profile commands
     ]

@@ -26,18 +26,18 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 //Constants required
 // const constants = require("./constants");
 
-function ifProfile(authorid) {
-  if (ls.get(authorid + "profile") && Number(ls.get(authorid + "profile")) >= -10) {
-      var profile = ls.get(authorid + "profile");
-      }
-  else if (Number(ls.get(authorid + "profile")) < -10) {
-    var profile = false;         
-  }
-  else {
-   var profile = false; 
-  }
-  return profile;
-}
+// function ifProfile(authorid) {
+//   if (ls.get(authorid + "profile") && Number(ls.get(authorid + "profile")) >= -10) {
+//       var profile = ls.get(authorid + "profile");
+//       }
+//   else if (Number(ls.get(authorid + "profile")) < -10) {
+//     var profile = false;         
+//   }
+//   else {
+//    var profile = false; 
+//   }
+//   return profile;
+// }
 
 // client.on('guildCreate', guild => {
 //     guild.channels.get(guild.channels.find("name", "general").id).send("Thanks for adding Sif Casino to your guild! Use the command /sifcasino to get started.");
@@ -63,13 +63,13 @@ client.on('message', message => {
   //     }
   //     return false;
   //   }
-    if (ls.get(message.guild.id + "prefix")) {
-        prefix = ls.get(message.guild.id + "prefix");
-        }
-      else {
-         ls.set(message.guild.id + "prefix", "/");
-          prefix = "/";
-      }
+    // if (ls.get(message.guild.id + "prefix")) {
+    //     prefix = ls.get(message.guild.id + "prefix");
+    //     }
+    //   else {
+    //      ls.set(message.guild.id + "prefix", "/");
+    //       prefix = "/";
+    //   }
   // var fixRegExp = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   // constants.setPrefix(prefix);
   // var re = new RegExp(fixRegExp);
@@ -269,19 +269,19 @@ client.on('message', message => {
           throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
         }
       break;
-    case "donate":
-        var donate = require("./donate");
-        var receiver = message.mentions.users.first();
-        if (!receiver) {
-          message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`");
-        }
-        else if (receiver.id == message.author.id) {
-          message.channel.send("You cannot donate to yourself.");
-        }
-        else {
-          message.channel.send(donate.toUser([receiver, args[1]], ifProfile(message.author.id), ifProfile(receiver.id), prefix, message));
-        }
-      break;
+    // case "donate":
+    //     var donate = require("./donate");
+    //     var receiver = message.mentions.users.first();
+    //     if (!receiver) {
+    //       message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`");
+    //     }
+    //     else if (receiver.id == message.author.id) {
+    //       message.channel.send("You cannot donate to yourself.");
+    //     }
+    //     else {
+    //       message.channel.send(donate.toUser([receiver, args[1]], ifProfile(message.author.id), ifProfile(receiver.id), prefix, message));
+    //     }
+    //   break;
     // case "profile":
     //   if (ls.get(message.author.id + "profile") && profile) {
     //     var donations = 0;
@@ -294,14 +294,14 @@ client.on('message', message => {
     //      message.channel.send(`Use ${prefix}create to create a casino profile.`); 
     //   }
     //   break;
-    case "balance":
-      if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
-      }
-      else {
-         message.channel.send(`Use ${prefix}create to create a casino profile.`); 
-      }
-      break;
+    // case "balance":
+    //   if (ls.get(message.author.id + "profile") && profile) {
+    //     message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
+    //   }
+    //   else {
+    //      message.channel.send(`Use ${prefix}create to create a casino profile.`); 
+    //   }
+    //   break;
     // case "create":
     //   if (ls.get(message.author.id + "profile") && profile) {
     //     message.channel.send("You already have a casino profile.");
