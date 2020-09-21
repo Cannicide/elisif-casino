@@ -3,7 +3,7 @@
 var ls = require("./ls");
 
 function hangmanStart(ifprofile, prefix, message) {
-    if (ls.getObj(message.guild.id + "hangmanGame")) {
+    if (ls.get(message.guild.id + "hangmanGame")) {
         return "You have already started a game of hangman! Type `" + prefix + "hm end` to end the game early.";
     }
     else if (ifprofile) {
@@ -36,7 +36,7 @@ function hangmanStart(ifprofile, prefix, message) {
 
 function hangmanEnd(message) {
     if (ls.exist(message.guild.id + "hangmanGame")) {
-        if (ls.getObj(message.guild.id + "hangmanGame").participants[0] == message.author.id || message.member.hasPermission("ADMINISTRATOR")) {
+        if (ls.get(message.guild.id + "hangmanGame").participants[0] == message.author.id || message.member.hasPermission("ADMINISTRATOR")) {
             ls.remove(message.guild.id + "hangmanGame");
             return `Ended hangman game, ${message.author.username}!`;
         }
@@ -52,7 +52,7 @@ function hangmanEnd(message) {
 function hangmanGuess(args, ifprofile, prefix, message) {
     if (ls.exist(message.guild.id + "hangmanGame") && ifprofile) {
         var guess = args[1];
-        var hObj = ls.getObj(message.guild.id + "hangmanGame");
+        var hObj = ls.get(message.guild.id + "hangmanGame");
         var limit = hObj.guesses;
         var word = hObj.word;
         var underscores = [];

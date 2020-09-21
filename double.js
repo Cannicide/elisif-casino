@@ -20,7 +20,7 @@ function dble(args, ifprofile, prefix, message) {
           else if (probability == 0 || probability == 1 || probability == 4 || probability == 5) {
             //Lose
             ls.remove(message.author.id + "doubleGame");
-            ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(ls.getObj(message.author.id + "doubleBetAmount")[0]));
+            ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(ls.get(message.author.id + "doubleBetAmount")[0]));
             ls.remove(message.author.id + "doubleBetAmount");
             return "Unlucky " + message.author.username + ", you lost ||$" + amount + "||.";
           }

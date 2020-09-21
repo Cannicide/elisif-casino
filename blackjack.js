@@ -61,7 +61,7 @@ function endGame(user) {
 }
 
 function userHit(user, message, prefix) {
-    var cardsObj = ls.getObj(user.id + "blackjackGame");
+    var cardsObj = ls.get(user.id + "blackjackGame");
     var card = new Card(randCard());
     var total = arrCardCalc(cardsObj.userTotal);
     var newTotal = total[0] + aceCheck(card.toInteger, total[0]);
@@ -91,7 +91,7 @@ function userHit(user, message, prefix) {
 }
 
 function compHit(user, message) {
-    var cardsObj = ls.getObj(user.id + "blackjackGame");
+    var cardsObj = ls.get(user.id + "blackjackGame");
     var card = new Card(randCard());
     var userTotal = arrCardCalc(cardsObj.userTotal);
     var compTotal = arrCardCalc(cardsObj.compTotal);
@@ -159,7 +159,7 @@ function createCardCollection(user, bet) {
 function startGame(args, ifprofile, prefix, message) {
     if (ifprofile && args[0] && typeof Number(args[0]) === "number" && (Number(args[0]) <= Number(ifprofile))) {
         createCardCollection(message.author, args[0]);
-        var starterCard = ls.getObj(message.author.id + "blackjackGame").userTotal[0];
+        var starterCard = ls.get(message.author.id + "blackjackGame").userTotal[0];
         return `${message.author.username} started a new blackjack game with $${args[0]}.\n${message.author.username} has ${starterCard.val + " " + starterCard.suite}.\nDo \`${prefix}hit\` or \`${prefix}stand\``;
     }
     else if (!ifprofile) {
@@ -171,7 +171,7 @@ function startGame(args, ifprofile, prefix, message) {
 }
 
 function userStand(message) {
-    message.channel.send(`${message.author} stands with: ${arrCardCalc(ls.getObj(message.author.id + "blackjackGame").userTotal)[0]}.`);
+    message.channel.send(`${message.author} stands with: ${arrCardCalc(ls.get(message.author.id + "blackjackGame").userTotal)[0]}.`);
     return compHit(message.author, message);
 }
 

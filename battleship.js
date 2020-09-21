@@ -21,7 +21,7 @@ function randColShip() {
 }
 
 function getBoard(user) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     return userObj.board;
 }
 function hasBoard(user) {
@@ -29,21 +29,21 @@ function hasBoard(user) {
     return userObj;
 }
 function setBoard(user, obj) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     userObj.board = obj;
     ls.set(user.id + "battleshipGame", userObj);
 }
 function setTurn(user, int) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     userObj["turn"] = int;
     ls.set(user.id + "battleshipGame", userObj);
 }
 function getTurn(user) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     return userObj.turn; 
 }
 function displayBoard(user) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     var board = userObj.board;
     var strBoard = "```  1  2  3  4  5  6  7  8  9  10 (<- Columns)\n";
     var num = 0;
@@ -61,15 +61,15 @@ function displayBoard(user) {
     return strBoard;
 }
 function getBet(user) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     return Number(userObj.bet);
 }
 function getRow(user) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     return Number(userObj.shipRow);
 }
 function getCol(user) {
-    var userObj = ls.getObj(user.id + "battleshipGame");
+    var userObj = ls.get(user.id + "battleshipGame");
     return Number(userObj.shipCol);
 }
 function endGame(user) {

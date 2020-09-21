@@ -12,7 +12,7 @@ var ls = require("./ls");
 function getQueue(author) {
     var queueID = author + "musicQueue";
     if (ls.exist(queueID)) {
-        return ls.getObj(queueID);
+        return ls.get(queueID);
         //Will be an array
     }
     else {

@@ -12,9 +12,9 @@ function jackpotStart(args, ifprofile, prefix, message) {
     }
     if (ls.exist(guildId)) {
         //Jackpot object already exists
-        if (ls.getObj(guildId).isEnabled) {
+        if (ls.get(guildId).isEnabled) {
             //Jackpot game is already running, join it
-            var jackpotObj = ls.getObj(guildId);
+            var jackpotObj = ls.get(guildId);
             var isAlreadyIn = jackpotObj.participants.includes(message.author.id);
             if (isAlreadyIn) {
                 //Add to value, not create a new one
@@ -27,7 +27,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
             }
             else {
                 //Add new value
-                var jackpotObj = ls.getObj(guildId);
+                var jackpotObj = ls.get(guildId);
                 jackpotObj.participants.push(message.author.id);
                 jackpotObj.bets.push(bet);
                 var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
@@ -57,7 +57,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
 }
 
 function jackpotEnd(message) {
-    var jackpotObj = ls.getObj(message.guild.id + "jackpotGame");
+    var jackpotObj = ls.get(message.guild.id + "jackpotGame");
     if (message.member.hasPermission("ADMINISTRATOR") || jackpotObj.participants[0] == message.author.id) {
         //End the jackpot game
         var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);

@@ -3,7 +3,7 @@ var ls = require("./ls");
 function getUserObject(author) {
     var asyncUser = author.id + "asyncUserObj";
     if (ls.exist(asyncUser)) {
-        var userObj = ls.getObj(asyncUser);
+        var userObj = ls.get(asyncUser);
     }
     else {
         var userObj = {
@@ -17,13 +17,13 @@ function getUserObject(author) {
 
 function setAwaitObject(author, value) {
     var asyncUser = author.id + "asyncUserObj";
-    var newObj = ls.getObj(asyncUser);
+    var newObj = ls.get(asyncUser);
     newObj.awaitRoulette = value;
     ls.set(asyncUser, newObj);
 }
 function setBetObject(author, value) {
     var asyncUser = author.id + "asyncUserObj";
-    var newObj = ls.getObj(asyncUser);
+    var newObj = ls.get(asyncUser);
     newObj.currentRouletteBet = value;
     ls.set(asyncUser, newObj);
 }
