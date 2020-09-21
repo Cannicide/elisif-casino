@@ -166,10 +166,10 @@ client.on('message', message => {
     //       message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
     //     }
     //   break;
-    case "coin":
-        var coin = require("./coinflip");
-        message.channel.send(coin.flip(args, ifProfile(message.author.id), prefix, message));
-      break;
+    // case "coin":
+    //     var coin = require("./coinflip");
+    //     message.channel.send(coin.flip(args, ifProfile(message.author.id), prefix, message));
+    //   break;
     case "dice":
         var dice = require("./dice");
         message.channel.send(dice.roll(args, ifProfile(message.author.id), prefix, message));
