@@ -1,6 +1,8 @@
 //All commands relating to casino profile (such as /balance and /user:all)
 
 var Command = require('../command');
+var Alias = require('../alias');
+var Interface = require('../interface');
 var evg = (require('../evg'))("profiles");
 var settings = require('../settings');
 
@@ -8,6 +10,7 @@ function Profile(message, specifiedId) {
 
     var id = specifiedId || message.author.id;
     var storage;
+    var user;
 
     var defaultProfile = {
         balance: settings.get(message.guild.id, "startingBalance"),
@@ -17,9 +20,13 @@ function Profile(message, specifiedId) {
     function generateProfileIfNoneExists() {
         storage = evg.get();
 
-        if (id in storage) return;
+        if (id in storage) {
+            user = storage[id];
+            return;
+        }
 
         storage[id] = defaultProfile;
+        user = storage[id];
     }
 
     this.exists = () => {
@@ -31,17 +38,18 @@ function Profile(message, specifiedId) {
 
     this.getBal = () => {
         generateProfileIfNoneExists();
-        return storage["balance"];
+        return user["balance"];
     };
 
     this.getDonations = () => {
         generateProfileIfNoneExists();
-        return storage["donations"];
+        return user["donations"];
     };
 
     function set(amount) {
         generateProfileIfNoneExists();
-        storage["balance"] = Number(amount);
+        user["balance"] = Number(amount);
+        storage[id] = user;
         evg.set(storage);
     }
 
@@ -59,8 +67,17 @@ function Profile(message, specifiedId) {
 
     this.addDonation = (amount) => {
         generateProfileIfNoneExists();
-        storage["donations"] = Number(storage["donations"]) + Number(amount);
+        user["donations"] = Number(storage["donations"]) + Number(amount);
+        storage[id] = user;
         evg.set(storage);
+    }
+
+    this.removeProfile = () => {
+        generateProfileIfNoneExists();
+
+        if (this.exists()) {
+            delete storage[id];
+        }
     }
 
 
@@ -158,7 +175,55 @@ module.exports = {
                 name: "usertag#1234",
                 optional: true
             }
-        ])
+        ]),
+
+        new Alias("bal", "balance"),
+
+        new Command("delete", (message, args) => {
+
+            var profile = new Profile(message.author.id);
+
+            if (profile.exists()) {
+                new Interface.Interface(message, "Are you sure you want to delete your casino account? Type `delete` to delete your account, or type `cancel` to cancel the deletion. This action is irreversible.", (collected, question) => {
+
+                    if (collected.toLowerCase() == "delete") {
+                        profile.removeProfile();
+                        message.channel.send("Account deleted.");
+                    }
+                    else if (collected.toLowerCase() == "cancel") {
+                        message.channel.send("Cancelled account deletion.");
+                    }
+
+                });
+            }
+
+        }, false, false, "Deletes your casino profile entirely, removing both your balance and donations."),
+
+        new Alias("deleteprofile", "delete"),
+
+        new Alias("delprofile", "delete"),
+
+        new Command("reset", (message, args) => {
+
+            var profile = new Profile(message.author.id);
+
+            if (profile.exists()) {
+                new Interface.Interface(message, "Are you sure you want to reset your casino balance? Type `reset` to reset your balance, or type `cancel` to cancel the reset. Your donation statistics will not be affected.", (collected, question) => {
+
+                    if (collected.toLowerCase() == "reset") {
+                        profile.set(0);
+                        message.channel.send("Account balance reset to $0.");
+                    }
+                    else if (collected.toLowerCase() == "cancel") {
+                        message.channel.send("Cancelled casino balance reset.");
+                    }
+
+                });
+            }
+
+        }, false, false, "Resets your casino balance to $0."),
+
+        new Alias("resetprofile", "reset")
 
         //TODO: All of the other profile commands
     ]

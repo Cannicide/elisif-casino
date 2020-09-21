@@ -75,7 +75,7 @@ function EmbedMessage(message, thumbnail, fields, desc) {
  * @param {Object} message - Message containing the command that led to calling on the interface
  * @param {String} question - Question to ask user for a response
  */
-function Interface(message, question, callback, type) {
+function Interface(message, question, callback) {
 
     var collected = false;
     var closed = false;

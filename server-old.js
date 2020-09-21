@@ -126,11 +126,11 @@ client.on('message', message => {
     //     message.author.send(constants.help("main3"));
     //     message.author.send(constants.help("ext"));
     //   break;
-    case "reset":
-        ls.set(message.author.id + "profile", 0);
-        profile = 0;
-        message.channel.send("Balance reset to 0");
-      break;
+    // case "reset":
+    //     ls.set(message.author.id + "profile", 0);
+    //     profile = 0;
+    //     message.channel.send("Balance reset to 0");
+    //   break;
     case "roulette":
         var roulette = require("./roulette");
         message.channel.send(roulette.specifyBet(args, ifProfile(message.author.id), prefix, message));
@@ -312,16 +312,16 @@ client.on('message', message => {
     //     message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
     //   }
     //   break;
-    case "delete":
-      if (ls.get(message.author.id + "profile") <= -1) {
-         message.channel.send("Account deleted.");
-          ls.set(message.author.id + "profile", -100);
-      }
-      else {
-         message.channel.send("Are you sure you want to delete your casino account? Type `" + prefix + "delete` again to delete your account. This action is irreversible."); 
-        ls.set(message.author.id + "profile", -5);
-      }
-      break;
+    // case "delete":
+    //   if (ls.get(message.author.id + "profile") <= -1) {
+    //      message.channel.send("Account deleted.");
+    //       ls.set(message.author.id + "profile", -100);
+    //   }
+    //   else {
+    //      message.channel.send("Are you sure you want to delete your casino account? Type `" + prefix + "delete` again to delete your account. This action is irreversible."); 
+    //     ls.set(message.author.id + "profile", -5);
+    //   }
+    //   break;
     // default:
     //   //External commands go here
     //   var external = require("./external");
