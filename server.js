@@ -24,7 +24,7 @@ var Alias = require("./alias");
 const Evg = require("./evg");
 
 client.on('guildCreate', guild => {
-    guild.channels.find("name", "general").send("Thanks for adding Elisif (formerly Sif Casino) to your guild! Use the command /sifcasino to get started.");
+    guild.channels.find("name", "general").send("Thanks for adding Elisif to your guild! Use the command /sifcasino to get started.");
     guild.createRole({
         name: "Casino",
         color: "#593695"
@@ -40,7 +40,7 @@ var requisites = [];
 
 client.on('ready', () => {
     console.log('Elisif is up and running!');
-    client.user.setActivity('/sifcasino', { type: 'STREAMING', url: 'https://www.twitch.tv/cannicide'});
+    client.user.setActivity('/elisifhelp', { type: 'STREAMING', url: 'https://www.twitch.tv/cannicide'});
 
     //Import commands:
     var cmdfiles = fs.readdirSync("commands");

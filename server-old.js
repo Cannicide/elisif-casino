@@ -12,11 +12,11 @@
 // const listener = app.listen(process.env.PORT, function() {
 //   console.log('Sif Casino listening on port ' + listener.address().port);
 // });
-if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage('./ls');
-  var ls = require("./ls");
-}
+// if (typeof localStorage === "undefined" || localStorage === null) {
+//   var LocalStorage = require('node-localstorage').LocalStorage;
+//   localStorage = new LocalStorage('./ls');
+//   var ls = require("./ls");
+// }
 
 //Discord.js initialized
 // const Discord = require('discord.js');
@@ -93,17 +93,17 @@ client.on('message', message => {
   // if (message.author.bot) {
   //    return false; 
   // }
-  var works = false;
-  var pColor = message.content.toLowerCase();
-  var asyncUser = require("./asyncUser");
-  if ((pColor == "green" || pColor == "red" || pColor == "black") && asyncUser.getUserObj(message.author).awaitRoulette) {
-    command = "rouletteSpin";
-    works = true;
-  }
-  else if (command == "rouletteSpin") {
-    command = "casino";
-    works = true;
-  }
+  // var works = false;
+  // var pColor = message.content.toLowerCase();
+  // var asyncUser = require("./asyncUser");
+  // if ((pColor == "green" || pColor == "red" || pColor == "black") && asyncUser.getUserObj(message.author).awaitRoulette) {
+  //   command = "rouletteSpin";
+  //   works = true;
+  // }
+  // else if (command == "rouletteSpin") {
+  //   command = "casino";
+  //   works = true;
+  // }
   // if ((!splitted[0] || !splitted[0].match(prefix)) && !works) {
   //   return false;
   //   //No prefix detected
@@ -119,7 +119,7 @@ client.on('message', message => {
   //    var profile = constants.profileStarterAmount; 
   // }
   //Check for command:
-  switch (command) {
+  // switch (command) {
     // case "casino":
     //     message.author.send(constants.help("main"));
     //     message.author.send(constants.help("main2"));
@@ -131,14 +131,14 @@ client.on('message', message => {
     //     profile = 0;
     //     message.channel.send("Balance reset to 0");
     //   break;
-    case "roulette":
-        var roulette = require("./roulette");
-        message.channel.send(roulette.specifyBet(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "rouletteSpin":
-        var roulette = require("./roulette");
-        message.channel.send(roulette.spin(message.content, ifProfile(message.author.id), prefix, message));
-      break;
+    // case "roulette":
+    //     var roulette = require("./commands/roulette");
+    //     message.channel.send(roulette.specifyBet(args, ifProfile(message.author.id), prefix, message));
+    //   break;
+    // case "rouletteSpin":
+    //     var roulette = require("./commands/roulette");
+    //     message.channel.send(roulette.spin(message.content, ifProfile(message.author.id), prefix, message));
+    //   break;
     case "jackpot":
         var jackpot = require("./jackpot");
         if (args[0] == "end") {
@@ -331,11 +331,11 @@ client.on('message', message => {
     //       message.channel.send(external.commands[key].get(args, message, secondaryCache));
     //     }
     //   });
-  }
+  // }
   // }
   // catch(err) {
   //   message.channel.send(`Errors found:\n\`\`\`${err}\nAt ${err.stack}\`\`\``);
   // }
-});
+// });
 
-client.login("your token here");
+// client.login("your token here");
