@@ -3,7 +3,7 @@
 var Command = require('../command');
 var Alias = require('../alias');
 var Interface = require('../interface');
-var evg = (require('../evg'))("profiles");
+var evg = new (require('../evg'))("profiles");
 var settings = require('../settings');
 
 function Profile(message, specifiedId) {
@@ -77,6 +77,7 @@ function Profile(message, specifiedId) {
 
         if (this.exists()) {
             delete storage[id];
+            evg.set(storage);
         }
     }
 

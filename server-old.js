@@ -162,7 +162,7 @@ client.on('message', message => {
           throw "GameExistenceError: User already has a game running!\nAt server.js:154:5\nAt discord.js\nAt client.bot.Sif_Casino";
         }
         else {
-          ls.setObj(message.author.id + "doubleBetAmount", args);
+          ls.set(message.author.id + "doubleBetAmount", args);
           message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
         }
       break;

@@ -24,10 +24,10 @@ function addToQueue(author, searchTerm) {
     if (getQueue(author)) {
         var queue = getQueue(author);
         queue.push(searchTerm);
-        ls.setObj(author + "musicQueue", queue);
+        ls.set(author + "musicQueue", queue);
     }
     else {
-        ls.setObj(author + "musicQueue", [searchTerm]);
+        ls.set(author + "musicQueue", [searchTerm]);
     }
 }
 
@@ -37,7 +37,7 @@ function loopQueue(author, message) {
         queue.forEach(function(song, index) {
             queue.push(song);
         });
-        ls.setObj(author + "musicQueue", queue);
+        ls.set(author + "musicQueue", queue);
         message.channel.send(`Added the current queue to itself to loop it once, ${message.author.username}.`);
     }
     else {
@@ -59,7 +59,7 @@ function playMusic(args, message, qPlay) {
         if (!args) return `You need to specify a youtube video to search for!`;
         var url;
         if (!qPlay) {
-            ls.setObj(message.author.id + "musicQueue", [args[0]]);
+            ls.set(message.author.id + "musicQueue", [args[0]]);
         }
         var params = {
             part: "id",
@@ -88,7 +88,7 @@ function playMusic(args, message, qPlay) {
                             voiceChannel.leave();
                         }
                         else {
-                            ls.setObj(message.author.id + "musicQueue", queue);
+                            ls.set(message.author.id + "musicQueue", queue);
                             return playMusic([queue[0], args[1]], message, true);
                         }
                     }
@@ -109,7 +109,7 @@ function playMusic(args, message, qPlay) {
                             voiceChannel.leave();
                         }
                         else {
-                            ls.setObj(message.author.id + "musicQueue", queue);
+                            ls.set(message.author.id + "musicQueue", queue);
                             return playMusic([queue[0], args[1]], message, true);
                         }
                     }

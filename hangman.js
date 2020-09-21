@@ -26,7 +26,7 @@ function hangmanStart(ifprofile, prefix, message) {
         hObj.word = word;
         hObj.guesses = 12;
         hObj.participants.push(message.author.id);
-        ls.setObj(message.guild.id + "hangmanGame", hObj);
+        ls.set(message.guild.id + "hangmanGame", hObj);
         return "You have begun a game of hangman! Use `" + prefix + "hm guess` to begin guessing!\n\n" + underscores;
     }
     else {
@@ -88,7 +88,7 @@ function hangmanGuess(args, ifprofile, prefix, message) {
             }
         }
         message.channel.send("**Hangman Progress**\n\n" + underscores.join(" "));
-        ls.setObj(message.guild.id + "hangmanGame", hObj)
+        ls.set(message.guild.id + "hangmanGame", hObj)
         if (gotLetter) {
             if (underscores.indexOf("⬜") < 0) {
                 hObj.participants.forEach(function(member, index) {
@@ -101,7 +101,7 @@ function hangmanGuess(args, ifprofile, prefix, message) {
         else {
             limit = Number(limit) - 1
             hObj.guesses = limit;
-            ls.setObj(message.guild.id + "hangmanGame", hObj)
+            ls.set(message.guild.id + "hangmanGame", hObj)
             return `Incorrect guess, ${message.author.username}... ` + limit + " guesses left.";
         }
         }

@@ -31,12 +31,12 @@ function hasBoard(user) {
 function setBoard(user, obj) {
     var userObj = ls.getObj(user.id + "battleshipGame");
     userObj.board = obj;
-    ls.setObj(user.id + "battleshipGame", userObj);
+    ls.set(user.id + "battleshipGame", userObj);
 }
 function setTurn(user, int) {
     var userObj = ls.getObj(user.id + "battleshipGame");
     userObj["turn"] = int;
-    ls.setObj(user.id + "battleshipGame", userObj);
+    ls.set(user.id + "battleshipGame", userObj);
 }
 function getTurn(user) {
     var userObj = ls.getObj(user.id + "battleshipGame");
@@ -144,7 +144,7 @@ function init(user, betAmount) {
         turn: 1
     }
     var userLsId = user.id + "battleshipGame";
-    ls.setObj(userLsId, userObj);
+    ls.set(userLsId, userObj);
 }
 
 

@@ -10,7 +10,7 @@ function getUserObject(author) {
             awaitRoulette: false,
             currentRouletteBet: false
         }
-        ls.setObj(asyncUser, userObj);
+        ls.set(asyncUser, userObj);
     }
     return userObj;
 }
@@ -19,13 +19,13 @@ function setAwaitObject(author, value) {
     var asyncUser = author.id + "asyncUserObj";
     var newObj = ls.getObj(asyncUser);
     newObj.awaitRoulette = value;
-    ls.setObj(asyncUser, newObj);
+    ls.set(asyncUser, newObj);
 }
 function setBetObject(author, value) {
     var asyncUser = author.id + "asyncUserObj";
     var newObj = ls.getObj(asyncUser);
     newObj.currentRouletteBet = value;
-    ls.setObj(asyncUser, newObj);
+    ls.set(asyncUser, newObj);
 }
 
 module.exports = {

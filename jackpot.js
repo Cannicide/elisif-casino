@@ -21,7 +21,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
                 var index = jackpotObj.participants.indexOf(message.author.id);
                 jackpotObj.bets[index] += bet;
                 var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
-                ls.setObj(guildId, jackpotObj);
+                ls.set(guildId, jackpotObj);
                 ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
                 return `${message.author.username}, you added $${bet} more to the jackpot! Total jackpot value: **$${total}**`;
             }
@@ -31,7 +31,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
                 jackpotObj.participants.push(message.author.id);
                 jackpotObj.bets.push(bet);
                 var total = jackpotObj.bets.reduce((a,b) => Number(a) + Number(b), 0);
-                ls.setObj(guildId, jackpotObj);
+                ls.set(guildId, jackpotObj);
                 ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
                 return `${message.author.username}, you joined the jackpot with $${bet}! Total jackpot value: **$${total}**`;
             }
@@ -50,7 +50,7 @@ function jackpotStart(args, ifprofile, prefix, message) {
         }
         jackpotObj.participants.push(message.author.id);
         jackpotObj.bets.push(bet);
-        ls.setObj(guildId, jackpotObj);
+        ls.set(guildId, jackpotObj);
         ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) - Number(bet));
         return `${message.author.username}, you created a new jackpot with **$${bet}**\nDo \`${prefix}jackpot [bet]\` to join for a chance to win over **$${Number(bet).toLocaleString()}**!\nEx: \`${prefix}jackpot 2500\` enters the jackpot with $2500, giving the winner a chance to earn over $${Number(bet) + 2500}!`;
     }

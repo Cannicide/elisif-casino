@@ -85,7 +85,7 @@ function userHit(user, message, prefix) {
     else {
         //User can continue hitting
         cardsObj.userTotal.push(card);
-        ls.setObj(user.id + "blackjackGame", cardsObj);
+        ls.set(user.id + "blackjackGame", cardsObj);
         return `${user.username}, hit or stand?\n \`${prefix}hit\` or \`${prefix}stand\``;
     }
 }
@@ -138,7 +138,7 @@ function compHit(user, message) {
     else {
         //Computer continues hitting
         cardsObj.compTotal.push(card);
-        ls.setObj(user.id + "blackjackGame", cardsObj);
+        ls.set(user.id + "blackjackGame", cardsObj);
         return compHit(user, message);
     }
 }
@@ -153,7 +153,7 @@ function createCardCollection(user, bet) {
     var compBase = new Card("base");
     cardsObj.userTotal.push(userBase);
     cardsObj.compTotal.push(compBase);
-    ls.setObj(user.id + "blackjackGame", cardsObj);
+    ls.set(user.id + "blackjackGame", cardsObj);
 }
 
 function startGame(args, ifprofile, prefix, message) {
