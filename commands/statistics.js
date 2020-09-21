@@ -28,7 +28,7 @@ module.exports = {
             var Bot = new Bot(message.client);
             message.channel.send(viewStats(Bot));
 
-        }, false, false, ""),
+        }, false, false, "Views bot statistics, including ping, uptime, and number of guilds."),
 
         new Alias("stats", "statistics")
     ]

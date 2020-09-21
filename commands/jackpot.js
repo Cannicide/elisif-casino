@@ -121,7 +121,7 @@ module.exports = new Command("jackpot", (message, args) => {
         message.channel.send(jackpot.start(args, message));
     }
 
-}, false, false, "").attachArguments([
+}, false, false, "Start, join, or end a jackpot game. Multiplayer; anyone can join, winner takes all.").attachArguments([
     {
         name: "bet | end",
         optional: false
