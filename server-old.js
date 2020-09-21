@@ -205,28 +205,6 @@ client.on('message', message => {
     /* case "guess":
         throw "CommandUtilizationError: This command does not exist yet!";
       break; */
-    case "stats":
-    case "statistics":
-        var statistics = require("./statistics");
-        var Bot = new statistics.Bot(client);
-        message.channel.send(statistics.view(Bot));
-      break;
-    case "play":
-        var music = require("./music");
-        message.channel.send(music.play([args.join(" "), process.env.YT_API], message, false));
-      break;
-    case "stop":
-        var music = require("./music");
-        message.channel.send(music.stop(message));
-      break;
-    case "loop":
-        var music = require("./music");
-        music.loop(message.author.id, message);
-      break;
-    case "queue":
-        var music = require("./music");
-        message.channel.send(music.getQueue(message));
-      break;
     case "hm":
         //Hangman game commands
         var hm = require("./hangman");
