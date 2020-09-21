@@ -211,11 +211,11 @@ module.exports = {
             if (profile.exists()) {
                 new Interface.Interface(message, "Are you sure you want to delete your casino account? Type `delete` to delete your account, or type `cancel` to cancel the deletion. This action is irreversible.", (collected, question) => {
 
-                    if (collected.toLowerCase() == "delete") {
+                    if (collected.content.toLowerCase() == "delete") {
                         profile.removeProfile();
                         message.channel.send("Account deleted.");
                     }
-                    else if (collected.toLowerCase() == "cancel") {
+                    else if (collected.content.toLowerCase() == "cancel") {
                         message.channel.send("Cancelled account deletion.");
                     }
 
@@ -235,11 +235,11 @@ module.exports = {
             if (profile.exists()) {
                 new Interface.Interface(message, "Are you sure you want to reset your casino balance? Type `reset` to reset your balance, or type `cancel` to cancel the reset. Your donation statistics will not be affected.", (collected, question) => {
 
-                    if (collected.toLowerCase() == "reset") {
+                    if (collected.content.toLowerCase() == "reset") {
                         profile.set(0);
                         message.channel.send("Account balance reset to $0.");
                     }
-                    else if (collected.toLowerCase() == "cancel") {
+                    else if (collected.content.toLowerCase() == "cancel") {
                         message.channel.send("Cancelled casino balance reset.");
                     }
 

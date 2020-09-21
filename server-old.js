@@ -156,16 +156,16 @@ client.on('message', message => {
         var battleship = require("./battleship");
         message.channel.send(battleship.guess(args, message));
       break;
-    case "double":
-        var double = require("./double");
-        if (ls.exist(message.author.id + "doubleGame")) {
-          throw "GameExistenceError: User already has a game running!\nAt server.js:154:5\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
-        else {
-          ls.set(message.author.id + "doubleBetAmount", args);
-          message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
-        }
-      break;
+    // case "double":
+    //     var double = require("./double");
+    //     if (ls.exist(message.author.id + "doubleGame")) {
+    //       throw "GameExistenceError: User already has a game running!\nAt server.js:154:5\nAt discord.js\nAt client.bot.Sif_Casino";
+    //     }
+    //     else {
+    //       ls.set(message.author.id + "doubleBetAmount", args);
+    //       message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
+    //     }
+    //   break;
     case "coin":
         var coin = require("./coinflip");
         message.channel.send(coin.flip(args, ifProfile(message.author.id), prefix, message));
@@ -222,30 +222,30 @@ client.on('message', message => {
     case "hit":
         //blackjack hit-subcommand AND double subcommand
         var blackjack = require("./blackjack");
-        var double = require("./double");
+        // var double = require("./double");
         if (ls.exist(message.author.id + "blackjackGame")) {
           message.channel.send(blackjack.hit(message.author, message, prefix));
         }
-        else if (ls.exist(message.author.id + "doubleGame")) {
-          message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
-        }
-        else {
-          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
+        // else if (ls.exist(message.author.id + "doubleGame")) {
+        //   message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
+        // }
+        // else {
+        //   throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
+        // }
       break;
     case "stand":
         //blackjack stand-subcommand AND double subcommand
         var blackjack = require("./blackjack");
-        var double = require("./double");
+        // var double = require("./double");
         if (ls.exist(message.author.id + "blackjackGame")) {
           message.channel.send(blackjack.stand(message));
         }
-        else if (ls.exist(message.author.id + "doubleGame")) {
-          message.channel.send(double.stand(message));
-        }
-        else {
-          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
+        // else if (ls.exist(message.author.id + "doubleGame")) {
+        //   message.channel.send(double.stand(message));
+        // }
+        // else {
+        //   throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
+        // }
       break;
     // case "donate":
     //     var donate = require("./donate");
