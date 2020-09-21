@@ -20,9 +20,6 @@ var Interpreter = require("./interpreter");
 var Command = require("./command");
 var Alias = require("./alias");
 
-//Constants required
-const constants = require("./constants");
-
 //Evergreen storage Required
 const Evg = require("./evg");
 
