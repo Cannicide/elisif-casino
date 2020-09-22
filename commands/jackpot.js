@@ -1,4 +1,4 @@
-var ls = require("./ls");
+var ls = require("../ls");
 var Profile = require("./profile").Profile;
 var settings = require("../settings");
 var Command = require("../command");

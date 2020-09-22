@@ -1,5 +1,5 @@
 //A basic one-player battleship game, adapted for casino
-var ls = require('./ls');
+var ls = require('../ls');
 
 function createBoard() {
     var boardArr = [];
