@@ -1,4 +1,4 @@
-var rand = require("./random");
+var rand = require("../random");
 var ls = require("./ls");
 
 function dice(args, ifprofile, prefix, message) {

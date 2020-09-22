@@ -1,6 +1,6 @@
 //Casino-styled blackjack card-game against the computer
 
-var rand = require("./random");
+var rand = require("../random");
 var Command = require("../command");
 var Interface = require("../interface");
 var Profile = require("./profile").Profile;

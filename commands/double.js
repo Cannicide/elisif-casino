@@ -1,4 +1,4 @@
-var rand = require("./random");
+var rand = require("../random");
 var Command = require("../command");
 var Profile = require("./profile").Profile;
 var Interface = require("../interface")
