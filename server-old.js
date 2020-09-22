@@ -148,14 +148,14 @@
     //       message.channel.send(jackpot.start(args, ifProfile(message.author.id), prefix, message));
     //     }
     //   break;
-    case "bs":
-        var battleship = require("./battleship");
-        message.channel.send(battleship.start(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "bsguess":
-        var battleship = require("./battleship");
-        message.channel.send(battleship.guess(args, message));
-      break;
+    // case "bs":
+    //     var battleship = require("./commands/battleship");
+    //     message.channel.send(battleship.start(args, ifProfile(message.author.id), prefix, message));
+    //   break;
+    // case "bsguess":
+    //     var battleship = require("./commands/battleship");
+    //     message.channel.send(battleship.guess(args, message));
+    //   break;
     // case "double":
     //     var double = require("./double");
     //     if (ls.exist(message.author.id + "doubleGame")) {
