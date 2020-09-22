@@ -48,6 +48,7 @@ function getDefaultSettings() {
         music_channels: [],
         command_channels: [],
         custom_commands: [],
+        extensions: [],
         startingBalance: 50,
         battleshipTurns: 25,
         dollarsPerMessage: 1,
