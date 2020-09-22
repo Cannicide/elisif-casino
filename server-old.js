@@ -52,7 +52,7 @@
 //     client.user.setActivity('/sifcasino', { type: 'STREAMING', url: 'https://www.twitch.tv/ishidres/video/264026461' });
 // });
 
-client.on('message', message => {
+// client.on('message', message => {
   // try {
   //  var splitter = message.content.replace(" ", ";:splitter185151813367::");
   //   var splitted = splitter.split(";:splitter185151813367::");
@@ -210,43 +210,43 @@ client.on('message', message => {
         var hm = require("./hangman");
         message.channel.send(hm.do(args, ifProfile(message.author.id), prefix, message));
       break;
-    case "blackjack":
-        var blackjack = require("./blackjack");
-        if (ls.exist(message.author.id + "blackjackGame")) {
-          throw "GameExistenceError: User already has a game running!\nAt server.js:201:5\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
-        else {
-          message.channel.send(blackjack.start(args, ifProfile(message.author.id), prefix, message));
-        }
-      break;
-    case "hit":
-        //blackjack hit-subcommand AND double subcommand
-        var blackjack = require("./blackjack");
-        // var double = require("./double");
-        if (ls.exist(message.author.id + "blackjackGame")) {
-          message.channel.send(blackjack.hit(message.author, message, prefix));
-        }
-        // else if (ls.exist(message.author.id + "doubleGame")) {
-        //   message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
-        // }
-        // else {
-        //   throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
-        // }
-      break;
-    case "stand":
-        //blackjack stand-subcommand AND double subcommand
-        var blackjack = require("./blackjack");
-        // var double = require("./double");
-        if (ls.exist(message.author.id + "blackjackGame")) {
-          message.channel.send(blackjack.stand(message));
-        }
-        // else if (ls.exist(message.author.id + "doubleGame")) {
-        //   message.channel.send(double.stand(message));
-        // }
-        // else {
-        //   throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
-        // }
-      break;
+    // case "blackjack":
+    //     var blackjack = require("./blackjack");
+    //     if (ls.exist(message.author.id + "blackjackGame")) {
+    //       throw "GameExistenceError: User already has a game running!\nAt server.js:201:5\nAt discord.js\nAt client.bot.Sif_Casino";
+    //     }
+    //     else {
+    //       message.channel.send(blackjack.start(args, ifProfile(message.author.id), prefix, message));
+    //     }
+    //   break;
+    // case "hit":
+    //     //blackjack hit-subcommand AND double subcommand
+    //     var blackjack = require("./blackjack");
+    //     // var double = require("./double");
+    //     if (ls.exist(message.author.id + "blackjackGame")) {
+    //       message.channel.send(blackjack.hit(message.author, message, prefix));
+    //     }
+    //     // else if (ls.exist(message.author.id + "doubleGame")) {
+    //     //   message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
+    //     // }
+    //     // else {
+    //     //   throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
+    //     // }
+    //   break;
+    // case "stand":
+    //     //blackjack stand-subcommand AND double subcommand
+    //     var blackjack = require("./blackjack");
+    //     // var double = require("./double");
+    //     if (ls.exist(message.author.id + "blackjackGame")) {
+    //       message.channel.send(blackjack.stand(message));
+    //     }
+    //     // else if (ls.exist(message.author.id + "doubleGame")) {
+    //     //   message.channel.send(double.stand(message));
+    //     // }
+    //     // else {
+    //     //   throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
+    //     // }
+    //   break;
     // case "donate":
     //     var donate = require("./donate");
     //     var receiver = message.mentions.users.first();
