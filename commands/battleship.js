@@ -2,6 +2,7 @@
 var ls = require('../ls');
 var Command = require("../command");
 var Profile = require("./profile").Profile;
+var Alias = require("../alias");
 var settings = require("../settings");
 
 function createBoard() {
@@ -231,6 +232,10 @@ module.exports = {
                 name: "column",
                 optional: false
             }
-        ])
+        ]),
+
+        new Alias("battleship", "bs"),
+
+        new Alias("battleshipguess", "bsguess")
     ]
 };

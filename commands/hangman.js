@@ -151,17 +151,23 @@ function hangmanDo(args, message) {
     }
 }
 
-module.exports = new Command("hm", (message, args) => {
+module.exports = {
+    commands: [
+        new Command("hm", (message, args) => {
 
-    message.channel.send(hangmanDo(args, message));
+            message.channel.send(hangmanDo(args, message));
 
-}, false, false, "Starts a guild-based hangman game, ends it, or guesses a letter in it, respectively. All participants gain $2500 dollars each upon victory.").attachArguments([
-    {
-        name: "start | end | guess",
-        optional: false
-    }, 
-    {
-        name: "letter",
-        optional: true
-    }
-]);
+        }, false, false, "Starts a guild-based hangman game, ends it, or guesses a letter in it, respectively. All participants gain $2500 dollars each upon victory.").attachArguments([
+            {
+                name: "start | end | guess",
+                optional: false
+            }, 
+            {
+                name: "letter",
+                optional: true
+            }
+        ]),
+
+        new Alias("hangman", "hm")
+    ]
+};

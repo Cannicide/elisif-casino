@@ -92,6 +92,7 @@ module.exports = {
 
 
             message.author.send(embed);
+            message.react("📨");
 
         }, false, false, "Gets a list of all commands, parameters, and their descriptions.").attachArguments([
             {
