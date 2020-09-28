@@ -52,16 +52,16 @@ module.exports = {
 
                         insertions++;
 
-                        if (insertions > 2) {
+                        page.push(res);
+                        if (insertions == 2) {
                             pages.push(page);
                             page = [];
                             insertions = 0;
                         }
-                        else {
-                            page.push(res);
-                        }
                     }
                 });
+
+                if (pages[pages.length - 1] != page && page.length != 0) pages.push(page);
 
                 embed = new Interface.Embed(message, thumb, pages[pageIndex]);
                 embed.embed.title = "**Commands**";
