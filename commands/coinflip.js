@@ -44,7 +44,7 @@ var coin = {
 
 module.exports = new Command("coinflip", (message, args) => {
 
-  var profile = new Profile(message.author.id);
+  var profile = new Profile(message);
   var prefix = settings.get(message.guild.id, "prefix");
 
   message.channel.send(coin.flip(args, profile, prefix, message));

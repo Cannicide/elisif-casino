@@ -6,16 +6,15 @@ var settings = require("../settings");
 
 function dble(amount, message, profile) {
 
-  var prefix = settings.get(message.guild.id, "prefix");
   var probability = rand.num(0, 5);
 
-  if (probability == 2 || probability == 3) {
+  if (probability == 4 || probability == 3 || probability == 1) {
     //Win
     amount = Number(amount) * 2;
 
-    message.channel.send("Double successful, " + message.author.username + "! Current double value: **$" + amount + "!**\nType `" + prefix + "hit` to keep going, or `" + prefix + "stand` to keep the money.");
+    var msg = ("Double successful, " + message.author.username + "! Current double value: **$" + amount + "!**\nType `hit` to keep going, or `stand` to keep the money.");
 
-    new Interface.Interface(message, "", (collected, question) => {
+    new Interface.Interface(message, msg, (collected, question) => {
 
       if (collected.content.toLowerCase() == "hit") {
         dble(amount, message, profile);
@@ -27,10 +26,9 @@ function dble(amount, message, profile) {
 
     });
   }
-  else if (probability == 0 || probability == 1 || probability == 4 || probability == 5) {
+  else if (probability == 0 || probability == 2 || probability == 5) {
     //Lose
 
-    profile.add(0 - amount);
     message.channel.send("Unlucky " + message.author.username + ", you lost ||$" + amount + "||.");
   }
   else {
@@ -43,7 +41,8 @@ function dble(amount, message, profile) {
 module.exports = new Command("double", (message, args) => {
 
     //ls.set(message.author.id + "doubleBetAmount", args);
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
+    var prefix = settings.get(message.guild.id, "prefix");
 
     var bal = profile.getBal();
 
@@ -51,7 +50,7 @@ module.exports = new Command("double", (message, args) => {
       var amount = Number(args[0]);
     }
     else {
-      message.channel.send("Please specify a bet.");
+      return message.channel.send("Please specify a bet.");
     }
 
     if (amount && typeof amount === "number" && amount > 0 && (amount <= bal) && (amount <= 2500)) {

@@ -88,7 +88,7 @@ function guessBoard(row, column, user, message) {
     var shipCol = getCol(user);
     var turn = getTurn(user);
 
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
 
     if (turn == settings.get(message.guild.id, "battleshipTurns")) {
         //Max turns reached, end game and lose bet
@@ -157,7 +157,7 @@ function init(user, betAmount) {
 
 function startGame(args, message) {
     var prefix = settings.get(message.guild.id, "prefix");
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
 
     var bal = profile.getBal();
 

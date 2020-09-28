@@ -65,7 +65,7 @@ function userHit(cardsObj, message) {
     var total = arrCardCalc(cardsObj.userTotal);
     var newTotal = total[0] + aceCheck(card.toInteger, total[0]);
 
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
 
     var bet = Number(cardsObj.bet);
     message.channel.send(`${user.username} drew ${card.val + " " + card.suite}`);
@@ -106,7 +106,7 @@ function compHit(cardsObj, message) {
     var compTotal = arrCardCalc(cardsObj.compTotal);
     var newTotal = compTotal[0] + aceCheck(card.toInteger, compTotal[0]);
     
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
 
     var bet = Number(cardsObj.bet);
     message.channel.send(`Elisif drew ${card.val + " " + card.suite}`);
@@ -159,7 +159,7 @@ function createCardCollection(bet) {
 }
 
 function startGame(args, message) {
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
     var bal = profile.getBal();
 
     var prefix = settings.get(message.guild.id, "prefix");

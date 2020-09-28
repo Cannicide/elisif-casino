@@ -5,7 +5,7 @@ var settings = require("../settings");
 
 function diceRoll(args, message) {
     var prefix = settings.get(message.guild.id, "prefix");
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
 
     var bal = profile.getBal();
 

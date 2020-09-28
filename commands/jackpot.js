@@ -5,7 +5,7 @@ var Command = require("../command");
 
 function jackpotStart(args, message) {
 
-    var profile = new Profile(message.author.id);
+    var profile = new Profile(message);
     var bal = profile.getBal();
 
     var prefix = settings.get(message.guild.id, "prefix");
