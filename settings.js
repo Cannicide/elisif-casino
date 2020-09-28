@@ -52,7 +52,6 @@ function getDefaultSettings() {
         startingBalance: 50,
         battleshipTurns: 25,
         dollarsPerMessage: 1,
-        music_disabled: false,
         bot_disabled: false
     }
 
