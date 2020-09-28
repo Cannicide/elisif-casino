@@ -3,6 +3,7 @@
 //Dependencies: LSON (EvG-Based Storage), node-fetch
 var ls = require("../ls");
 var Command = require("../command");
+var Alias = require("../alias");
 var Interface = require("../interface");
 var fetch = require("node-fetch");
 
@@ -167,7 +168,7 @@ function Queue(message) {
 
     }
 
-    this.displaySong = (msg) => {
+    this.displaySong = (msg, player) => {
 
         reloadStorage();
 
@@ -206,6 +207,7 @@ function Queue(message) {
                     m.reactions.resolve("⏪").users.remove("501862549739012106");
                     m.reactions.resolve(loopEmote).users.remove("501862549739012106");
                 }
+                else player.skip(true);
             });
 
             loopFilter.on("collect", r => {
@@ -256,6 +258,7 @@ function Queue(message) {
                     m.reactions.resolve("⏪").users.remove("501862549739012106");
                     m.reactions.resolve(loopEmote).users.remove("501862549739012106");
                 }
+                else player.skip(false);
             });
         
         });
@@ -295,7 +298,7 @@ function Player(message, pargs) {
                 const dispatcher = conn.playArbitraryInput(song.url);
                 dispatcher.on("end", end => {
 
-                    var nextSong = queue.nextSong();
+                    var nextSong = "reason" in end && end.reason == "skip" ? queue.getSong() : queue.nextSong();
 
                     if (!nextSong) {
                         message.channel.send(`Queue has ended. Left music channel, ${message.author.username}.`);
@@ -315,7 +318,7 @@ function Player(message, pargs) {
                     const dispatcher = connection.playArbitraryInput(song.url);
                     dispatcher.on("end", end => {
 
-                        var nextSong = queue.nextSong();
+                        var nextSong = "reason" in end && end.reason == "skip" ? queue.getSong() : queue.nextSong();
 
                         if (!nextSong) {
                             message.channel.send(`Queue has ended. Left music channel, ${message.author.username}.`);
@@ -376,9 +379,9 @@ function Player(message, pargs) {
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
             
-            queue.displaySong(message);
+            queue.displaySong(message, methods);
         },
-        skip: () => {
+        skip: (isNext) => {
             var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
@@ -388,7 +391,10 @@ function Player(message, pargs) {
 
             if (message.author.id != queue.get().starter || !message.author.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
             
-            conn.player.dispatcher.end();
+            if (isNext) queue.nextSong();
+            else queue.prevSong();
+
+            conn.player.dispatcher.end("skip");
             message.channel.send(`Skipped to next song, ${message.author.tag}.`);
         },
         removeSong: (args, removeAll) => {
@@ -430,6 +436,32 @@ function Player(message, pargs) {
             embed.embed.title = "Music Queue";
 
             message.channel.send(embed);
+        },
+        addQueue: () => {
+
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+
+            if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
+
+            var voiceChannel = message.member.voiceChannel;
+            if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
+
+            fetch("https://cannicideapi.glitch.me/yt/details/" + pargs.join("+"))
+            .then(resp => resp.json())
+            .then(res => {
+                options.name = res.name;
+                options.id = res.id;
+                options.author = res.author;
+                options.keywords = pargs.join("+");
+                options.audio = "https://cannicideapi.glitch.me/yt/name/" + options.keywords;
+
+                queue.addSong(options.name, options.id, options.author, options.msg, options.audio, options.keywords);
+                message.channel.send(`Added ${options.name} by ${options.author} to the queue.`);
+            })
+            .catch(() => {
+                console.error("Could not fetch music details from CannicideAPI.");
+            })
+
         }
     }
 
@@ -461,8 +493,108 @@ module.exports = {
     commands: [
         new Command("play", (message, args) => {
 
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
 
+            if (conn) {
+                new Player(message, args).then((player) => {
+                    player.addQueue(message, args);
+                });
+            }
+            else {
+                new Player(message, args).then((player) => {
+                    player.play(true);
+                });
+            }
 
-        }, false, false, "")
+        }, false, false, "").attachArguments([
+            {
+                name: "keywords",
+                optional: false
+            }
+        ]),
+
+        new Command("pause", (message, args) => {
+
+            new Player(message, false).then((player) => {
+                player.pause();
+            })
+
+        }, false, false, ""),
+
+        new Command("stop", (message, args) => {
+
+            new Player(message, false).then((player) => {
+                player.stop();
+            })
+
+        }, false, false, ""),
+
+        new Command("resume", (message, args) => {
+
+            new Player(message, false).then((player) => {
+                player.resume();
+            })
+
+        }, false, false, ""),
+
+        new Command("skip", (message, args) => {
+
+            new Player(message, false).then((player) => {
+                player.skip(true);
+            })
+
+        }, false, false, ""),
+
+        new Command("song", (message, args) => {
+
+            new Player(message, false).then((player) => {
+                player.display();
+            })
+
+        }, false, false, ""),
+
+        new Alias("songcontrols", "song"),
+
+        new Alias("controls", "song"),
+
+        new Command("queue", (message, args) => {
+
+            if (!args || args.length < 1) args[0] = "list";
+
+            switch(args[0].toLowerCase()) {
+                case "remove":
+                    if (args.length < 2) return message.channel.send(`Please specify a song to remove, ${message.author.tag}.`);
+
+                    new Player(message, false).then((player) => {
+                        player.remove(args.slice(1), false);
+                    })
+                break;
+                case "removeall":
+                    if (args.length < 2) return message.channel.send(`Please specify a song to remove all of, ${message.author.tag}.`);
+
+                    new Player(message, false).then((player) => {
+                        player.remove(args.slice(1), true);
+                    })
+                break;
+                case "add":
+                    if (args.length < 2) return message.channel.send(`Please specify the keywords of a song to add, ${message.author.tag}.`);
+
+                    new Player(message, args.slice(1)).then((player) => {
+                        player.addQueue();
+                    })
+                break;
+                default:
+                    new Player(message, false).then((player) => {
+                        player.queue();
+                    })
+                break;
+            }
+
+        }, false, false, "").attachArguments([
+            {
+                name: "remove | removeall | add | list",
+                optional: true
+            }
+        ])
     ]
 }
