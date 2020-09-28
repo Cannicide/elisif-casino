@@ -202,6 +202,10 @@ function Queue(message) {
                 var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], desc);
                 m.edit(embed);
 
+                var conn = msg.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+
+                if (!conn) return msg.channel.send(`No music is currently being played in this guild.`);
+
                 if (!song) {
                     m.reactions.find(c => c.emoji.toString() == "⏩").remove("501862549739012106");
                     m.reactions.find(c => c.emoji.toString() == "⏪").remove("501862549739012106");
@@ -209,9 +213,6 @@ function Queue(message) {
                     conn.dispatcher.end("skip:false");
                 }
                 else {
-                    var conn = msg.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
-
-                    if (!conn) return msg.channel.send(`No music is currently being played in this guild.`);
 
                     var voiceChannel = msg.member.voiceChannel;
                     if (!voiceChannel) return msg.channel.send(`You need to be in a voice channel first!`);
@@ -271,6 +272,10 @@ function Queue(message) {
                 var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], desc);
                 m.edit(embed);
 
+                var conn = msg.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+
+                if (!conn) return msg.channel.send(`No music is currently being played in this guild.`);
+
                 if (!song) {
                     m.reactions.find(c => c.emoji.toString() == "⏩").remove("501862549739012106");
                     m.reactions.find(c => c.emoji.toString() == "⏪").remove("501862549739012106");
@@ -278,9 +283,6 @@ function Queue(message) {
                     conn.dispatcher.end("skip:false");
                 }
                 else {
-                    var conn = msg.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
-
-                    if (!conn) return msg.channel.send(`No music is currently being played in this guild.`);
 
                     var voiceChannel = msg.member.voiceChannel;
                     if (!voiceChannel) return msg.channel.send(`You need to be in a voice channel first!`);
