@@ -538,7 +538,7 @@ module.exports = {
 
             if (conn) {
                 new Player(message, args).then((player) => {
-                    player.addQueue(message, args);
+                    player.addQueue();
                 });
             }
             else {
@@ -547,7 +547,7 @@ module.exports = {
                 });
             }
 
-        }, false, false, "").attachArguments([
+        }, false, false, "Play a specified song in the voice channel you are in. If already playing a song, the specified song will be added to the queue.").attachArguments([
             {
                 name: "keywords",
                 optional: false
@@ -560,7 +560,7 @@ module.exports = {
                 player.pause();
             })
 
-        }, false, false, ""),
+        }, false, false, "Pauses the currently playing song."),
 
         new Command("stop", (message, args) => {
 
@@ -568,7 +568,7 @@ module.exports = {
                 player.stop();
             })
 
-        }, false, false, ""),
+        }, false, false, "Stops the currently playing song, clears the queue, and disconnects Elisif from your voice channel."),
 
         new Command("resume", (message, args) => {
 
@@ -576,7 +576,7 @@ module.exports = {
                 player.resume();
             })
 
-        }, false, false, ""),
+        }, false, false, "Resumes the currently paused song, if paused."),
 
         new Command("skip", (message, args) => {
 
@@ -584,7 +584,7 @@ module.exports = {
                 player.skip(true);
             })
 
-        }, false, false, ""),
+        }, false, false, "Skips the currently playing song, and starts playing the next song in the queue."),
 
         new Command("song", (message, args) => {
 
@@ -592,7 +592,7 @@ module.exports = {
                 player.display();
             })
 
-        }, false, false, ""),
+        }, false, false, "Sends song information as well as controls for queue loop and skipping to the next/previous song in the queue."),
 
         new Alias("songcontrols", "song"),
 
@@ -633,7 +633,7 @@ module.exports = {
                 break;
             }
 
-        }, false, false, "").attachArguments([
+        }, false, false, "Remove songs from the queue, remove all duplicates of a song from the queue, add a song to the queue, or list the songs in the queue.").attachArguments([
             {
                 name: "remove | removeall | add | list",
                 optional: true
