@@ -10,6 +10,7 @@ function Profile(message) {
 
     var storage;
     var user;
+
     var id = message.author.id;
 
     var defaultProfile = {
@@ -63,7 +64,7 @@ function Profile(message) {
     this.add = add;
 
     this.addForMessage = () => {
-        add(settings.get("dollarsPerMessage"));
+        add(settings.get(message.guild.id, "dollarsPerMessage"));
     }
 
     this.addDonation = (amount) => {
@@ -127,7 +128,7 @@ module.exports = {
 
         new Command("profile", (message, args) => {
 
-            var profile = new Profile(message.author.id);
+            var profile = new Profile(message);
             var username = message.author.username;
 
             if (args.length >= 1) {
@@ -160,7 +161,7 @@ module.exports = {
             var receiver = message.mentions.users.first();
 
             var profileRec = new Profile(receiver.id);
-            var profileDon = new Profile(message.author.id);
+            var profileDon = new Profile(message);
 
             if (!receiver || args.length < 2) {
                 message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + settings.get(message.guild.id, "prefix") + "donate [user] [donation]` to continue.\nExample: `" + settings.get(message.guild.id, "prefix") + "donate @Cannicide#2753 5000`");
@@ -176,7 +177,7 @@ module.exports = {
 
         new Command("balance", (message, args) => {
 
-            var profile = new Profile(message.author.id);
+            var profile = new Profile(message);
             var username = message.author.username;
 
             if (args.length >= 1) {
@@ -208,7 +209,7 @@ module.exports = {
 
         new Command("delete", (message, args) => {
 
-            var profile = new Profile(message.author.id);
+            var profile = new Profile(message);
 
             if (profile.exists()) {
                 new Interface.Interface(message, "Are you sure you want to delete your casino account? Type `delete` to delete your account, or type `cancel` to cancel the deletion. This action is irreversible.", (collected, question) => {
@@ -232,7 +233,7 @@ module.exports = {
 
         new Command("reset", (message, args) => {
 
-            var profile = new Profile(message.author.id);
+            var profile = new Profile(message);
 
             if (profile.exists()) {
                 new Interface.Interface(message, "Are you sure you want to reset your casino balance? Type `reset` to reset your balance, or type `cancel` to cancel the reset. Your donation statistics will not be affected.", (collected, question) => {

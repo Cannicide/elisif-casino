@@ -33,11 +33,11 @@ function getGuildSetting(guildId, setting) {
     if (getGuildSettings(guildId)) {
         //Guild settings for this guild exist
 
-        return getGuildSettings()[setting];
+        return getGuildSettings(guildId)[setting];
     }
     else {
         setGuildSetting(guildId, setting, getDefaultSettings()[setting]);
-        return getGuildSettings()[setting];
+        return getGuildSettings(guildId)[setting];
     }
 }
 
