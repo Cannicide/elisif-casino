@@ -1,7 +1,7 @@
 //Manage guild settings for the Elisif bot.
 
 //The evg storage object for guild settings
-var evg = new (require('../evg'))("settings");
+var evg = new (require('./evg'))("settings");
 
 function getGuildSettings(guildId) {
     return guildId in evg.get() ? evg.get()[guildId] : false;

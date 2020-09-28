@@ -6,10 +6,11 @@ var Interface = require('../interface');
 var evg = new (require('../evg'))("profiles");
 var settings = require('../settings');
 
-function Profile(id) {
+function Profile(message) {
 
     var storage;
     var user;
+    var id = message.author.id;
 
     var defaultProfile = {
         balance: settings.get(message.guild.id, "startingBalance"),
@@ -55,7 +56,8 @@ function Profile(id) {
     this.set = set;
 
     function add(amount) {
-        set(Number(storage.balance) + Number(amount));
+        generateProfileIfNoneExists();
+        set(Number(user.balance) + Number(amount));
     }
 
     this.add = add;

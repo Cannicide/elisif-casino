@@ -106,7 +106,7 @@ client.on('message', message => {
 
         if (message.content == "/sifcasino" || message.content == "/elisif" || message.content == "/elisifhelp") {
             
-            var usable = commands.find(c => c.getName() == "help");
+            var usable = commands.find(c => c.name == "help").cmd;
             usable.set(message);
 
             usable.execute([prefix, args]).catch((err) => {
@@ -118,7 +118,7 @@ client.on('message', message => {
         else if (message.content == "/elisifprefix") {
             //Fetches the prefix (setting the prefix through this is not enabled)
 
-            var usable = commands.find(c => c.getName() == "prefix");
+            var usable = commands.find(c => c.name == "prefix").cmd;
             usable.set(message);
 
             usable.execute([]).catch((err) => {

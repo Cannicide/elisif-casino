@@ -1,4 +1,5 @@
 var Command = require('../command');
+var Alias = require('../alias');
 
 function Bot(client) {
     this.readyAt = "Ready at: " + client.readyAt;

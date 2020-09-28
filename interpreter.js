@@ -7,7 +7,7 @@ function Interpreter(message) {
     this.interpret = (args) => {
 
         //Always interpret adding money balance on non-command message:
-        var profile = new Profile(message.author.id);
+        var profile = new Profile(message);
         profile.addForMessage();
 
         //Suggestion reactions:

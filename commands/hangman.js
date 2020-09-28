@@ -3,6 +3,7 @@
 var ls = require("../ls");
 var Command = require("../command");
 var Profile = require("./profile").Profile;
+var Alias = require("../alias");
 var settings = require("../settings");
 
 function hangmanStart(prefix, message) {
