@@ -7,7 +7,7 @@ var settings = require('../settings');
 module.exports = new Command('prefix', (message, args) => {
 
     var nPref = args[0];
-    if (nPref.length > 1) {
+    if (nPref && nPref.length > 1) {
         //Too long prefix
         message.channel.send(`Sorry ${message.author.tag}, prefixes can only be at max one character long.`);
     }
@@ -22,8 +22,8 @@ module.exports = new Command('prefix', (message, args) => {
     else {
         //Change the prefix
 
-        ls.set(message.guild.id + "prefix", nPref);
-        message.channel.send(`Set the server's prefix to ${nPref}. Use \`/fetch prefix\` to identify this guild's current prefix.`);
+        settings.set(message.guild.id, "prefix", nPref);
+        message.channel.send(`Set the server's prefix to ${nPref}. Use \`/elisifprefix\` to identify this guild's current prefix.`);
     }
 
 }, {

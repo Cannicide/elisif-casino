@@ -23,6 +23,9 @@ var Alias = require("./alias");
 //Evergreen storage Required
 const Evg = require("./evg");
 
+//Guild settings
+const settings = require("./settings");
+
 client.on('guildCreate', guild => {
     guild.channels.find("name", "general").send("Thanks for adding Elisif to your guild! Use the command /sifcasino to get started.");
     guild.createRole({
@@ -74,7 +77,7 @@ client.on('message', message => {
 
         //Determine prefix
 
-            //if (ls contains prefix) then do stuff
+            prefix = settings.get(message.guild.id, "prefix");
 
         //Command determination:
 
