@@ -40,7 +40,7 @@ function Queue(message) {
 
         reloadStorage();
 
-        return index >= storage.songs.length ? false : storage.songs[index];
+        return storage.index >= storage.songs.length ? false : storage.songs[storage.index];
 
     }
 
@@ -51,7 +51,7 @@ function Queue(message) {
         storage.songs.push({
             name: name,
             id: id,
-            audio: audio,
+            url: audio,
             artist: author,
             requester: msg.author.tag,
             keywords: keywords
@@ -173,9 +173,9 @@ function Queue(message) {
         reloadStorage();
 
         var song = storage.songs[storage.index];
-        var embed = new Interface.Embed(message, "youtube logo here", [], 
+        var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], 
         `**[${song.name}](https://www.youtube.com/watch?v=${song.id})**\n\n` +
-        `\`Requested by:${song.requester}\``);
+        `\`Requested by: ${song.requester}\``);
 
         msg.channel.send(embed).then((m) => {
 
@@ -191,31 +191,49 @@ function Queue(message) {
             let backFilter = m.createReactionCollector((reaction, user) => reaction.emoji.name === '⏪' && user.id === msg.author.id, { time: 120000 });
         
             forwardsFilter.on("collect", r => {
-                m.reactions.resolve("⏩").users.remove(msg.author.id);
+                r.remove(msg.author);
 
                 var song = this.nextSong();
                 var desc = "The queue has ended.";
                 
                 if (song) desc = `**[${song.name}](https://www.youtube.com/watch?v=${song.id})**\n\n` +
-                `\`Requested by:${song.requester}\``;
+                `\`Requested by: ${song.requester}\``;
 
-                var embed = new Interface.Embed(message, "youtube logo here", [], desc);
+                var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], desc);
                 m.edit(embed);
 
                 if (!song) {
-                    m.reactions.resolve("⏩").users.remove("501862549739012106");
-                    m.reactions.resolve("⏪").users.remove("501862549739012106");
-                    m.reactions.resolve(loopEmote).users.remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == "⏩").remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == "⏪").remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == loopEmote).remove("501862549739012106");
+                    conn.dispatcher.end("skip:false");
                 }
-                else player.skip(true);
+                else {
+                    var conn = msg.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+
+                    if (!conn) return msg.channel.send(`No music is currently being played in this guild.`);
+
+                    var voiceChannel = msg.member.voiceChannel;
+                    if (!voiceChannel) return msg.channel.send(`You need to be in a voice channel first!`);
+
+                    if (msg.author.id != this.get().starter || !msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+
+                    conn.dispatcher.end("skip:" + song);
+                    msg.channel.send(`Skipped to next song, ${msg.author.tag}.`).then(c => {
+                        setTimeout(() => {
+                            c.delete();
+                        }, 3000);
+                    });
+                }
             });
 
             loopFilter.on("collect", r => {
-                m.reactions.resolve(loopEmote).users.remove(msg.author.id);
+                r.remove(msg.author);
                 if (loopEmote == loopEmotes[0]) loopEmote = loopEmotes[1]
                 else loopEmote = loopEmotes[0];
 
-                m.reactions.resolve("⏩").users.remove("501862549739012106");
+                r.remove("501862549739012106");
+                m.reactions.find(c => c.emoji.toString() == "⏩").remove("501862549739012106");
                 m.react(loopEmote).then(r3 => m.react("⏩"));
 
                 reloadStorage();
@@ -228,16 +246,16 @@ function Queue(message) {
                 var desc = "The queue has ended.";
 
                 if (song) desc = `**[${song.name}](https://www.youtube.com/watch?v=${song.id})**\n\n` +
-                `Loop: ${storage.loop}` +
-                `\`Requested by:${song.requester}\``;
+                `Loop: ${storage.loop}\n` +
+                `\`Requested by: ${song.requester}\``;
 
-                var embed = new Interface.Embed(message, "youtube logo here", [], desc);
+                var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], desc);
                 m.edit(embed);
 
                 if (!song) {
-                    m.reactions.resolve("⏩").users.remove("501862549739012106");
-                    m.reactions.resolve("⏪").users.remove("501862549739012106");
-                    m.reactions.resolve(loopEmote).users.remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == "⏩").remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == "⏪").remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == loopEmote).remove("501862549739012106");
                 }
             });
 
@@ -248,17 +266,34 @@ function Queue(message) {
                 var desc = "The queue has ended.";
                 
                 if (song) desc = `**[${song.name}](https://www.youtube.com/watch?v=${song.id})**\n\n` +
-                `\`Requested by:${song.requester}\``;
+                `\`Requested by: ${song.requester}\``;
 
-                var embed = new Interface.Embed(message, "youtube logo here", [], desc);
+                var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], desc);
                 m.edit(embed);
 
                 if (!song) {
-                    m.reactions.resolve("⏩").users.remove("501862549739012106");
-                    m.reactions.resolve("⏪").users.remove("501862549739012106");
-                    m.reactions.resolve(loopEmote).users.remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == "⏩").remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == "⏪").remove("501862549739012106");
+                    m.reactions.find(c => c.emoji.toString() == loopEmote).remove("501862549739012106");
+                    conn.dispatcher.end("skip:false");
                 }
-                else player.skip(false);
+                else {
+                    var conn = msg.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+
+                    if (!conn) return msg.channel.send(`No music is currently being played in this guild.`);
+
+                    var voiceChannel = msg.member.voiceChannel;
+                    if (!voiceChannel) return msg.channel.send(`You need to be in a voice channel first!`);
+
+                    if (msg.author.id != this.get().starter || !msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+    
+                    conn.dispatcher.end("skip:" + song);
+                    msg.channel.send(`Skipped to next song, ${msg.author.tag}.`).then(c => {
+                        setTimeout(() => {
+                            c.delete();
+                        }, 3000);
+                    });
+                }
             });
         
         });
@@ -282,29 +317,31 @@ function Player(message, pargs) {
     }
 
     var methods = {
-        play: (addingSong) => {
+        play: (addingSong, dontDisplay) => {
             var voiceChannel = message.member.voiceChannel;
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
-            if (!args) return message.channel.send(`You need to specify music to search for!`);
+            if (!pargs) return message.channel.send(`You need to specify music to search for!`);
 
             if (addingSong) queue.addSong(options.name, options.id, options.author, options.msg, options.audio, options.keywords);
 
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (conn) {
                 var song = queue.getSong();
-                queue.displaySong(message);
+                if (!dontDisplay) queue.displaySong(message);
                 
                 const dispatcher = conn.playArbitraryInput(song.url);
                 dispatcher.on("end", end => {
 
-                    var nextSong = "reason" in end && end.reason == "skip" ? queue.getSong() : queue.nextSong();
+                    var nextSong = end.match("skip") ? queue.getSong() : queue.nextSong();
+
+                    if (end.match("skip") && end.split("skip:")[1] == "false") nextSong = false;
 
                     if (!nextSong) {
                         message.channel.send(`Queue has ended. Left music channel, ${message.author.username}.`);
                         voiceChannel.leave();
                     }
-                    else methods.play(false);
+                    else methods.play(false, true);
 
                 });
             }
@@ -313,18 +350,20 @@ function Player(message, pargs) {
                     message.channel.send(`Joined music channel, ${message.author.username}.`);
                     var song = queue.getSong();
 
-                    queue.displaySong(message);
+                    if (!dontDisplay) queue.displaySong(message);
                     
                     const dispatcher = connection.playArbitraryInput(song.url);
                     dispatcher.on("end", end => {
 
-                        var nextSong = "reason" in end && end.reason == "skip" ? queue.getSong() : queue.nextSong();
+                        var nextSong = end.match("skip") ? queue.getSong() : queue.nextSong();
+
+                        if (end.match("skip") && end.split("skip:")[1] == "false") nextSong = false;
 
                         if (!nextSong) {
                             message.channel.send(`Queue has ended. Left music channel, ${message.author.username}.`);
                             voiceChannel.leave();
                         }
-                        else methods.play();
+                        else methods.play(false, true);
 
                     });
                 
@@ -333,79 +372,79 @@ function Player(message, pargs) {
 
         },
         stop: () => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
             var voiceChannel = message.member.voiceChannel;
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
-            if (message.author.id != queue.get().starter || !message.author.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+            if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
            
             queue.endQueue();
-            conn.player.dispatcher.end();
+            conn.dispatcher.end();
             message.channel.send(`Stopped music, ${message.author.tag}.`);
         },
         resume: () => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
             var voiceChannel = message.member.voiceChannel;
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
-            if (message.author.id != queue.get().starter || !message.author.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+            if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
             if (!dispatcher.paused) return message.channel.send(`Music in this guild is already resumed.`);
             
-            conn.player.dispatcher.resume();
+            conn.dispatcher.resume();
             message.channel.send(`Resumed music, ${message.author.tag}.`);
         },
         pause: () => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
             var voiceChannel = message.member.voiceChannel;
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
-            if (message.author.id != queue.get().starter || !message.author.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+            if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
             if (dispatcher.paused) return message.channel.send(`Music in this guild is already paused.`);
             
-            conn.player.dispatcher.pause();
+            conn.dispatcher.pause();
             message.channel.send(`Paused music, ${message.author.tag}.`);
         },
         display: () => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
             
             queue.displaySong(message, methods);
         },
         skip: (isNext) => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
             var voiceChannel = message.member.voiceChannel;
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
-            if (message.author.id != queue.get().starter || !message.author.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+            if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
             
             if (isNext) queue.nextSong();
             else queue.prevSong();
 
-            conn.player.dispatcher.end("skip");
+            conn.dispatcher.end("skip");
             message.channel.send(`Skipped to next song, ${message.author.tag}.`);
         },
         removeSong: (args, removeAll) => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
             var voiceChannel = message.member.voiceChannel;
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
-            if (message.author.id != queue.get().starter || !message.author.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
+            if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
             
             if (removeAll) {
                 var removed = queue.removeSongs(args.join(" "));
@@ -418,7 +457,7 @@ function Player(message, pargs) {
             }
         },
         queue: () => {
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
@@ -432,14 +471,14 @@ function Player(message, pargs) {
 
             });
 
-            var embed = new Interface.Embed(message, "youtube logo here", [], response);
+            var embed = new Interface.Embed(message, "https://images-ext-2.discordapp.net/external/4drkq2ygDPQKt-TGs7QzYXwPsRCueV8-XHF59EcEdqo/https/cdn.discordapp.com/icons/668485643487412234/4a8ae89ac65f47638b418c80269e2de6.jpg", [], response);
             embed.embed.title = "Music Queue";
 
             message.channel.send(embed);
         },
         addQueue: () => {
 
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (!conn) return message.channel.send(`No music is currently being played in this guild.`);
 
@@ -449,9 +488,9 @@ function Player(message, pargs) {
             fetch("https://cannicideapi.glitch.me/yt/details/" + pargs.join("+"))
             .then(resp => resp.json())
             .then(res => {
-                options.name = res.name;
-                options.id = res.id;
-                options.author = res.author;
+                options.name = res.details.name;
+                options.id = res.details.id;
+                options.author = res.details.author;
                 options.keywords = pargs.join("+");
                 options.audio = "https://cannicideapi.glitch.me/yt/name/" + options.keywords;
 
@@ -470,9 +509,9 @@ function Player(message, pargs) {
             fetch("https://cannicideapi.glitch.me/yt/details/" + pargs.join("+"))
             .then(resp => resp.json())
             .then(res => {
-                options.name = res.name;
-                options.id = res.id;
-                options.author = res.author;
+                options.name = res.details.name;
+                options.id = res.details.id;
+                options.author = res.details.author;
                 options.keywords = pargs.join("+");
                 options.audio = "https://cannicideapi.glitch.me/yt/name/" + options.keywords;
 
@@ -493,7 +532,7 @@ module.exports = {
     commands: [
         new Command("play", (message, args) => {
 
-            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == msg.guild.id);
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
 
             if (conn) {
                 new Player(message, args).then((player) => {
@@ -559,21 +598,23 @@ module.exports = {
 
         new Command("queue", (message, args) => {
 
-            if (!args || args.length < 1) args[0] = "list";
+            var arg = args[0];
 
-            switch(args[0].toLowerCase()) {
+            if (!args || !args[0] || args.length < 1) arg = "list";
+
+            switch(arg.toLowerCase()) {
                 case "remove":
                     if (args.length < 2) return message.channel.send(`Please specify a song to remove, ${message.author.tag}.`);
 
                     new Player(message, false).then((player) => {
-                        player.remove(args.slice(1), false);
+                        player.removeSong(args.slice(1), false);
                     })
                 break;
                 case "removeall":
                     if (args.length < 2) return message.channel.send(`Please specify a song to remove all of, ${message.author.tag}.`);
 
                     new Player(message, false).then((player) => {
-                        player.remove(args.slice(1), true);
+                        player.removeSong(args.slice(1), true);
                     })
                 break;
                 case "add":
