@@ -396,7 +396,7 @@ function Player(message, pargs) {
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
             if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
-            if (!dispatcher.paused) return message.channel.send(`Music in this guild is already resumed.`);
+            if (!conn.dispatcher.paused) return message.channel.send(`Music in this guild is already resumed.`);
             
             conn.dispatcher.resume();
             message.channel.send(`Resumed music, ${message.author.tag}.`);
@@ -410,7 +410,7 @@ function Player(message, pargs) {
             if (!voiceChannel) return message.channel.send(`You need to be in a voice channel first!`);
 
             if (message.author.id != queue.get().starter || !message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`You must be the starter of the current queue or an administrator to do that.`);
-            if (dispatcher.paused) return message.channel.send(`Music in this guild is already paused.`);
+            if (conn.dispatcher.paused) return message.channel.send(`Music in this guild is already paused.`);
             
             conn.dispatcher.pause();
             message.channel.send(`Paused music, ${message.author.tag}.`);
