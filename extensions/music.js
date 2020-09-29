@@ -65,7 +65,7 @@ function Queue(message) {
 
         reloadStorage();
 
-        var songKeywords = storage.songs.find(s => s.keywords == keywords);
+        var songKeywords = storage.songs.find(s => s.keywords == keywords.replace(/ /g, "+"));
         var songName = storage.songs.find(s => s.name == keywords);
         var songUrl = storage.songs.find(s => keywords.match("youtube.com/watch?v=" + s.id));
 
@@ -81,6 +81,11 @@ function Queue(message) {
         else return false;
 
         saveStorage();
+
+        if (storage.songs.length == 0) {
+            var conn = message.client.voiceConnections.find(val => val.channel.guild.id == message.guild.id);
+            conn.dispatcher.end();
+        }
 
         return true;
 
@@ -261,7 +266,7 @@ function Queue(message) {
             });
 
             backFilter.on("collect", r => {
-                m.reactions.resolve("⏪").users.remove(msg.author.id);
+                r.remove(msg.author.id);
 
                 var song = this.prevSong();
                 var desc = "The queue has ended.";
