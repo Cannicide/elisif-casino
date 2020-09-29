@@ -32,7 +32,7 @@ function diceRoll(args, message) {
         }
         else {
           profile.add(0 - amount);
-          return `Unlucky ${message.author.username}, you lost \`$"${amount}"\`.`;
+          return `You rolled ${roll1} and ${roll2}.\nUnlucky ${message.author.username}, you lost \`$${amount}\`.`;
         }
     }
     else {
