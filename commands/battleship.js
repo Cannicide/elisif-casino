@@ -116,17 +116,17 @@ function guessBoard(row, column, user, message) {
     }
     else if (row > 10 || column > 10 || row <= 0 || column <= 0) {
         //Value is outside the battleship board array's bounds
-        return `||Turn: ${turn - 1}/${settings.get(message.guild.id, "battleshipTurns")}|| Those coordinates aren't even in the ocean, ${user.username}! Keep row and column guesses between 1 and 10.`;
+        return `\`Turn: ${turn - 1}/${settings.get(message.guild.id, "battleshipTurns")}\` Those coordinates aren't even in the ocean, ${user.username}! Keep row and column guesses between 1 and 10.`;
     }
     else if (board[row - 1][column - 1] == "X") {
         //This value was already guessed...
-        return `||Turn: ${turn - 1}/${settings.get(message.guild.id, "battleshipTurns")}|| Those coordinates have already been guessed. Try different ones! Current board:\n\n${displayBoard(user)}`;
+        return `\`Turn: ${turn - 1}/${settings.get(message.guild.id, "battleshipTurns")}\` Those coordinates have already been guessed. Try different ones! Current board:\n\n${displayBoard(user)}`;
     }
     else {
         //Incorrect guess
         board[row - 1][column - 1] = "X";
         setBoard(user, board);
-        return `||Turn: ${turn - 1}/${settings.get(message.guild.id, "battleshipTurns")}|| Missed the battleship. Keep trying! Current board:\n\n${displayBoard(user)}`;
+        return `\`Turn: ${turn - 1}/${settings.get(message.guild.id, "battleshipTurns")}\` Missed the battleship. Keep trying! Current board:\n\n${displayBoard(user)}`;
     }
 }
 

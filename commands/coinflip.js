@@ -26,11 +26,11 @@ function coinflip(args, profile, prefix, message) {
         else if ((probability == 1 && side.toLowerCase() == "heads") || (probability == 0 && side.toLowerCase() == "tails")) {
           //Lose
           profile.add(0 - amount);
-          return "Unlucky " + message.author.username + ", you guessed " + side + " but the coin was " + coinside[probability] + ". You lost ||$" + amount + "||.";
+          return "Unlucky " + message.author.username + ", you guessed " + side + " but the coin was " + coinside[probability] + ". You lost \`$" + amount + "\`.";
         }
         else {
           //Error
-          return "Error - Click to reveal: ||``` Error in line 14 of coinflip.js; Local variable probability did not return any of the 2 possible values: coinside[0] (heads) and coinside[1] (tails). ```||";
+          return "Error - Click to reveal: ``` Error in line 14 of coinflip.js; Local variable probability did not return any of the 2 possible values: coinside[0] (heads) and coinside[1] (tails). ```";
         }
     }
     else {

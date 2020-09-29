@@ -29,11 +29,11 @@ function dble(amount, message, profile) {
   else if (probability == 0 || probability == 2 || probability == 5) {
     //Lose
 
-    message.channel.send("Unlucky " + message.author.username + ", you lost ||$" + amount + "||.");
+    message.channel.send("Unlucky " + message.author.username + ", you lost \`$" + amount + "\`.");
   }
   else {
     //Error
-    message.channel.send("Error - Click to reveal: ||``` Error in line 12 of double.js; Local variable probability did not return any of the 3 possible values: 0, 1, and 2. ```||");
+    message.channel.send("Error - Click to reveal: ``` Error in line 12 of double.js; Local variable probability did not return any of the 3 possible values: 0, 1, and 2. ```");
   }
 
 }
