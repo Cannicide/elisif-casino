@@ -133,6 +133,7 @@ module.exports = {
 
             var profile = new Profile(message);
             var username = message.author.username;
+            var url = message.author.avatarURL;
 
             if (args.length >= 1) {
                 var tag = args.join(" ");
@@ -141,6 +142,7 @@ module.exports = {
                 if (found) {
                     profile = new Profile(message, found.id);
                     username = found.user.username;
+                    url = found.user.avatarURL;
                 }
                 else {
                     message.channel.send(`You must specify both a valid username and tag to do that.\nEx: \`Cannicide#2753\``);
@@ -151,7 +153,11 @@ module.exports = {
             var bal = profile.getBal();
             var donations = profile.getDonations();
 
-            message.channel.send(`${username} has $${Number(bal).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
+            var embed = new Interface.Embed(message, "", [], `Balance: $${Number(bal).toLocaleString()}\nAmount Donated: $${Number(donations).toLocaleString()}`)
+            embed.embed.author.name = username;
+            embed.embed.author.icon_url = url;
+
+            message.channel.send(embed);
         }, false, false, "Sends you your casino profile: your balance and donation totals.").attachArguments([
             {
                 name: 'usertag#1234',
@@ -183,6 +189,7 @@ module.exports = {
 
             var profile = new Profile(message);
             var username = message.author.username;
+            var url = message.author.avatarURL;
 
             if (args.length >= 1) {
                 var tag = args.join(" ");
@@ -191,6 +198,7 @@ module.exports = {
                 if (found) {
                     profile = new Profile(message, found.id);
                     username = found.user.username;
+                    url = found.user.avatarURL;
                 }
                 else {
                     message.channel.send(`You must specify both a valid username and tag to do that.\nEx: \`Cannicide#2753\``);
@@ -200,7 +208,11 @@ module.exports = {
 
             var bal = profile.getBal();
 
-            message.channel.send(`${username} has $${Number(bal).toLocaleString()}.`);
+            var embed = new Interface.Embed(message, "", [], `Balance: $${Number(bal).toLocaleString()}`);
+            embed.embed.author.name = username;
+            embed.embed.author.icon_url = url;
+
+            message.channel.send(embed);
 
         }, false, false, "Sends you your casino balance.").attachArguments([
             {
