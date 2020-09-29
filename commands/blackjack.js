@@ -98,15 +98,13 @@ function userHit(cardsObj, message) {
 
 }
 
-function compHit(cardsObj, message) {
+function compHit(cardsObj, message, profile) {
     var user = message.author;
 
     var card = new Card(randCard());
     var userTotal = arrCardCalc(cardsObj.userTotal);
     var compTotal = arrCardCalc(cardsObj.compTotal);
     var newTotal = compTotal[0] + aceCheck(card.toInteger, compTotal[0]);
-    
-    var profile = new Profile(message);
 
     var bet = Number(cardsObj.bet);
     message.channel.send(`Elisif drew ${card.val + " " + card.suite}`);
@@ -114,34 +112,37 @@ function compHit(cardsObj, message) {
     if (newTotal > 21) {
         //Computer busted - end game (user win)
         profile.add(bet);
-        return `Elisif busted; **${user.username} wins**!`;
+        message.channel.send(`Elisif busted; **${user.username} wins**!`);
     }
     else if (newTotal >= 17) {
         //Computer stands
         if (newTotal == 21 && compTotal[1] == 1) {
             //Computer has blackjack
             profile.add(0 - bet);
-            return `Elisif has blackjack; Sif wins, **${user.username} loses**.`;
+            message.channel.send(`Elisif has blackjack; Sif wins, **${user.username} loses**.`);
         }
         else if (newTotal > userTotal[0]) {
             //Computer has larger number - end game (user loss)
             profile.add(0 - bet);
-            return `Elisif stands with ${newTotal}; Sif wins, **${user.username} loses**.`;
+            message.channel.send(`Elisif stands with ${newTotal}; Sif wins, **${user.username} loses**.`);
         }
         else if (newTotal == userTotal[0]) {
             //It's a tie
-            return `Elisif stands with ${newTotal}; **It's a tie**.`;
+            message.channel.send(`Elisif stands with ${newTotal}; **It's a tie**.`);
         }
         else {
             //Computer has smaller number - end game (user win)
             profile.add(bet);
-            return `Elisif stands with ${newTotal}; **${user.username} wins**!`;
+            message.channel.send(`Elisif stands with ${newTotal}; **${user.username} wins**!`);
         }
     }
     else {
         //Computer continues hitting
         cardsObj.compTotal.push(card);
-        return compHit(cardsObj, message);
+
+        setTimeout(() => {
+            compHit(cardsObj, message, profile);
+        }, 1500);
     }
 }
 
@@ -152,7 +153,7 @@ function createCardCollection(bet) {
         bet: bet
     }
     var userBase = new Card(randCard());
-    var compBase = new Card("base");
+    var compBase = new Card(["base", "base"]);
     cardsObj.userTotal.push(userBase);
     cardsObj.compTotal.push(compBase);
     return cardsObj;
@@ -189,7 +190,8 @@ function startGame(args, message) {
 
 function userStand(cardsObj, message) {
     message.channel.send(`${message.author} stands with: ${arrCardCalc(cardsObj.userTotal)[0]}.`);
-    return compHit(cardsObj, message);
+    var profile = new Profile(message);
+    return compHit(cardsObj, message, profile);
 }
 
 
