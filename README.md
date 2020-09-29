@@ -11,7 +11,7 @@ of rewriting the entirety of Sif Casino, every single one of the 21 files, to be
 
 Elisif is now incredibly modern and efficient. Commands like `/hit` and `/stand` were replaced with message collectors. The help command is no longer a long, ugly list, and instead
 utilizes an interactive reaction pagination menu. All commands are loaded in via a highly automated, efficient command handler. Certain features that go far beyond
-the bot's regular featureset, such as music, moderation, and logging, will be addable via toggleable extension packs that are included with the bot and are toggleable 
+the bot's regular featureset, such as music, moderation, and logging, will be addable via extension packs that are included with the bot and are toggleable 
 (like modules). And Elisif has never been more customizable. When the Settings Update releases, the bot will go far beyond its current ability to change the command prefix
 in your guild: extensions will be able to be enabled/disabled, command and music channels will be able to be set, guild starting balance will be customizable, battleship
 turn limits will be modifiable, dollars per message will be customizable with limits, custom commands will be addable, and the bot will have an option to be disabled 
