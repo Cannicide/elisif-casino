@@ -89,7 +89,7 @@ function jackpotEnd(message) {
             var randWinner = Math.floor(Math.random() * jackpotLength);
             var winner = jackpotObj.participants[randWinner];
 
-            var winnerProfile = new Profile(message.guild.members.find(m => m.id == winner).lastMessage);
+            var winnerProfile = new Profile(message, winner);
 
             winnerProfile.add(Number(total));
             var winnerUsername = "<@" + winner + ">";

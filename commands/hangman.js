@@ -153,7 +153,7 @@ function hangmanGuess(args, prefix, message) {
         if (gotLetter) {
             if (underscores.indexOf("⬜") < 0) {
                 hObj.participants.forEach(function(member, index) {
-                    var subprof = new Profile(message.guild.members.find(m => m.id == member).lastMessage);
+                    var subprof = new Profile(message, member);
                     subprof.getBal();
 
                     subprof.add(2500);

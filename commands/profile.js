@@ -6,12 +6,12 @@ var Interface = require('../interface');
 var evg = new (require('../evg'))("profiles");
 var settings = require('../settings');
 
-function Profile(message) {
+function Profile(message, overrideId) {
 
     var storage;
     var user;
 
-    var id = message.author.id;
+    var id = overrideId || message.author.id;
 
     var defaultProfile = {
         balance: settings.get(message.guild.id, "startingBalance"),
@@ -89,7 +89,7 @@ function Profile(message) {
 function donateToUser(args, donor, target, message) {
     var prefix = settings.get(message.guild.id, "prefix");
 
-    if (args && args[0] && args[1] && !isNan(args[1])) {
+    if (args && args[0] && args[1] && !isNaN(args[1])) {
         var user = args[0];
         var donations = Number(args[1]);
     }
@@ -97,15 +97,18 @@ function donateToUser(args, donor, target, message) {
         return "Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`";
     }
 
-    if (donor && target && donations <= Number(donor.getBal()) && donations >= 1) {
-        var donorBal = Number(ifprofile.getBal()) - donations;
-        var targetBal = Number(targetProfile.getBal()) + donations;
+    if (donor.exists() && target.exists() && donations <= Number(donor.getBal()) && donations >= 1) {
+        var donorBal = 0 - donations;
+        var targetBal = donations;
 
-        donor.set(donorBal);
-        target.set(targetBal);
+        donor.add(donorBal);
+        target.add(targetBal);
         donor.addDonation(donations);
 
         return `Generous ${message.author.username}, you donated **$${Number(donations).toLocaleString()}** to ${user.username}!`;
+    }
+    else if (donor.exists() && target.exists()) {
+        return `Sorry ${message.author.username}, you specified either too little or too much money to donate.`;
     }
     else {
         return `Sorry ${message.author.username}, either you or the person you are donating to does not have a casino profile. Casino profiles are automatically generated when you send your first message in a guild with Elisif in it.`;
@@ -132,12 +135,12 @@ module.exports = {
             var username = message.author.username;
 
             if (args.length >= 1) {
-                var tag = args.toString().replace(/\]/g, "").replace(/ /g, "").split(",", 2)[1].replace(/,/g, " ");
-                var found = message.guild.members.find(m => m.tag == tag);
+                var tag = args.join(" ");
+                var found = message.guild.members.find(m => m.user.tag == tag);
 
                 if (found) {
-                    profile = new Profile(found.id);
-                    username = found.username;
+                    profile = new Profile(message, found.id);
+                    username = found.user.username;
                 }
                 else {
                     message.channel.send(`You must specify both a valid username and tag to do that.\nEx: \`Cannicide#2753\``);
@@ -160,17 +163,18 @@ module.exports = {
 
             var receiver = message.mentions.users.first();
 
-            var profileRec = new Profile(receiver.id);
+            if (!receiver || args.length < 2) {
+                return message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + settings.get(message.guild.id, "prefix") + "donate [user] [donation]` to continue.\nExample: `" + settings.get(message.guild.id, "prefix") + "donate @Cannicide#2753 5000`");
+            }
+
+            var profileRec = new Profile(message, receiver.id);
             var profileDon = new Profile(message);
 
-            if (!receiver || args.length < 2) {
-                message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + settings.get(message.guild.id, "prefix") + "donate [user] [donation]` to continue.\nExample: `" + settings.get(message.guild.id, "prefix") + "donate @Cannicide#2753 5000`");
-            }
-            else if (receiver.id == message.author.id) {
+            if (receiver.id == message.author.id) {
                 message.channel.send("You cannot donate to yourself.");
             }
             else {
-                message.channel.send(donateToUser([receiver, args[1]], profileDon.exists(), profileRec.exists(), message));
+                message.channel.send(donateToUser([receiver, args[1]], profileDon, profileRec, message));
             }
 
         }, false, false, "Donate money to another user!"),
@@ -181,12 +185,12 @@ module.exports = {
             var username = message.author.username;
 
             if (args.length >= 1) {
-                var tag = args.toString().replace(/\]/g, "").replace(/ /g, "").split(",", 2)[1].replace(/,/g, " ");
-                var found = message.guild.members.find(m => m.tag == tag);
+                var tag = args.join(" ");
+                var found = message.guild.members.find(m => m.user.tag == tag);
 
                 if (found) {
-                    profile = new Profile(found.id);
-                    username = found.username;
+                    profile = new Profile(message, found.id);
+                    username = found.user.username;
                 }
                 else {
                     message.channel.send(`You must specify both a valid username and tag to do that.\nEx: \`Cannicide#2753\``);
@@ -252,7 +256,5 @@ module.exports = {
         }, false, false, "Resets your casino balance to $0."),
 
         new Alias("resetprofile", "reset")
-
-        //TODO: All of the other profile commands
     ]
 }
