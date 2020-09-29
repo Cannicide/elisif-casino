@@ -67,7 +67,7 @@ function jackpotStart(args, message) {
         ls.set(guildId, jackpotObj);
 
         profile.add(0 - Number(bet));
-        return `${message.author.username}, you created a new jackpot with **$${bet}**\nDo \`${prefix}jackpot [bet]\` to join for a chance to win over **$${Number(bet).toLocaleString()}**!\nEx: \`${prefix}jackpot 2500\` enters the jackpot with $2500, giving the winner a chance to earn over $${Number(bet) + 2500}!`;
+        return `${message.author.username}, you created a new jackpot with **$${bet}**\nUse \`${prefix}jackpot end\` to end the jackpot and declare a winner.\n\nDo \`${prefix}jackpot [bet]\` to join for a chance to win over **$${Number(bet).toLocaleString()}**!\nEx: \`${prefix}jackpot 2500\` enters the jackpot with $2500, giving the winner a chance to earn over $${Number(bet) + 2500}!`;
     }
 }
 
@@ -80,6 +80,7 @@ function jackpotEnd(message) {
         var jackpotLength = jackpotObj.participants.length;
 
         if (jackpotLength == 1) {
+            var profile = new Profile(message);
             profile.add(Number(jackpotObj.bets[jackpotObj.participants.indexOf(message.author.id)]));
             ls.remove(message.guild.id + "jackpotGame");
             return `Sorry ${message.author.username}, nobody joined your jackpot game. You get your money back, though!`;
@@ -88,7 +89,7 @@ function jackpotEnd(message) {
             var randWinner = Math.floor(Math.random() * jackpotLength);
             var winner = jackpotObj.participants[randWinner];
 
-            var winnerProfile = new Profile(winner);
+            var winnerProfile = new Profile(message.guild.members.find(m => m.id == winner).lastMessage);
 
             winnerProfile.add(Number(total));
             var winnerUsername = "<@" + winner + ">";
