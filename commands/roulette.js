@@ -18,7 +18,7 @@ var outputs = {
     wait: "Choose a color:\n\n<:red:757632465610342410> **Red** ||x2||\n<:black:757632465429856376> **Black** ||x2||\n<:green:757632465446764670> **Green** ||x12||",
     green: function(message) { return `Lucky ${message.author.username}, it landed on <:green:757632465446764670> **Green** and you won **x12** of your original bet!` },
     redBlack: function(message, guess) { return `${message.author.username}, it successfully landed on ${emotes[guess.toLowerCase()]} **${guess}** and you won **x2** of your original bet!` },
-    fail: function(message, loss, landed) { return `Unlucky ${message.author.username}, it landed on ${emotes[landed.toLowerCase()]} ${landed} and you lost **$${loss}**...` }
+    fail: function(message, loss, landed) { return `Unlucky ${message.author.username}, it landed on ${emotes[landed.toLowerCase()]} **${landed}** and you lost **$${loss}**...` }
 }
 
 var command = new Command("roulette", (message, args) => {
@@ -27,7 +27,7 @@ var command = new Command("roulette", (message, args) => {
         var amount = Number(args[0]);
     }
     else {
-        message.reply("Please specify a bet.");
+        return message.reply("Please specify a bet.");
     }
 
     var prefix = settings.get(message.guild.id, "prefix");
@@ -64,7 +64,7 @@ var command = new Command("roulette", (message, args) => {
                                 }
                                 else {
                                     profile.add(0 - bet);
-                                    msg.edit(outputs.fail(message, bet, upperc));
+                                    msg.edit(outputs.fail(message, bet, "Green"));
                                 }
                             }
                             else if (probability % 2 == 0) {
@@ -77,7 +77,7 @@ var command = new Command("roulette", (message, args) => {
                                 }
                                 else {
                                     profile.add(0 - bet);
-                                    msg.edit(outputs.fail(message, bet, upperc));
+                                    msg.edit(outputs.fail(message, bet, "Black"));
                                 }
                             }
                             else {
@@ -90,7 +90,7 @@ var command = new Command("roulette", (message, args) => {
                                 }
                                 else {
                                     profile.add(0 - bet);
-                                    msg.edit(outputs.fail(message, bet, upperc));
+                                    msg.edit(outputs.fail(message, bet, "Red"));
                                 }
                             }
                         }, 4000);
