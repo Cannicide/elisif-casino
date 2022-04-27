@@ -1,48 +1,39 @@
-//Simpler localStorage v1.3.1
-//Designed for npm localstorage module, nodeJS
-//Only works for pre-required localStorage module
-//Include this code in your main nodeJS file:
-/* 
-    if (typeof localStorage === "undefined" || localStorage === null) {
-        var LocalStorage = require('node-localstorage').LocalStorage;
-        localStorage = new LocalStorage('./ls');
-    }
-    var ls = require("./ls");
-*/
-//The node-localstorage module was not designed by me
-//This is merely my way of simplifying its usage
-//This Simple LocalStorage module was created by me to work with node-localstorage
+//Evolved LocalStorage v3.4.6 (EvG-based system)
+//This module was entirely designed by Cannicide
 
-module.exports = {
-    set: function(key, value) {
-        return localStorage.setItem(key, value);
-    },
-    get: function(key) {
-        return localStorage.getItem(key);
-    },
-    setObj: function(key, obj) {
-        return localStorage.setItem(key, JSON.stringify(obj));
-    },
-    getObj: function(key) {
-        return JSON.parse(localStorage.getItem(key));
-    },
-    exist: function(key) {
-        if (localStorage.getItem(key)) {
+var evg = new (require("./evg"))("ls");
+
+function LS() {
+
+    var storage = evg.get();
+
+    this.set = function(key, value) {
+        storage = evg.get();
+        storage[key] = value;
+        evg.set(storage);
+    }
+
+    this.get = function(key) {
+        storage = evg.get();
+        return this.exist(key) ? storage[key] : false;
+    }
+
+    this.exist = function(key) {
+        storage = evg.get();
+        if (key in storage) {
             return true;
         }
         else {
             return false;
         }
-    },
-    remove: function(key) {
-        return localStorage.removeItem(key);
-    },
-    clear: function() {
-        return localStorage.clear();
-    },
-    append:function(key,value){ return localStorage.setItem(key,localStorage.getItem(key)+value); },
-    renameKey:function(key,newk){ let value=localStorage.getItem(key);return localStorage.setItem(newk,value); }
+    }
+
+    this.remove = function(key) {
+        storage = evg.get();
+        if (this.exist(key)) delete storage[key];
+        evg.set(storage);
+    }
+
 }
 
-//The node-localstorage module can be found at:
-//https://www.npmjs.com/package/node-localstorage
+module.exports = new LS();

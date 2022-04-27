@@ -1,347 +1,173 @@
-//server.js
-//where the node app starts
-
-//init express
 const express = require('express');
 const app = express();
+const fs = require("fs");
 
 app.use(express.static('public'));
-app.get('/', function(request, response) {
-  response.send("Running botserver");
-});
+
 const listener = app.listen(process.env.PORT, function() {
-  console.log('Sif Casino listening on port ' + listener.address().port);
+  console.log('Elisif is listening on port ' + listener.address().port);
 });
-if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage('./ls');
-  var ls = require("./ls");
-}
 
 //Discord.js initialized
 const Discord = require('discord.js');
 const client = new Discord.Client();
 var prefix = "/";
 
-//Constants required
-const constants = require("./constants");
+var inface = require("./interface");
+inface.setClient(Discord);
 
-function ifProfile(authorid) {
-  if (ls.get(authorid + "profile") && Number(ls.get(authorid + "profile")) >= -10) {
-      var profile = ls.get(authorid + "profile");
-      }
-  else if (Number(ls.get(authorid + "profile")) < -10) {
-    var profile = false;         
-  }
-  else {
-   var profile = false; 
-  }
-  return profile;
-}
+var Interpreter = require("./interpreter");
+var Command = require("./command");
+var Alias = require("./alias");
+
+//Evergreen storage Required
+const Evg = require("./evg");
+
+//Guild settings
+const settings = require("./settings");
 
 client.on('guildCreate', guild => {
-    guild.channels.get(guild.channels.find("name", "general").id).send("Thanks for adding Sif Casino to your guild! Use the command /sifcasino to get started.");
-  guild.createRole({
-    name: "Casino",
-    color: "#593695"
-  }).then(role => guild.member(client.user).addRole(role)).catch(console.error);
+    guild.channels.find("name", "general").send("Thanks for adding Elisif to your guild! Use the command /sifcasino to get started.");
+    guild.createRole({
+        name: "Casino",
+        color: "#593695"
+      }).then(role => guild.member(client.user).addRole(role)).catch(console.error);
 });
 
+var commands = [];
+
+/**
+* @type Command[]
+*/
+var requisites = [];
+
 client.on('ready', () => {
-    console.log('Sif Casino is up and running!');
-    client.user.setActivity('/sifcasino', { type: 'STREAMING', url: 'https://www.twitch.tv/ishidres/video/264026461' });
+    console.log('Elisif is up and running!');
+    client.user.setActivity('/elisifhelp', { type: 'STREAMING', url: 'https://www.twitch.tv/cannicide'});
+
+    //Import commands:
+    var cmdfiles = fs.readdirSync("commands");
+    cmdfiles.forEach((item) => {
+        var file = require(`./commands/${item.substring(0, item.length - 3)}`);
+        if (file instanceof Command) {
+            requisites.push(file);
+        }
+        else if ("commands" in file) {
+            file.commands.forEach((alias) => {
+                if (alias instanceof Command) requisites.push(alias);
+                else if (alias instanceof Alias) requisites.push(alias.getAsCommand());
+            })
+        }
+    });
+
+    commands = requisites.find(c => c.getName() == "help").getCommands();
 });
 
 client.on('message', message => {
-  try {
-   var splitter = message.content.replace(" ", ";:splitter185151813367::");
-    var splitted = splitter.split(";:splitter185151813367::");
-  var prefix;
-    if (message.guild === null) {
-      if (message.author.id != "501862549739012106") {
-        message.reply("Sorry " + message.author.username + ", DM messages are not supported by this bot.");
-      }
-      return false;
+    try {
+
+        // Avoid bot messages, DM and otherwise:
+
+        if (message.author.bot) {
+            return false;
+        }
+
+        //Create new interpreter
+        var intp = new Interpreter(message);
+
+        //Determine prefix
+
+            prefix = settings.get(message.guild.id, "prefix");
+
+        //Command determination:
+
+        var splitter = message.content.replace(" ", ";:splitter185151813367::");
+        var splitted = splitter.split(";:splitter185151813367::");
+
+        var fixRegExp = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        var re = new RegExp(fixRegExp);
+
+        var command = splitted[0].replace(re, "");
+        command = command.toLowerCase();
+
+        if (splitted[1]) {
+            var args = splitted[1].split(" ");
+        }
+        else {
+            var args = false;
+        }
+
+        // DM determination:
+
+        if (message.guild === null) {
+            message.reply("Sorry " + message.author.username + ", DM commands are not supported by this bot.");
+
+            return false;
+        }
+
+        //Universal help command:
+
+        if (message.content == "/sifcasino" || message.content == "/elisif" || message.content == "/elisifhelp") {
+            
+            var usable = commands.find(c => c.name == "help").cmd;
+            usable.set(message);
+
+            usable.execute([prefix, args]).catch((err) => {
+                message.reply("An error occurred: " + err);
+            });
+
+            return;
+        }
+        else if (message.content == "/elisifprefix") {
+            //Fetches the prefix (setting the prefix through this is not enabled)
+
+            var usable = commands.find(c => c.name == "prefix").cmd;
+            usable.set(message);
+
+            usable.execute([]).catch((err) => {
+                message.reply("An error occurred: " + err);
+            });
+
+            return;
+        }
+
+        //Check for command:
+        var cmd = false;
+
+        commands.forEach((item, index) => {
+            if (item.name == command) {
+                cmd = item.cmd;
+            }
+        });
+
+        //Run commands if matches prefix:
+
+        if (cmd && splitted[0].match(prefix)) {
+            message.channel.startTyping();
+            setTimeout(() => {
+                cmd.set(message);
+                if (cmd.matches("help")) {
+                    cmd.execute([prefix, args]).catch((err) => {
+                        message.reply("An error occurred: " + err);
+                    });
+                }
+                else {
+                    cmd.execute(args).catch((err) => {
+                        message.reply("An error occurred: " + err);
+                    });
+                }
+                message.channel.stopTyping();
+            }, 1000);
+        }
+        else {
+            intp.interpret(message.content.split(" "));
+        }
+
     }
-    if (ls.get(message.guild.id + "prefix")) {
-        prefix = ls.get(message.guild.id + "prefix");
-        }
-      else {
-         ls.set(message.guild.id + "prefix", "/");
-          prefix = "/";
-      }
-  var fixRegExp = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  constants.setPrefix(prefix);
-  var re = new RegExp(fixRegExp);
-  var command = splitted[0].replace(re, "");
-  if (splitted[1]) {
-    var args = splitted[1].split(" ");
-  }
-  else {
-   var args = false; 
-  }
-  
-  if (message.content == "/sifcasino") {
-      message.author.send(constants.help("main"));
-      message.author.send(constants.help("main2"));
-      message.author.send(constants.help("main3"));
-      message.author.send(constants.help("ext"));
-  }
-  else if (message.content == "/fetch prefix") {
-    message.channel.send(`The prefix for this guild is ${prefix}`);
-  }
-  if (message.author.bot) {
-     return false; 
-  }
-  var works = false;
-  var pColor = message.content.toLowerCase();
-  var asyncUser = require("./asyncUser");
-  if ((pColor == "green" || pColor == "red" || pColor == "black") && asyncUser.getUserObj(message.author).awaitRoulette) {
-    command = "rouletteSpin";
-    works = true;
-  }
-  else if (command == "rouletteSpin") {
-    command = "casino";
-    works = true;
-  }
-  if ((!splitted[0] || !splitted[0].match(prefix)) && !works) {
-    return false;
-    //No prefix detected
-  }
-  if (ls.get(message.author.id + "profile") && Number(ls.get(message.author.id + "profile")) >= -10) {
-      ls.set(message.author.id + "profile", Number(ls.get(message.author.id + "profile")) + 1);
-      var profile = ls.get(message.author.id + "profile");
-      }
-  else if (Number(ls.get(message.author.id + "profile")) < -10) {
-    var profile = false;         
-  }
-  else {
-     var profile = constants.profileStarterAmount; 
-  }
-  //Init simplify.js
-  var simpjs = require("./simplify");
-  //Check for command:
-  switch (command) {
-    case "casino":
-        message.author.send(constants.help("main"));
-        message.author.send(constants.help("main2"));
-        message.author.send(constants.help("main3"));
-        message.author.send(constants.help("ext"));
-      break;
-    case "reset":
-        ls.set(message.author.id + "profile", 0);
-        profile = 0;
-        message.channel.send("Balance reset to 0");
-      break;
-    case "roulette":
-        var roulette = require("./roulette");
-        message.channel.send(roulette.specifyBet(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "rouletteSpin":
-        var roulette = require("./roulette");
-        message.channel.send(roulette.spin(message.content, ifProfile(message.author.id), prefix, message));
-      break;
-    case "jackpot":
-        var jackpot = require("./jackpot");
-        if (args[0] == "end") {
-          message.channel.send(jackpot.end(message));
-        }
-        else {
-          message.channel.send(jackpot.start(args, ifProfile(message.author.id), prefix, message));
-        }
-      break;
-    case "bs":
-        var battleship = require("./battleship");
-        message.channel.send(battleship.start(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "bsguess":
-        var battleship = require("./battleship");
-        message.channel.send(battleship.guess(args, message));
-      break;
-    case "double":
-        var double = require("./double");
-        if (ls.exist(message.author.id + "doubleGame")) {
-          throw "GameExistenceError: User already has a game running!\nAt server.js:154:5\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
-        else {
-          ls.setObj(message.author.id + "doubleBetAmount", args);
-          message.channel.send(double.dble(args, ifProfile(message.author.id), prefix, message));
-        }
-      break;
-    case "coin":
-        var coin = require("./coinflip");
-        message.channel.send(coin.flip(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "dice":
-        var dice = require("./dice");
-        message.channel.send(dice.roll(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "user:all":
-        message.channel.send(simpjs.simplify.users.getUser(message.author));
-        message.channel.send(simpjs.simplify.users.getRaw.getUserID(message.author));
-        message.channel.send(simpjs.simplify.users.getTag(message.author));
-        //^ simplify.js first instance
-      break;
-    case "about":
-      message.channel.send(simpjs.simplify.users.getRaw.getDateCreated("Sif Casino", "Created by " + simpjs.simplify.users.getRaw.getCreator() + "#2753. Built on simplifyJS (for discord), discord.js, and NodeJS.\nDo `" + prefix + "casino` to view a list of the commands.\nGithub: https://github.com/Cannicide/sif-casino/ \nInvite link: ||https://discordapp.com/api/oauth2/authorize?client_id=501862549739012106&permissions=470076480&scope=bot|| \nBot Support Server: https://discord.gg/wYKRB9n"));
-    break;
-    case "prefix":
-      if (simpjs.discrim(message.member)) {
-        var nPref = args[0];
-        if (nPref.length > 1) {
-          //Too long prefix
-          message.channel.send("Error LengthException: Prefixes can only be at max one character long.");
-        }
-        else if (!nPref) {
-          //No prefix specified, send how to do command
-          message.channel.send(`**Usage of ${prefix}prefix**\n\n \`n${prefix}prefix [new prefix character]\`\n__Ex:__\`\`\`${prefix}prefix ?\`\`\`\nThe shown example will set the prefix to ?`);
-        }
-        else {
-          //Change the prefix
-          ls.set(message.guild.id + "prefix", nPref);
-          prefix = nPref;
-          message.channel.send(`Set the server's prefix to ${nPref}. Use \`/fetch prefix\` to identify this guild's current prefix.`);
-        }
-      }
-      else {
-        //Doesn't have admin perms
-        message.channel.send("Error PermissionError: You do not have the `ADMINISTRATOR` permission required to do this.");
-      }
-    break;
-    case "guess":
-        throw "CommandUtilizationError: This command does not exist yet!";
-      break;
-    case "stats":
-    case "statistics":
-        var statistics = require("./statistics");
-        var Bot = new statistics.Bot(client);
-        message.channel.send(statistics.view(Bot));
-      break;
-    case "play":
-        var music = require("./music");
-        message.channel.send(music.play([args.join(" "), process.env.YT_API], message, false));
-      break;
-    case "stop":
-        var music = require("./music");
-        message.channel.send(music.stop(message));
-      break;
-    case "loop":
-        var music = require("./music");
-        music.loop(message.author.id, message);
-      break;
-    case "queue":
-        var music = require("./music");
-        message.channel.send(music.getQueue(message));
-      break;
-    case "hm":
-        //Hangman game commands
-        var hm = require("./hangman");
-        message.channel.send(hm.do(args, ifProfile(message.author.id), prefix, message));
-      break;
-    case "blackjack":
-        var blackjack = require("./blackjack");
-        if (ls.exist(message.author.id + "blackjackGame")) {
-          throw "GameExistenceError: User already has a game running!\nAt server.js:201:5\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
-        else {
-          message.channel.send(blackjack.start(args, ifProfile(message.author.id), prefix, message));
-        }
-      break;
-    case "hit":
-        //blackjack hit-subcommand AND double subcommand
-        var blackjack = require("./blackjack");
-        var double = require("./double");
-        if (ls.exist(message.author.id + "blackjackGame")) {
-          message.channel.send(blackjack.hit(message.author, message, prefix));
-        }
-        else if (ls.exist(message.author.id + "doubleGame")) {
-          message.channel.send(double.hit(prefix, message, ifProfile(message.author.id)));
-        }
-        else {
-          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:224:15\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
-      break;
-    case "stand":
-        //blackjack stand-subcommand AND double subcommand
-        var blackjack = require("./blackjack");
-        var double = require("./double");
-        if (ls.exist(message.author.id + "blackjackGame")) {
-          message.channel.send(blackjack.stand(message));
-        }
-        else if (ls.exist(message.author.id + "doubleGame")) {
-          message.channel.send(double.stand(message));
-        }
-        else {
-          throw "GameExistenceError: User does not have a blackjack or double game running.\nAt server.js:235:15\nAt discord.js\nAt client.bot.Sif_Casino";
-        }
-      break;
-    case "donate":
-        var donate = require("./donate");
-        var receiver = message.mentions.users.first();
-        if (!receiver) {
-          message.channel.send("Please specify a valid user and amount to donate to them.\nUse `" + prefix + "donate [user] [donation]` to continue.\nExample: `" + prefix + "donate @Cannicide#2753 5000`");
-        }
-        else if (receiver.id == message.author.id) {
-          message.channel.send("You cannot donate to yourself.");
-        }
-        else {
-          message.channel.send(donate.toUser([receiver, args[1]], ifProfile(message.author.id), ifProfile(receiver.id), prefix, message));
-        }
-      break;
-    case "profile":
-      if (ls.get(message.author.id + "profile") && profile) {
-        var donations = 0;
-        if (ls.get(message.author.id + "donations")) {
-          donations = ls.get(message.author.id + "donations");
-        }
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.\nAmount Donated: $${Number(donations).toLocaleString()}.`);
-      }
-      else {
-         message.channel.send(`Use ${prefix}create to create a casino profile.`); 
-      }
-      break;
-    case "balance":
-      if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send(`${message.author.username} has $${Number(profile).toLocaleString()}.`);
-      }
-      else {
-         message.channel.send(`Use ${prefix}create to create a casino profile.`); 
-      }
-      break;
-    case "create":
-      if (ls.get(message.author.id + "profile") && profile) {
-        message.channel.send("You already have a casino profile.");
-      }
-      else {
-       profile = constants.profileStarterAmount;
-       ls.set(message.author.id + "profile", profile);
-        message.channel.send(`Created a profile for ${message.author.username} with a beginning amount of $50.`);
-      }
-      break;
-    case "delete":
-      if (ls.get(message.author.id + "profile") <= -1) {
-         message.channel.send("Account deleted.");
-          ls.set(message.author.id + "profile", -100);
-      }
-      else {
-         message.channel.send("Are you sure you want to delete your casino account? Type `" + prefix + "delete` again to delete your account. This action is irreversible."); 
-        ls.set(message.author.id + "profile", -5);
-      }
-      break;
-    default:
-      //External commands go here
-      var external = require("./external");
-      Object.keys(external.commands).forEach(function(key) {
-        if (external.commands[key].name.toLowerCase() == command) {
-          var secondaryCache = [prefix, ifProfile(message.author.id)];
-          message.channel.send(external.commands[key].get(args, message, secondaryCache));
-        }
-      });
-  }
-  }
-  catch(err) {
-    message.channel.send(`Errors found:\n\`\`\`${err}\nAt ${err.stack}\`\`\``);
-  }
+    catch (err) {
+        message.channel.send(`Errors found:\n\`\`\`${err}\nAt ${err.stack}\`\`\``);
+    }
 });
 
-client.login("your token here");
+//Added token
+client.login(process.env.TOKEN);
