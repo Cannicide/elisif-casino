@@ -1,0 +1,26 @@
+{
+  "name": "elisif-casino",
+  "version": "2.0.0",
+  "description": "A powerful casino discord bot created in djs v12.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cannicide/elisif-casino.git"
+  },
+  "author": "Cannicide",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cannicide/elisif-casino/issues"
+  },
+  "homepage": "https://github.com/Cannicide/elisif-casino#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "discord.js": "^12.5.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "node-fetch": "^2.6.7"
+  }
+}
